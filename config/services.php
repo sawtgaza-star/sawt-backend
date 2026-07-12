@@ -35,4 +35,23 @@ return [
         ],
     ],
 
+    'paypal' => [
+        // Fallbacks — the dashboard Settings (paypal_client_id / paypal_secret / paypal_mode) take priority
+        'mode' => env('PAYPAL_MODE', 'sandbox'),
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+        'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
+    ],
+
+    'instagram' => [
+        // Instagram Business/Creator account ID (numeric) — the account whose reels we show
+        'user_id' => env('INSTAGRAM_USER_ID'),
+        // Long-lived access token generated from your Meta app
+        'token' => env('INSTAGRAM_ACCESS_TOKEN'),
+        // Graph API version
+        'version' => env('INSTAGRAM_API_VERSION', 'v21.0'),
+        // Short cache (seconds) to avoid hitting IG rate limits. Set to 0 for fully live.
+        'cache_ttl' => (int) env('INSTAGRAM_CACHE_TTL', 300),
+    ],
+
 ];

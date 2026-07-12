@@ -1,0 +1,73 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+/* ===== Sawt custom admin theme — Cairo + Violet, RTL-first =====
+   Cairo font is loaded by the panel via ->font('Cairo'). */
+
+:root {
+    --font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+}
+
+.fi-body,
+.fi {
+    font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0;
+}
+
+/* Softer, more modern rounding across the panel */
+.fi-sidebar,
+.fi-topbar,
+.fi-main {
+    --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+}
+
+/* Sidebar: subtle violet gradient + rounded active item */
+.fi-sidebar-nav {
+    padding-inline: 0.5rem;
+}
+
+.fi-sidebar-item-button {
+    border-radius: 0.75rem;
+    transition: all 0.15s ease;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    background: linear-gradient(135deg, rgb(124 58 237 / 0.14), rgb(139 92 246 / 0.06));
+    box-shadow: inset 3px 0 0 0 rgb(124 58 237);
+}
+
+/* Cards & sections: bigger radius, gentle shadow — reads less "default Filament" */
+.fi-section,
+.fi-wi,
+.fi-ta-ctn,
+.fi-fo-component-ctn .fi-input-wrp {
+    border-radius: 1rem !important;
+}
+
+.fi-section {
+    box-shadow: 0 4px 20px -8px rgb(76 29 149 / 0.12);
+}
+
+/* Primary buttons: gradient for a more branded feel */
+.fi-btn[class*='fi-color-primary'],
+.fi-btn.fi-color-primary {
+    background-image: linear-gradient(135deg, rgb(124 58 237), rgb(139 92 246));
+    border: 0;
+}
+
+/* Topbar branding */
+.fi-topbar {
+    backdrop-filter: saturate(1.2) blur(6px);
+}
+
+/* Login page: centered branded card */
+.fi-simple-main {
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 60px -20px rgb(76 29 149 / 0.35);
+}
+
+/* RTL number/badge alignment fix */
+[dir='rtl'] .fi-badge {
+    letter-spacing: 0;
+}

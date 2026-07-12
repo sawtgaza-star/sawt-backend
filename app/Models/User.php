@@ -49,6 +49,21 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Donation::class);
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(CourseEnrollment::class);
+    }
+
+    public function lessonProgress()
+    {
+        return $this->hasMany(LessonProgress::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     // يتحكم مين يقدر يدخل لوحة Filament (لازم يكون عنده أي دور معطى من الأدمن)
     public function canAccessPanel(Panel $panel): bool
     {

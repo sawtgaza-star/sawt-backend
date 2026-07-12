@@ -47,6 +47,12 @@ class SettingSeeder extends Seeder
             ['group' => 'stats', 'key' => 'supporters_count', 'value' => '250000', 'type' => 'number'],
             ['group' => 'stats', 'key' => 'collaborations_count', 'value' => '500', 'type' => 'number'],
             ['group' => 'stats', 'key' => 'active_creators_count', 'value' => '45', 'type' => 'number'],
+
+            // reels (إنستغرام)
+            ['group' => 'reels', 'key' => 'reels_enabled', 'value' => '0', 'type' => 'boolean'],
+            ['group' => 'reels', 'key' => 'instagram_user_id', 'value' => '', 'type' => 'string'],
+            ['group' => 'reels', 'key' => 'instagram_access_token', 'value' => '', 'type' => 'string'],
+            ['group' => 'reels', 'key' => 'instagram_cache_ttl', 'value' => '300', 'type' => 'number'],
         ];
 
         foreach ($settings as $setting) {

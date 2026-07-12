@@ -34,6 +34,11 @@ class Donation extends Model
         return $this->hasOne(PaymentTransaction::class);
     }
 
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'payable');
+    }
+
     public function scopeSucceeded($query)
     {
         return $query->where('status', 'succeeded');

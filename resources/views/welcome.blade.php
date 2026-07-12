@@ -1,176 +1,2770 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@php
+    use App\Models\Setting;
+    use Illuminate\Support\Facades\Storage;
 
-        <title>Laravel</title>
+    $logoRaw = Setting::get('home_logo');
+    $logoUrl = $logoRaw ? Storage::disk('public')->url($logoRaw) : '/assets/images/صوت 1.png';
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    $heroRaw = Setting::get('home_hero_image');
+    $heroUrl = $heroRaw ? Storage::disk('public')->url($heroRaw) : '/assets/images/swat.png';
 
-        <!-- Styles / Scripts -->
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @else
-            <style>
-                /* ! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Figtree, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }.absolute{position:absolute}.relative{position:relative}.-left-20{left:-5rem}.top-0{top:0px}.-bottom-16{bottom:-4rem}.-left-16{left:-4rem}.-mx-3{margin-left:-0.75rem;margin-right:-0.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16 / 9}.size-12{width:3rem;height:3rem}.size-5{width:1.25rem;height:1.25rem}.size-6{width:1.5rem;height:1.5rem}.h-12{height:3rem}.h-40{height:10rem}.h-full{height:100%}.min-h-screen{min-height:100vh}.w-full{width:100%}.w-\[calc\(100\%\+8rem\)\]{width:calc(100% + 8rem)}.w-auto{width:auto}.max-w-\[877px\]{max-width:877px}.max-w-2xl{max-width:42rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.items-stretch{align-items:stretch}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.self-center{align-self:center}.overflow-hidden{overflow:hidden}.rounded-\[10px\]{border-radius:10px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-sm{border-radius:0.125rem}.bg-\[\#FF2D20\]\/10{background-color:rgb(255 45 32 / 0.1)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.bg-gradient-to-b{background-image:linear-gradient(to bottom, var(--tw-gradient-stops))}.from-transparent{--tw-gradient-from:transparent var(--tw-gradient-from-position);--tw-gradient-to:rgb(0 0 0 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-white{--tw-gradient-to:rgb(255 255 255 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #fff var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-white{--tw-gradient-to:#fff var(--tw-gradient-to-position)}.stroke-\[\#FF2D20\]{stroke:#FF2D20}.object-cover{object-fit:cover}.object-top{object-position:top}.p-6{padding:1.5rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.pt-3{padding-top:0.75rem}.text-center{text-align:center}.font-sans{font-family:Figtree, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-sm\/relaxed{font-size:0.875rem;line-height:1.625}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-semibold{font-weight:600}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-\[0px_14px_34px_0px_rgba\(0\2c 0\2c 0\2c 0\.08\)\]{--tw-shadow:0px 14px 34px 0px rgba(0,0,0,0.08);--tw-shadow-colored:0px 14px 34px 0px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-transparent{--tw-ring-color:transparent}.ring-white\/\[0\.05\]{--tw-ring-color:rgb(255 255 255 / 0.05)}.drop-shadow-\[0px_4px_34px_rgba\(0\2c 0\2c 0\2c 0\.06\)\]{--tw-drop-shadow:drop-shadow(0px 4px 34px rgba(0,0,0,0.06));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-\[0px_4px_34px_rgba\(0\2c 0\2c 0\2c 0\.25\)\]{--tw-drop-shadow:drop-shadow(0px 4px 34px rgba(0,0,0,0.25));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.selection\:bg-\[\#FF2D20\] *::selection{--tw-bg-opacity:1;background-color:rgb(255 45 32 / var(--tw-bg-opacity))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.selection\:bg-\[\#FF2D20\]::selection{--tw-bg-opacity:1;background-color:rgb(255 45 32 / var(--tw-bg-opacity))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.hover\:text-black:hover{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity))}.hover\:text-black\/70:hover{color:rgb(0 0 0 / 0.7)}.hover\:ring-black\/20:hover{--tw-ring-color:rgb(0 0 0 / 0.2)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus-visible\:ring-1:focus-visible{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus-visible\:ring-\[\#FF2D20\]:focus-visible{--tw-ring-opacity:1;--tw-ring-color:rgb(255 45 32 / var(--tw-ring-opacity))}@media (min-width: 640px){.sm\:size-16{width:4rem;height:4rem}.sm\:size-6{width:1.5rem;height:1.5rem}.sm\:pt-5{padding-top:1.25rem}}@media (min-width: 768px){.md\:row-span-3{grid-row:span 3 / span 3}}@media (min-width: 1024px){.lg\:col-start-2{grid-column-start:2}.lg\:h-16{height:4rem}.lg\:max-w-7xl{max-width:80rem}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:flex-col{flex-direction:column}.lg\:items-end{align-items:flex-end}.lg\:justify-center{justify-content:center}.lg\:gap-8{gap:2rem}.lg\:p-10{padding:2.5rem}.lg\:pb-10{padding-bottom:2.5rem}.lg\:pt-0{padding-top:0px}.lg\:text-\[\#FF2D20\]{--tw-text-opacity:1;color:rgb(255 45 32 / var(--tw-text-opacity))}}@media (prefers-color-scheme: dark){.dark\:block{display:block}.dark\:hidden{display:none}.dark\:bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity))}.dark\:bg-zinc-900{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity))}.dark\:via-zinc-900{--tw-gradient-to:rgb(24 24 27 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #18181b var(--tw-gradient-via-position), var(--tw-gradient-to)}.dark\:to-zinc-900{--tw-gradient-to:#18181b var(--tw-gradient-to-position)}.dark\:text-white\/50{color:rgb(255 255 255 / 0.5)}.dark\:text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.dark\:text-white\/70{color:rgb(255 255 255 / 0.7)}.dark\:ring-zinc-800{--tw-ring-opacity:1;--tw-ring-color:rgb(39 39 42 / var(--tw-ring-opacity))}.dark\:hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.dark\:hover\:text-white\/70:hover{color:rgb(255 255 255 / 0.7)}.dark\:hover\:text-white\/80:hover{color:rgb(255 255 255 / 0.8)}.dark\:hover\:ring-zinc-700:hover{--tw-ring-opacity:1;--tw-ring-color:rgb(63 63 70 / var(--tw-ring-opacity))}.dark\:focus-visible\:ring-\[\#FF2D20\]:focus-visible{--tw-ring-opacity:1;--tw-ring-color:rgb(255 45 32 / var(--tw-ring-opacity))}.dark\:focus-visible\:ring-white:focus-visible{--tw-ring-opacity:1;--tw-ring-color:rgb(255 255 255 / var(--tw-ring-opacity))}}
-            </style>
-        @endif
-    </head>
-    <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-        <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-            <img id="background" class="absolute -left-20 top-0 max-w-[877px]" src="https://laravel.com/assets/img/welcome/background.svg" alt="Laravel background" />
-            <div class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
-                <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                    <header class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
-                        <div class="flex lg:justify-center lg:col-start-2">
-                            <svg class="h-12 w-auto text-white lg:h-16 lg:text-[#FF2D20]" viewBox="0 0 62 65" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M61.8548 14.6253C61.8778 14.7102 61.8895 14.7978 61.8897 14.8858V28.5615C61.8898 28.737 61.8434 28.9095 61.7554 29.0614C61.6675 29.2132 61.5409 29.3392 61.3887 29.4265L49.9104 36.0351V49.1337C49.9104 49.4902 49.7209 49.8192 49.4118 49.9987L25.4519 63.7916C25.3971 63.8227 25.3372 63.8427 25.2774 63.8639C25.255 63.8714 25.2338 63.8851 25.2101 63.8913C25.0426 63.9354 24.8666 63.9354 24.6991 63.8913C24.6716 63.8838 24.6467 63.8689 24.6205 63.8589C24.5657 63.8389 24.5084 63.8215 24.456 63.7916L0.501061 49.9987C0.348882 49.9113 0.222437 49.7853 0.134469 49.6334C0.0465019 49.4816 0.000120578 49.3092 0 49.1337L0 8.10652C0 8.01678 0.0124642 7.92953 0.0348998 7.84477C0.0423783 7.8161 0.0598282 7.78993 0.0697995 7.76126C0.0884958 7.70891 0.105946 7.65531 0.133367 7.6067C0.152063 7.5743 0.179485 7.54812 0.20192 7.51821C0.230588 7.47832 0.256763 7.43719 0.290416 7.40229C0.319084 7.37362 0.356476 7.35243 0.388883 7.32751C0.425029 7.29759 0.457436 7.26518 0.498568 7.2415L12.4779 0.345059C12.6296 0.257786 12.8015 0.211853 12.9765 0.211853C13.1515 0.211853 13.3234 0.257786 13.475 0.345059L25.4531 7.2415H25.4556C25.4955 7.26643 25.5292 7.29759 25.5653 7.32626C25.5977 7.35119 25.6339 7.37362 25.6625 7.40104C25.6974 7.43719 25.7224 7.47832 25.7523 7.51821C25.7735 7.54812 25.8021 7.5743 25.8196 7.6067C25.8483 7.65656 25.8645 7.70891 25.8844 7.76126C25.8944 7.78993 25.9118 7.8161 25.9193 7.84602C25.9423 7.93096 25.954 8.01853 25.9542 8.10652V33.7317L35.9355 27.9844V14.8846C35.9355 14.7973 35.948 14.7088 35.9704 14.6253C35.9792 14.5954 35.9954 14.5692 36.0053 14.5405C36.0253 14.4882 36.0427 14.4346 36.0702 14.386C36.0888 14.3536 36.1163 14.3274 36.1375 14.2975C36.1674 14.2576 36.1923 14.2165 36.2272 14.1816C36.2559 14.1529 36.292 14.1317 36.3244 14.1068C36.3618 14.0769 36.3942 14.0445 36.4341 14.0208L48.4147 7.12434C48.5663 7.03694 48.7383 6.99094 48.9133 6.99094C49.0883 6.99094 49.2602 7.03694 49.4118 7.12434L61.3899 14.0208C61.4323 14.0457 61.4647 14.0769 61.5021 14.1055C61.5333 14.1305 61.5694 14.1529 61.5981 14.1803C61.633 14.2165 61.6579 14.2576 61.6878 14.2975C61.7103 14.3274 61.7377 14.3536 61.7551 14.386C61.7838 14.4346 61.8 14.4882 61.8199 14.5405C61.8312 14.5692 61.8474 14.5954 61.8548 14.6253ZM59.893 27.9844V16.6121L55.7013 19.0252L49.9104 22.3593V33.7317L59.8942 27.9844H59.893ZM47.9149 48.5566V37.1768L42.2187 40.4299L25.953 49.7133V61.2003L47.9149 48.5566ZM1.99677 9.83281V48.5566L23.9562 61.199V49.7145L12.4841 43.2219L12.4804 43.2194L12.4754 43.2169C12.4368 43.1945 12.4044 43.1621 12.3682 43.1347C12.3371 43.1097 12.3009 43.0898 12.2735 43.0624L12.271 43.0586C12.2386 43.0275 12.2162 42.9888 12.1887 42.9539C12.1638 42.9203 12.1339 42.8916 12.114 42.8567L12.1127 42.853C12.0903 42.8156 12.0766 42.7707 12.0604 42.7283C12.0442 42.6909 12.023 42.656 12.013 42.6161C12.0005 42.5688 11.998 42.5177 11.9931 42.4691C11.9881 42.4317 11.9781 42.3943 11.9781 42.3569V15.5801L6.18848 12.2446L1.99677 9.83281ZM12.9777 2.36177L2.99764 8.10652L12.9752 13.8513L22.9541 8.10527L12.9752 2.36177H12.9777ZM18.1678 38.2138L23.9574 34.8809V9.83281L19.7657 12.2459L13.9749 15.5801V40.6281L18.1678 38.2138ZM48.9133 9.14105L38.9344 14.8858L48.9133 20.6305L58.8909 14.8846L48.9133 9.14105ZM47.9149 22.3593L42.124 19.0252L37.9323 16.6121V27.9844L43.7219 31.3174L47.9149 33.7317V22.3593ZM24.9533 47.987L39.59 39.631L46.9065 35.4555L36.9352 29.7145L25.4544 36.3242L14.9907 42.3482L24.9533 47.987Z" fill="currentColor"/></svg>
-                        </div>
-                        @if (Route::has('login'))
-                            <nav class="-mx-3 flex flex-1 justify-end">
-                                @auth
-                                    <a
-                                        href="{{ url('/dashboard') }}"
-                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                    >
-                                        Dashboard
-                                    </a>
-                                @else
-                                    <a
-                                        href="{{ route('login') }}"
-                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                    >
-                                        Log in
-                                    </a>
+    // النصوص القابلة للتعديل ثنائية اللغة — تُحقن فوق قاموس translate.js
+    $i18nKeys = ['who_we_are', 'welcome_lead', 'welcome_title', 'welcome_desc'];
+    $i18nOverrides = ['ar' => [], 'en' => []];
+    foreach ($i18nKeys as $k) {
+        $ar = Setting::get("home_{$k}_ar");
+        $en = Setting::get("home_{$k}_en");
+        if (filled($ar)) $i18nOverrides['ar'][$k] = $ar;
+        if (filled($en)) $i18nOverrides['en'][$k] = $en;
+    }
 
-                                    @if (Route::has('register'))
-                                        <a
-                                            href="{{ route('register') }}"
-                                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                        >
-                                            Register
-                                        </a>
-                                    @endif
-                                @endauth
-                            </nav>
-                        @endif
-                    </header>
+    // شرائح الكاروسيل الرئيسي — قابلة للإضافة/الحذف من لوحة التحكم
+    $heroDefault = [
+        ['image' => '', 'title_ar' => 'منصة صوت', 'title_en' => 'Sawt Platform', 'subtitle_ar' => 'نروي قصص غزة بكرامة... ونبني جيلاً جديداً من صناع المحتوى', 'subtitle_en' => "We tell Gaza's stories with dignity and build a new generation of creators"],
+        ['image' => '', 'title_ar' => 'منصة صوت', 'title_en' => 'Sawt Platform', 'subtitle_ar' => 'نروي قصص غزة بكرامة... ونبني جيلاً جديداً من صناع المحتوى', 'subtitle_en' => "We tell Gaza's stories with dignity and build a new generation of creators"],
+        ['image' => '', 'title_ar' => 'منصة صوت', 'title_en' => 'Sawt Platform', 'subtitle_ar' => 'نروي قصص غزة بكرامة... ونبني جيلاً جديداً من صناع المحتوى', 'subtitle_en' => "We tell Gaza's stories with dignity and build a new generation of creators"],
+    ];
+    $heroDefaultImgs = ['/assets/images/heroSectionImg.jpeg', '/assets/images/backgrounf_sawt.jpg', '/assets/images/tree.jpg'];
 
-                    <main class="mt-6">
-                        <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-                            <a
-                                href="https://laravel.com/docs"
-                                id="docs-card"
-                                class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] md:row-span-3 lg:p-10 lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                            >
-                                <div id="screenshot-container" class="relative flex w-full flex-1 items-stretch">
-                                    <img
-                                        src="https://laravel.com/assets/img/welcome/docs-light.svg"
-                                        alt="Laravel documentation screenshot"
-                                        class="aspect-video h-full w-full flex-1 rounded-[10px] object-top object-cover drop-shadow-[0px_4px_34px_rgba(0,0,0,0.06)] dark:hidden"
-                                        onerror="
-                                            document.getElementById('screenshot-container').classList.add('!hidden');
-                                            document.getElementById('docs-card').classList.add('!row-span-1');
-                                            document.getElementById('docs-card-content').classList.add('!flex-row');
-                                            document.getElementById('background').classList.add('!hidden');
-                                        "
-                                    />
-                                    <img
-                                        src="https://laravel.com/assets/img/welcome/docs-dark.svg"
-                                        alt="Laravel documentation screenshot"
-                                        class="hidden aspect-video h-full w-full flex-1 rounded-[10px] object-top object-cover drop-shadow-[0px_4px_34px_rgba(0,0,0,0.25)] dark:block"
-                                    />
-                                    <div
-                                        class="absolute -bottom-16 -left-16 h-40 w-[calc(100%+8rem)] bg-gradient-to-b from-transparent via-white to-white dark:via-zinc-900 dark:to-zinc-900"
-                                    ></div>
-                                </div>
+    $heroSlidesRaw = Setting::get('home_hero_slides', $heroDefault);
+    if (! is_array($heroSlidesRaw) || empty($heroSlidesRaw)) $heroSlidesRaw = $heroDefault;
 
-                                <div class="relative flex items-center gap-6 lg:items-end">
-                                    <div id="docs-card-content" class="flex items-start gap-6 lg:flex-col">
-                                        <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                            <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="#FF2D20" d="M23 4a1 1 0 0 0-1.447-.894L12.224 7.77a.5.5 0 0 1-.448 0L2.447 3.106A1 1 0 0 0 1 4v13.382a1.99 1.99 0 0 0 1.105 1.79l9.448 4.728c.14.065.293.1.447.1.154-.005.306-.04.447-.105l9.453-4.724a1.99 1.99 0 0 0 1.1-1.789V4ZM3 6.023a.25.25 0 0 1 .362-.223l7.5 3.75a.251.251 0 0 1 .138.223v11.2a.25.25 0 0 1-.362.224l-7.5-3.75a.25.25 0 0 1-.138-.22V6.023Zm18 11.2a.25.25 0 0 1-.138.224l-7.5 3.75a.249.249 0 0 1-.329-.099.249.249 0 0 1-.033-.12V9.772a.251.251 0 0 1 .138-.224l7.5-3.75a.25.25 0 0 1 .362.224v11.2Z"/><path fill="#FF2D20" d="m3.55 1.893 8 4.048a1.008 1.008 0 0 0 .9 0l8-4.048a1 1 0 0 0-.9-1.785l-7.322 3.706a.506.506 0 0 1-.452 0L4.454.108a1 1 0 0 0-.9 1.785H3.55Z"/></svg>
-                                        </div>
+    $heroSlides = [];
+    foreach (array_values($heroSlidesRaw) as $hi => $hs) {
+        $img = $hs['image'] ?? '';
+        if (! $img) {
+            $img = $heroDefaultImgs[$hi] ?? $heroDefaultImgs[0];
+        } elseif (! str_starts_with($img, '/') && ! str_starts_with($img, 'http')) {
+            $img = Storage::disk('public')->url($img);
+        }
+        $heroSlides[] = ['image' => $img];
 
-                                        <div class="pt-3 sm:pt-5 lg:pt-0">
-                                            <h2 class="text-xl font-semibold text-black dark:text-white">Documentation</h2>
+        if (filled($hs['title_ar'] ?? null)) $i18nOverrides['ar']["hero_title_{$hi}"] = $hs['title_ar'];
+        if (filled($hs['title_en'] ?? null)) $i18nOverrides['en']["hero_title_{$hi}"] = $hs['title_en'];
+        if (filled($hs['subtitle_ar'] ?? null)) $i18nOverrides['ar']["hero_subtitle_{$hi}"] = $hs['subtitle_ar'];
+        if (filled($hs['subtitle_en'] ?? null)) $i18nOverrides['en']["hero_subtitle_{$hi}"] = $hs['subtitle_en'];
 
-                                            <p class="mt-4 text-sm/relaxed">
-                                                Laravel has wonderful documentation covering every aspect of the framework. Whether you are a newcomer or have prior experience with Laravel, we recommend reading our documentation from beginning to end.
-                                            </p>
-                                        </div>
-                                    </div>
+        // النص الظاهر افتراضياً قبل تشغيل الترجمة (عربي)
+        $heroSlides[$hi]['title'] = $hs['title_ar'] ?? '';
+        $heroSlides[$hi]['subtitle'] = $hs['subtitle_ar'] ?? '';
+    }
+@endphp
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Sawt</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/assets/images/icon.png"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">-->
 
-                                    <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
-                                </div>
-                            </a>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+      integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+      integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css"
+      integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+  </head>
 
-                            <a
-                                href="https://laracasts.com"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                            >
-                                <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                    <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g fill="#FF2D20"><path d="M24 8.25a.5.5 0 0 0-.5-.5H.5a.5.5 0 0 0-.5.5v12a2.5 2.5 0 0 0 2.5 2.5h19a2.5 2.5 0 0 0 2.5-2.5v-12Zm-7.765 5.868a1.221 1.221 0 0 1 0 2.264l-6.626 2.776A1.153 1.153 0 0 1 8 18.123v-5.746a1.151 1.151 0 0 1 1.609-1.035l6.626 2.776ZM19.564 1.677a.25.25 0 0 0-.177-.427H15.6a.106.106 0 0 0-.072.03l-4.54 4.543a.25.25 0 0 0 .177.427h3.783c.027 0 .054-.01.073-.03l4.543-4.543ZM22.071 1.318a.047.047 0 0 0-.045.013l-4.492 4.492a.249.249 0 0 0 .038.385.25.25 0 0 0 .14.042h5.784a.5.5 0 0 0 .5-.5v-2a2.5 2.5 0 0 0-1.925-2.432ZM13.014 1.677a.25.25 0 0 0-.178-.427H9.101a.106.106 0 0 0-.073.03l-4.54 4.543a.25.25 0 0 0 .177.427H8.4a.106.106 0 0 0 .073-.03l4.54-4.543ZM6.513 1.677a.25.25 0 0 0-.177-.427H2.5A2.5 2.5 0 0 0 0 3.75v2a.5.5 0 0 0 .5.5h1.4a.106.106 0 0 0 .073-.03l4.54-4.543Z"/></g></svg>
-                                </div>
+  <body>
+    <header>
+      <div class="main-header-wrapper py-1">
+        <div
+          class="container nav-face py-2 text-white border-bottom border-light border-opacity-25"
+        >
+          <div
+            class="container d-flex justify-content-between align-items-center"
+          >
+            <div class="social-links">
+              <span
+                class="font-18 ms-2"
+                data-i18n="follow_us"
+                style="
+                  color: rgba(127, 127, 127, 1);
+                  font-weight: bold;
+                  font-size: 16px;
+                "
+                >وسائل التواصل الاجتماعي</span
+              >
+              <a href="#" class="text-white ms-2">
+                <i class="fab fa-linkedin-in font-18"></i>
+              </a>
 
-                                <div class="pt-3 sm:pt-5">
-                                    <h2 class="text-xl font-semibold text-black dark:text-white">Laracasts</h2>
+              <a href="#" class="text-white ms-2"
+                ><i class="fab fa-facebook-f font-18"></i
+              ></a>
 
-                                    <p class="mt-4 text-sm/relaxed">
-                                        Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
-                                    </p>
-                                </div>
+              <a href="#" class="text-white ms-2"
+                ><i class="fa-solid fa-paper-plane"></i
+              ></a>
 
-                                <svg class="size-6 shrink-0 self-center stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
-                            </a>
+              <a href="#" class="text-white ms-2"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.3em"
+                  height="1.3em"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    fill="rgba(76, 92, 55, 1)"
+                    d="M19.57 4.488a.75.75 0 0 0-1.14-.976l-5.368 6.274l-5.224-5.938a1.8 1.8 0 0 0-1.357-.598H5.007c-.68 0-1.264.352-1.56.885a1.55 1.55 0 0 0 .204 1.795l6.286 7.147l-5.507 6.435a.75.75 0 1 0 1.14.976l5.368-6.274l5.224 5.938c.345.392.85.598 1.357.598h1.474c.681 0 1.264-.352 1.56-.885a1.55 1.55 0 0 0-.203-1.795l-6.287-7.146z"
+                  />
+                </svg>
+              </a>
 
-                            <a
-                                href="https://laravel-news.com"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                            >
-                                <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                    <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g fill="#FF2D20"><path d="M8.75 4.5H5.5c-.69 0-1.25.56-1.25 1.25v4.75c0 .69.56 1.25 1.25 1.25h3.25c.69 0 1.25-.56 1.25-1.25V5.75c0-.69-.56-1.25-1.25-1.25Z"/><path d="M24 10a3 3 0 0 0-3-3h-2V2.5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2V20a3.5 3.5 0 0 0 3.5 3.5h17A3.5 3.5 0 0 0 24 20V10ZM3.5 21.5A1.5 1.5 0 0 1 2 20V3a.5.5 0 0 1 .5-.5h14a.5.5 0 0 1 .5.5v17c0 .295.037.588.11.874a.5.5 0 0 1-.484.625L3.5 21.5ZM22 20a1.5 1.5 0 1 1-3 0V9.5a.5.5 0 0 1 .5-.5H21a1 1 0 0 1 1 1v10Z"/><path d="M12.751 6.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 7.3v-.5a.75.75 0 0 1 .751-.753ZM12.751 10.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 11.3v-.5a.75.75 0 0 1 .751-.753ZM4.751 14.047h10a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-10A.75.75 0 0 1 4 15.3v-.5a.75.75 0 0 1 .751-.753ZM4.75 18.047h7.5a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-7.5A.75.75 0 0 1 4 19.3v-.5a.75.75 0 0 1 .75-.753Z"/></g></svg>
-                                </div>
-
-                                <div class="pt-3 sm:pt-5">
-                                    <h2 class="text-xl font-semibold text-black dark:text-white">Laravel News</h2>
-
-                                    <p class="mt-4 text-sm/relaxed">
-                                        Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials.
-                                    </p>
-                                </div>
-
-                                <svg class="size-6 shrink-0 self-center stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
-                            </a>
-
-                            <div class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
-                                <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                    <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <g fill="#FF2D20">
-                                            <path
-                                                d="M16.597 12.635a.247.247 0 0 0-.08-.237 2.234 2.234 0 0 1-.769-1.68c.001-.195.03-.39.084-.578a.25.25 0 0 0-.09-.267 8.8 8.8 0 0 0-4.826-1.66.25.25 0 0 0-.268.181 2.5 2.5 0 0 1-2.4 1.824.045.045 0 0 0-.045.037 12.255 12.255 0 0 0-.093 3.86.251.251 0 0 0 .208.214c2.22.366 4.367 1.08 6.362 2.118a.252.252 0 0 0 .32-.079 10.09 10.09 0 0 0 1.597-3.733ZM13.616 17.968a.25.25 0 0 0-.063-.407A19.697 19.697 0 0 0 8.91 15.98a.25.25 0 0 0-.287.325c.151.455.334.898.548 1.328.437.827.981 1.594 1.619 2.28a.249.249 0 0 0 .32.044 29.13 29.13 0 0 0 2.506-1.99ZM6.303 14.105a.25.25 0 0 0 .265-.274 13.048 13.048 0 0 1 .205-4.045.062.062 0 0 0-.022-.07 2.5 2.5 0 0 1-.777-.982.25.25 0 0 0-.271-.149 11 11 0 0 0-5.6 2.815.255.255 0 0 0-.075.163c-.008.135-.02.27-.02.406.002.8.084 1.598.246 2.381a.25.25 0 0 0 .303.193 19.924 19.924 0 0 1 5.746-.438ZM9.228 20.914a.25.25 0 0 0 .1-.393 11.53 11.53 0 0 1-1.5-2.22 12.238 12.238 0 0 1-.91-2.465.248.248 0 0 0-.22-.187 18.876 18.876 0 0 0-5.69.33.249.249 0 0 0-.179.336c.838 2.142 2.272 4 4.132 5.353a.254.254 0 0 0 .15.048c1.41-.01 2.807-.282 4.117-.802ZM18.93 12.957l-.005-.008a.25.25 0 0 0-.268-.082 2.21 2.21 0 0 1-.41.081.25.25 0 0 0-.217.2c-.582 2.66-2.127 5.35-5.75 7.843a.248.248 0 0 0-.09.299.25.25 0 0 0 .065.091 28.703 28.703 0 0 0 2.662 2.12.246.246 0 0 0 .209.037c2.579-.701 4.85-2.242 6.456-4.378a.25.25 0 0 0 .048-.189 13.51 13.51 0 0 0-2.7-6.014ZM5.702 7.058a.254.254 0 0 0 .2-.165A2.488 2.488 0 0 1 7.98 5.245a.093.093 0 0 0 .078-.062 19.734 19.734 0 0 1 3.055-4.74.25.25 0 0 0-.21-.41 12.009 12.009 0 0 0-10.4 8.558.25.25 0 0 0 .373.281 12.912 12.912 0 0 1 4.826-1.814ZM10.773 22.052a.25.25 0 0 0-.28-.046c-.758.356-1.55.635-2.365.833a.25.25 0 0 0-.022.48c1.252.43 2.568.65 3.893.65.1 0 .2 0 .3-.008a.25.25 0 0 0 .147-.444c-.526-.424-1.1-.917-1.673-1.465ZM18.744 8.436a.249.249 0 0 0 .15.228 2.246 2.246 0 0 1 1.352 2.054c0 .337-.08.67-.23.972a.25.25 0 0 0 .042.28l.007.009a15.016 15.016 0 0 1 2.52 4.6.25.25 0 0 0 .37.132.25.25 0 0 0 .096-.114c.623-1.464.944-3.039.945-4.63a12.005 12.005 0 0 0-5.78-10.258.25.25 0 0 0-.373.274c.547 2.109.85 4.274.901 6.453ZM9.61 5.38a.25.25 0 0 0 .08.31c.34.24.616.561.8.935a.25.25 0 0 0 .3.127.631.631 0 0 1 .206-.034c2.054.078 4.036.772 5.69 1.991a.251.251 0 0 0 .267.024c.046-.024.093-.047.141-.067a.25.25 0 0 0 .151-.23A29.98 29.98 0 0 0 15.957.764a.25.25 0 0 0-.16-.164 11.924 11.924 0 0 0-2.21-.518.252.252 0 0 0-.215.076A22.456 22.456 0 0 0 9.61 5.38Z"
-                                            />
-                                        </g>
-                                    </svg>
-                                </div>
-
-                                <div class="pt-3 sm:pt-5">
-                                    <h2 class="text-xl font-semibold text-black dark:text-white">Vibrant Ecosystem</h2>
-
-                                    <p class="mt-4 text-sm/relaxed">
-                                        Laravel's robust library of first-party tools and libraries, such as <a href="https://forge.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white dark:focus-visible:ring-[#FF2D20]">Forge</a>, <a href="https://vapor.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Vapor</a>, <a href="https://nova.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Nova</a>, <a href="https://envoyer.io" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Envoyer</a>, and <a href="https://herd.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Herd</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href="https://laravel.com/docs/billing" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Cashier</a>, <a href="https://laravel.com/docs/dusk" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Dusk</a>, <a href="https://laravel.com/docs/broadcasting" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Echo</a>, <a href="https://laravel.com/docs/horizon" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Horizon</a>, <a href="https://laravel.com/docs/sanctum" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Sanctum</a>, <a href="https://laravel.com/docs/telescope" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Telescope</a>, and more.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-
-                    <footer class="py-16 text-center text-sm text-black dark:text-white/70">
-                        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
-                    </footer>
-                </div>
+              <a href="#" class="text-white ms-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  class="icon"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    fill="rgba(76, 92, 55, 1)"
+                    d="M9.367 2.25c-1.092 0-1.958 0-2.655.057c-.714.058-1.317.18-1.868.46a4.75 4.75 0 0 0-2.076 2.077c-.281.55-.403 1.154-.461 1.868c-.057.697-.057 1.563-.057 2.655v5.266c0 1.092 0 1.958.057 2.655c.058.714.18 1.317.46 1.869a4.75 4.75 0 0 0 2.077 2.075c.55.281 1.154.403 1.868.461c.697.057 1.563.057 2.655.057h5.266c1.092 0 1.958 0 2.655-.057c.714-.058 1.317-.18 1.869-.46a4.75 4.75 0 0 0 2.075-2.076c.281-.552.403-1.155.461-1.869c.057-.697.057-1.563.057-2.655V9.367c0-1.092 0-1.958-.057-2.655c-.058-.714-.18-1.317-.46-1.868a4.75 4.75 0 0 0-2.076-2.076c-.552-.281-1.155-.403-1.869-.461c-.697-.057-1.563-.057-2.655-.057zM16.25 6.5a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 0 1.5H17a.75.75 0 0 1-.75-.75m-6.207 1.728a4.25 4.25 0 1 1 3.914 7.544a4.25 4.25 0 0 1-3.914-7.544"
+                  />
+                </svg>
+              </a>
             </div>
+
+            <div
+              class="contact-info small d-flex justify-content-center align-items-center"
+            >
+              <div class="register-btn">
+                <a href="/register" data-i18n="register_account"
+                  >أنشئ حساب</a
+                >
+              </div>
+              <div class="sign-in-btn">
+                <a href="/login" data-i18n="sign_in">تسجيل الدخول</a>
+              </div>
+            </div>
+          </div>
         </div>
-    </body>
+
+        <nav class="navbar navbar-expand-lg py-1">
+          <div class="container bg-white shadow-sm py-1">
+            <a class="navbar-brand" href="#" style="margin-right: 0 !important">
+              <img src="{{ $logoUrl }}" alt="Sawt Logo" height="60" />
+            </a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#mainNav"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div
+              class="collapse navbar-collapse flex-column flex-lg-row align-items-start align-items-lg-center"
+              id="mainNav"
+            >
+              <ul
+                class="navbar-nav mb-2 mb-lg-0 fw-bold"
+                style="text-align: start"
+              >
+                <li class="nav-item ms-lg-3">
+                  <a
+                    class="nav-link active font-16"
+                    href="#"
+                    data-i18n="nav_home"
+                    >الرئيسية</a
+                  >
+                </li>
+                <li class="nav-item ms-lg-3">
+                  <a
+                    class="nav-link font-16"
+                    href="/about.html"
+                    target="_self"
+                    data-i18n="nav_about"
+                    >من نحن</a
+                  >
+                </li>
+                <li class="nav-item ms-lg-3">
+                  <a
+                    class="nav-link font-16"
+                    href="/content.html"
+                    data-i18n="nav_content"
+                    >محتوانا</a
+                  >
+                </li>
+                <li class="nav-item ms-lg-3">
+                  <a class="nav-link font-16" href="#" data-i18n="nav_team"
+                    >الفريق</a
+                  >
+                </li>
+                <li class="nav-item ms-lg-3">
+                  <a class="nav-link font-16" href="#" data-i18n="nav_creators"
+                    >صناع المحتوى</a
+                  >
+                </li>
+                <div class="v-divider d-none d-lg-block mx-3"></div>
+                <li class="nav-item ms-lg-3">
+                  <a
+                    class="nav-link nav-link-back font-16"
+                    href="#"
+                    style="color: rgba(76, 92, 55, 1) !important"
+                    data-i18n="nav_incubator"
+                    >حاضنة صوت</a
+                  >
+                </li>
+                <li class="nav-item ms-lg-3">
+                  <a
+                    class="nav-link nav-link-back font-16 font-color-green"
+                    href="#"
+                    style="color: rgba(76, 92, 55, 1) !important"
+                    data-i18n="nav_media"
+                    >صوت ميديا</a
+                  >
+                </li>
+              </ul>
+
+              <div class="d-flex gap-2 nav-search-div">
+                <div class="position-relative nav-search-div">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    class="fa fa-search position-absolute top-50 end-0 translate-middle-y me-3"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      fill="none"
+                      stroke="rgba(145, 145, 145, 1)"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="m17 17l4 4m-2-10a8 8 0 1 0-16 0a8 8 0 0 0 16 0"
+                    />
+                  </svg>
+
+                  <input
+                    type="text"
+                    class="form-control custom-placeholder py-2 search-input"
+                    placeholder="ابحث هنا..."
+                    data-i18n-placeholder="search_placeholder"
+                  />
+                </div>
+              </div>
+
+              <div class="contact-info-nav small d-flex">
+                <div class="register-btn">
+                  <a href="/register" data-i18n="register_account"
+                    >أنشئ حساب</a
+                  >
+                </div>
+                <div class="sign-in-btn">
+                  <a href="/login" data-i18n="sign_in">تسجيل الدخول</a>
+                </div>
+              </div>
+              <div class="searchDiv d-flex align-items-center gap-2">
+                <button class="btn rounded-nav nav-bttn">
+                  <i class="ri-moon-line"></i>
+                </button>
+
+                <button class="btn rounded-nav language-btn nav-bttn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="2em"
+                    height="3em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <g fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <path
+                        stroke-linejoin="round"
+                        d="M8 12c0 6 4 10 4 10s4-4 4-10s-4-10-4-10s-4 4-4 10Z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 15H3m18-6H3"
+                      />
+                    </g>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            @foreach ($heroSlides as $hi => $hs)
+            <div>
+              <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $hi }}" @if($hi === 0) class="active" @endif></button>
+            </div>
+            @endforeach
+          </div>
+
+          <div class="carousel-inner">
+            @foreach ($heroSlides as $hi => $hs)
+            <div class="carousel-item position-relative @if($hi === 0) active @endif">
+              <div class="overlay"></div>
+              <img src="{{ $hs['image'] }}" class="d-block w-100 carousel-img" alt="منصة صوت" />
+              <div class="carousel-caption-custom text-center">
+                <div class="container">
+                  <div class="d-md-flex justify-content-center gap-1 mb-4 align-items-center">
+                    <i class="fa-solid fa-star yellow-stars"></i>
+                    <i class="fa-solid fa-star yellow-stars"></i>
+                    <i class="fa-solid fa-star yellow-stars"></i>
+                    <i class="fa-solid fa-star yellow-stars"></i>
+                    <i class="fa-regular fa-star gray-star"></i>
+                    <p class="text-white hero-subtitle mb-0" data-i18n="hero_trust">ثقة آلاف المتابعين في منصة صوت غزة بصدق وتأثير</p>
+                  </div>
+                  <h1 class="fw-bold text-white font-60" data-i18n="hero_title_{{ $hi }}">{{ $hs['title'] }}</h1>
+                  <p class="mb-4 text-white font-24" data-i18n="hero_subtitle_{{ $hi }}">{{ $hs['subtitle'] }}</p>
+                  <div class="d-flex justify-content-center gap-3 heroOptionsBtn">
+                    <button class="btn rounded-pill px-4 py-2 text-white fw-bold hero-btn-watch" style="background-color: rgba(76, 92, 55, 1)">
+                      <span class="ms-2" data-i18n="hero_btn_watch">ادعم صوت</span>
+                      <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                    <button class="btn rounded-pill px-4 py-2 text-white fw-bold hero-btn-support" data-i18n="hero_btn_collab">تعاون معنا</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endforeach
+          </div>
+
+          <button
+            class="carousel-control-prev hero-arrow"
+            type="button"
+            data-bs-target="#heroCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="hero-arrow-icon" aria-hidden="true">
+              <i class="fa-solid fa-chevron-left"></i>
+            </span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next hero-arrow"
+            type="button"
+            data-bs-target="#heroCarousel"
+            data-bs-slide="next"
+          >
+            <span class="hero-arrow-icon" aria-hidden="true">
+              <i class="fa-solid fa-chevron-right"></i>
+            </span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="box-element container front-face text-white rounded-4 py-4">
+          <div
+            class="row d-flex justify-content-center align-items-center text-center g-0"
+          >
+            <div class="col count">
+              <i>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="3em"
+                  height="3em"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <g
+                    fill="none"
+                    stroke="rgba(255, 116, 32, 1)"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  >
+                    <path
+                      d="M16.5 20v-2.03c0-1.242-.56-2.46-1.69-2.975C13.431 14.366 11.778 14 10 14s-3.431.366-4.81.995c-1.13.515-1.69 1.733-1.69 2.975V20m17 .001v-2.03c0-1.242-.56-2.46-1.69-2.975q-.39-.18-.81-.328"
+                    />
+                    <circle cx="10" cy="7.5" r="3.5" />
+                    <path d="M15 4.145a3.502 3.502 0 0 1 0 6.71" />
+                  </g>
+                </svg>
+              </i>
+
+              <h3 class="counter font-mob-22">{{ Setting::get('home_stat_team', '20+') }}</h3>
+              <p class="mb-0" data-i18n="stat_team">أعضاء الفريق</p>
+            </div>
+            <div class="col count">
+              <!-- <i class="fa-solid fa-book-open"></i> -->
+              <i>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="3em"
+                  height="3em"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M5.333 3c2.46-.003 4.836.887 6.667 2.5V21a10.07 10.07 0 0 0-6.667-2.5c-1.562 0-2.343 0-2.688-.22a1.16 1.16 0 0 1-.424-.425C2 17.51 2 16.895 2 15.663v-9.26c0-1.428 0-2.141.549-2.72c.548-.579 1.11-.609 2.234-.668Q5.056 3 5.333 3m13.334 0A10.07 10.07 0 0 0 12 5.5V21a10.07 10.07 0 0 1 6.667-2.5c1.562 0 2.343 0 2.688-.22c.207-.133.291-.218.424-.425c.221-.345.221-.96.221-2.192v-9.26c0-1.428 0-2.141-.549-2.72s-1.11-.609-2.234-.668Q18.944 3 18.667 3"
+                  />
+                </svg>
+              </i>
+              <h3 class="font-mob-22 counter">{{ Setting::get('home_stat_stories', '100+') }}</h3>
+              <p class="mb-0" data-i18n="stat_stories">قصة</p>
+            </div>
+            <div class="col count">
+              <i>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="3em"
+                  height="3em"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <g fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                      d="M21.544 11.045c.304.426.456.64.456.955c0 .316-.152.529-.456.955C20.178 14.871 16.689 19 12 19c-4.69 0-8.178-4.13-9.544-6.045C2.152 12.529 2 12.315 2 12c0-.316.152-.529.456-.955C3.822 9.129 7.311 5 12 5c4.69 0 8.178 4.13 9.544 6.045Z"
+                    />
+                    <path d="M15 12a3 3 0 1 0-6 0a3 3 0 0 0 6 0Z" />
+                  </g>
+                </svg>
+              </i>
+
+              <h3 class="font-mob-22">
+                {{ Setting::get('home_stat_views', '+30') }} <span data-i18n="one_thousand"></span>
+              </h3>
+              <p class="mb-0" data-i18n="stat_views">مشاهدة</p>
+            </div>
+            <div class="col count">
+              <i>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="3em"
+                  height="3em"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      d="M17.7 21.335c-1.172.165-2.7.165-4.75.165h-1.9c-4.03 0-6.046 0-7.298-1.252S2.5 16.98 2.5 12.95v-1.9c0-4.03 0-6.046 1.252-7.298S7.02 2.5 11.05 2.5h1.9c4.03 0 6.046 0 7.298 1.252S21.5 7.019 21.5 11.05v1.9c0 1.208 0 2.235-.034 3.115c-.027.705-.04 1.057-.307 1.19c-.267.13-.566-.08-1.163-.503L18.65 15.8"
+                    />
+                    <path
+                      d="M14.945 12.395c-.176.627-1.012 1.07-2.682 1.955c-1.615.856-2.422 1.285-3.073 1.113a1.66 1.66 0 0 1-.712-.393C8 14.62 8 13.746 8 12s0-2.62.478-3.07c.198-.186.443-.321.712-.392c.65-.173 1.458.256 3.073 1.112c1.67.886 2.506 1.329 2.682 1.955c.073.259.073.531 0 .79Z"
+                    />
+                  </g>
+                </svg>
+              </i>
+
+              <h3 class="counter font-mob-22">{{ Setting::get('home_stat_videos', '30+') }}</h3>
+              <p class="mb-0" data-i18n="stat_videos">فيديو</p>
+            </div>
+            <div class="col count">
+              <i>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="3em"
+                  height="3em"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  >
+                    <path
+                      d="M7.5 19.5c0-.966.329-1.942 1.13-2.48A6.04 6.04 0 0 1 12 16c1.248 0 2.407.376 3.37 1.02c.802.538 1.13 1.514 1.13 2.48"
+                    />
+                    <circle cx="12" cy="11" r="2.5" />
+                    <path
+                      d="M17.5 11c1.11 0 2.142.377 2.997 1.022c.726.548 1.003 1.473 1.003 2.382v.096"
+                    />
+                    <circle cx="17.5" cy="6.5" r="2" />
+                    <path
+                      d="M6.5 11c-1.11 0-2.142.377-2.997 1.022c-.726.548-1.003 1.473-1.003 2.382v.096"
+                    />
+                    <circle cx="6.5" cy="6.5" r="2" />
+                  </g>
+                </svg>
+              </i>
+              <h3 class="font-mob-22">
+                {{ Setting::get('home_stat_followers', '+10') }} <span data-i18n="one_thousand"></span>
+              </h3>
+
+              <p class="mb-0" data-i18n="stat_followers">متابع</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="my-5">
+      <section class="sout-section py-5">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 70px">
+            <h1 class="fw-bold who-us font-42" data-i18n="who_we_are">
+              من نحن
+            </h1>
+            <p
+              class="mt-2 font-24"
+              style="color: rgba(72, 72, 72, 1)"
+              data-i18n="welcome_lead"
+            >
+              في صوت، كل فكرة بتلاقي مكانها!
+            </p>
+          </div>
+          <div class="row">
+            <div
+              class="col-lg-6 position-relative mt-5"
+              style="text-align: start"
+            >
+              <h3
+                class="main-title text-bold fw-bold"
+                data-i18n="welcome_title"
+              >
+                كل فكرة إلها صوت... وصوت بيجمعهم
+              </h3>
+
+              <p
+                class="description text-secondary font-18 lh-lg"
+                style="color: rgba(90, 90, 90, 1) !important"
+                data-i18n="welcome_desc"
+              >
+                استكشف محتوى متنوع، عبّر عن نفسك، وشارك صوتك مع العالم، من خلال
+                تجربة تفاعلية مليئة بالإبداع والإلهام، رح تقدر تطوّر أفكارك
+                وتوصل لجمهور أوسع، وصوت بيكون معك خطوة بخطوة لتخلي صوتك يوصل
+                أبعد.
+              </p>
+
+              <div class="features-grid row gap-2 my-4">
+                <div class="col-6 feature-item d-flex align-items-center">
+                  <div class="icon-box">
+                    <i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          d="M21 6.5a3 3 0 1 1-6 0a3 3 0 0 1 6 0ZM9 12a3 3 0 1 1-6 0a3 3 0 0 1 6 0Zm12 5.5a3 3 0 1 1-6 0a3 3 0 0 1 6 0ZM8.729 10.75l6.5-3m-6.5 5.5l6.5 3"
+                        />
+                      </svg>
+                    </i>
+                  </div>
+
+                  <span
+                    class="me-md-1 ms-2 text-bold font-18 fw-bold"
+                    data-i18n="feature_publish"
+                    >خدمات تُسهّل النشر.</span
+                  >
+                </div>
+                <div class="col feature-item d-flex align-items-center">
+                  <div class="icon-box">
+                    <i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 14 14"
+                      >
+                        <path d="M0 0h14v14H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9.568 1.255a.466.466 0 0 1 .864 0l.587 1.433l1.593.14c.416.036.578.56.255.824l-.947.778a.47.47 0 0 0-.16.46l.314 1.452a.466.466 0 0 1-.715.486L10 5.92l-1.359.91a.466.466 0 0 1-.715-.487L8.24 4.89a.47.47 0 0 0-.16-.459l-.947-.778a.466.466 0 0 1 .255-.825l1.593-.14zM.983 6.37l.692-.043a8 8 0 0 1 2.448.227l1.16.292a1.32 1.32 0 0 1 .99 1.416v0c-.078.765-.79 1.3-1.546 1.166L3.622 9.23l3.897.699l4.037-.958a1.24 1.24 0 0 1 1.482.887v0c.16.603-.153 1.23-.73 1.465l-3.23 1.311a6.93 6.93 0 0 1-4.918.113L.813 11.562"
+                        />
+                      </svg>
+                    </i>
+                  </div>
+
+                  <span
+                    class="me-md-1 ms-2 text-bold font-18 fw-bold"
+                    data-i18n="feature_empower_creativity"
+                    >مساحة لتمكين الإبداع</span
+                  >
+                </div>
+
+                <div class="col-6 feature-item d-flex align-items-center">
+                  <div class="icon-box">
+                    <i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                        >
+                          <path
+                            d="M16.5 20v-2.03c0-1.242-.56-2.46-1.69-2.975C13.431 14.366 11.778 14 10 14s-3.431.366-4.81.995c-1.13.515-1.69 1.733-1.69 2.975V20m17 .001v-2.03c0-1.242-.56-2.46-1.69-2.975q-.39-.18-.81-.328"
+                          />
+                          <circle cx="10" cy="7.5" r="3.5" />
+                          <path d="M15 4.145a3.502 3.502 0 0 1 0 6.71" />
+                        </g>
+                      </svg>
+                    </i>
+                  </div>
+
+                  <span
+                    class="me-md-1 ms-2 text-bold font-18 fw-bold"
+                    data-i18n="feature_expert_team"
+                    >فريق خبراء يدعمك
+                  </span>
+                </div>
+                <div class="col feature-item d-flex align-items-center">
+                  <div class="icon-box">
+                    <i
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <g fill="none" stroke="currentColor" stroke-width="1.5">
+                          <path d="M17 7v4a5 5 0 0 1-10 0V7a5 5 0 0 1 10 0Z" />
+                          <path
+                            stroke-linecap="round"
+                            d="M17 7h-3m3 4h-3m6 0a8 8 0 0 1-8 8m0 0a8 8 0 0 1-8-8m8 8v3m0 0h3m-3 0H9"
+                          />
+                        </g></svg
+                    ></i>
+                  </div>
+
+                  <span
+                    class="me-md-1 ms-2 text-bold font-18 fw-bold"
+                    data-i18n="feature_express_voice"
+                  >
+                    محتوى يعبّر عن صوتك
+                  </span>
+                </div>
+              </div>
+
+              <a
+                href="#"
+                class="btn btn-dark-green rounded-pill px-4 py-2 font-16 text-bold fw-bold"
+                style="border-radius: 18px !important"
+              >
+                <span class="" data-i18n="discover_more">اكتشف المزيد</span>
+                <i
+                  class="fa-solid fa-angle-left me-2 font-14 text-bold arrow"
+                ></i>
+              </a>
+            </div>
+
+            <div class="col-lg-6 mt-2">
+              <img class="image-swat" src="{{ $heroUrl }}" alt="" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="latest-news py-5 position-relative">
+        <div class="bg-icon bg-icon-right">
+          <img src="/assets/images/fa-solid_microphone-alt.png" alt="" />
+        </div>
+        <div class="bg-icon bg-icon-left">
+          <img src="/assets/images/fa-solid_microphone-alt (1).png" alt="" />
+        </div>
+        <div class="container">
+          <div class="text-center mb-2">
+            <h2 class="fw-bold who-us font-42">
+              <span data-i18n="news_title_pre">آخر</span>
+              <span data-i18n="news_title_highlight">أخبارنا</span>
+            </h2>
+            <p
+              class="news-subtitle font-24"
+              style="
+                color: rgba(90, 90, 90, 1);
+                margin: 20px 0px 35px 0px !important;
+              "
+              data-i18n="news_subtitle"
+            >
+              شاهد أحدث القصص والفيديوهات من منصة صوت
+            </p>
+          </div>
+          <div class="owl-carousel creators-carousel">
+            <div class="item">
+              <div class="card h-100 news-card">
+                <img
+                  src="/assets/images/Rectangle 701.png"
+                  class="card-img-top"
+                  alt="صانع المحتوى"
+                />
+                <div class="card-body">
+                  <h5 class="card-title fw-bold" data-i18n="news_card1_title">
+                    صانع المحتوى في غزة
+                  </h5>
+                  <p
+                    class="card-text font-md-18"
+                    style="font-weight: 500; color: rgba(109, 109, 109, 1)"
+                    data-i18n="news_desc"
+                  >
+                    نشارككم آخر تحديثات صانع المحتوى في غزة، حيث نعمل على إبراز
+                    قصص المبدعين وإيصال صوتهم.
+                  </p>
+                </div>
+                <div
+                  class="card-footer bg-white border-0 d-flex font-16 text-dark pb-3 fw-bold"
+                >
+                  <span>
+                    <i style="color: rgba(109, 109, 109, 1)">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M16 2v4M8 2v4m5-2h-2C7.229 4 5.343 4 4.172 5.172S3 8.229 3 12v2c0 3.771 0 5.657 1.172 6.828S7.229 22 11 22h2c3.771 0 5.657 0 6.828-1.172S21 17.771 21 14v-2c0-3.771 0-5.657-1.172-6.828S16.771 4 13 4M3 10h18m-10 4h5m-8 0h.009M13 18H8m8 0h-.009"
+                        />
+                      </svg>
+                    </i>
+
+                    <span
+                      data-i18n="news_date"
+                      style="color: rgba(109, 109, 109, 1)"
+                      >5 مارس 2026</span
+                    >
+                  </span>
+                  <span class="readmore">
+                    <a href="#">
+                      <span
+                        style="color: rgba(76, 92, 55, 1)"
+                        data-i18n="read_more"
+                        >اقرأ المزيد</span
+                      >
+                      <i
+                        class="fa-solid fa-angle-left me-2 ms-1 arrow"
+                        style="color: rgba(76, 92, 55, 1)"
+                      ></i>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="card h-100 news-card">
+                <img
+                  src="/assets/images/Rectangle 703.png"
+                  class="card-img-top"
+                  alt="الام في غزة "
+                />
+                <div class="card-body">
+                  <h5 class="card-title fw-bold" data-i18n="news_card2_title">
+                    الام في غزة
+                  </h5>
+                  <p
+                    class="card-text font-md-18"
+                    style="font-weight: 500; color: rgba(109, 109, 109, 1)"
+                    data-i18n="news_desc"
+                  >
+                    نشارككم آخر تحديثات صانع المحتوى في غزة، حيث نعمل على إبراز
+                    قصص المبدعين وإيصال صوتهم.
+                  </p>
+                </div>
+                <div
+                  class="card-footer bg-white border-0 d-flex font-16 text-dark pb-3 fw-bold"
+                >
+                  <span>
+                    <i style="color: rgba(109, 109, 109, 1)">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M16 2v4M8 2v4m5-2h-2C7.229 4 5.343 4 4.172 5.172S3 8.229 3 12v2c0 3.771 0 5.657 1.172 6.828S7.229 22 11 22h2c3.771 0 5.657 0 6.828-1.172S21 17.771 21 14v-2c0-3.771 0-5.657-1.172-6.828S16.771 4 13 4M3 10h18m-10 4h5m-8 0h.009M13 18H8m8 0h-.009"
+                        />
+                      </svg>
+                    </i>
+
+                    <span
+                      data-i18n="news_date"
+                      style="color: rgba(109, 109, 109, 1)"
+                      >5 مارس 2026</span
+                    >
+                  </span>
+                  <span class="readmore">
+                    <a href="#">
+                      <span
+                        style="color: rgba(76, 92, 55, 1)"
+                        data-i18n="read_more"
+                        >اقرأ المزيد</span
+                      >
+                      <i
+                        class="fa-solid fa-angle-left me-2 ms-1 arrow"
+                        style="color: rgba(76, 92, 55, 1)"
+                      ></i>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="card h-100 news-card">
+                <img
+                  src="/assets/images/Rectangle 705.png"
+                  class="card-img-top"
+                  alt="صانع المحتوى"
+                />
+                <div class="card-body">
+                  <h5 class="card-title fw-bold" data-i18n="news_card1_title">
+                    صانع المحتوى في غزة
+                  </h5>
+                  <p
+                    class="card-text font-md-18"
+                    style="font-weight: 500; color: rgba(109, 109, 109, 1)"
+                    data-i18n="news_desc"
+                  >
+                    نشارككم آخر تحديثات صانع المحتوى في غزة، حيث نعمل على إبراز
+                    قصص المبدعين وإيصال صوتهم.
+                  </p>
+                </div>
+                <div
+                  class="card-footer bg-white border-0 d-flex font-16 text-dark pb-3 fw-bold"
+                >
+                  <span>
+                    <i style="color: rgba(109, 109, 109, 1)">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M16 2v4M8 2v4m5-2h-2C7.229 4 5.343 4 4.172 5.172S3 8.229 3 12v2c0 3.771 0 5.657 1.172 6.828S7.229 22 11 22h2c3.771 0 5.657 0 6.828-1.172S21 17.771 21 14v-2c0-3.771 0-5.657-1.172-6.828S16.771 4 13 4M3 10h18m-10 4h5m-8 0h.009M13 18H8m8 0h-.009"
+                        />
+                      </svg>
+                    </i>
+                    <span
+                      data-i18n="news_date"
+                      style="color: rgba(109, 109, 109, 1)"
+                      >5 مارس 2026</span
+                    >
+                  </span>
+                  <span class="readmore">
+                    <a href="#">
+                      <span
+                        style="color: rgba(76, 92, 55, 1)"
+                        data-i18n="read_more"
+                        >اقرأ المزيد</span
+                      >
+                      <i
+                        class="fa-solid fa-angle-left me-2 ms-1 arrow"
+                        style="color: rgba(76, 92, 55, 1)"
+                      ></i>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-5 fw-bold">
+            <a href="#" class="px-3 py-2 fw-bold show-more-news">
+              <span data-i18n="view_all_news" style="font-size: 18px"
+                >عرض جميع الأخبار</span
+              >
+              <i
+                class="fa-solid fa-angle-left me-2 arrow"
+                style="font-size: 18px"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section my-5">
+        <div class="container position-relative">
+          <img
+            src="/assets/images/leaf_cutout.png"
+            class="olive-branch branch-left-top-content-section"
+            alt="Olive Branch"
+          />
+          <img
+            src="/assets/images/leaf_cutout.png"
+            class="olive-branch branch-right-bottom-content-section"
+            alt="Olive Branch"
+          />
+
+          <div class="text-center mb-5">
+            <h1
+              class="creators-title"
+              style="font-size: 42px; font-weight: bolder"
+            >
+              <span data-i18n="creators_title_main">صُناع المحتوى</span>
+              <span class="who-us" data-i18n="at_sawt">في صوت</span>
+            </h1>
+            <h4
+              class="font-24 creators-subtitle"
+              style="color: rgba(72, 72, 72, 1); margin-top: 20px"
+              data-i18n="creators_subtitle"
+            >
+              تعرف على صُنّاع المحتوى في صوت، حيث كل فكرة إلها صوت، وكل مبدع إله
+              حكاية.
+            </h4>
+          </div>
+          <div class="owl-carousel creators-carousel2">
+            <!-- Card 1 -->
+            <div class="item">
+              <a href="#" class="text-decoration-none">
+                <div class="main-container">
+                  <div class="the-card">
+                    <div
+                      class="face front-face-img w-100 h-100 overflow-hidden text-white"
+                    >
+                      <div class="arrowDiv">
+                        <span class="followers" data-i18n="creator_followers">
+                          31.4K متابع
+                        </span>
+                      </div>
+
+                      <div class="d-flex flex-column align-items-center pt-2">
+                        <div
+                          class="img-circle rounded-circle p-2 mb-3 d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            class="rounded-circle object-fit-cover"
+                            style="width: 95px; height: 95px"
+                            src="/assets/images/محمود زعيتر 2.png"
+                            alt="محمود زعيتر"
+                          />
+                        </div>
+                        <div
+                          class="name-tag text-center mb-1"
+                          data-i18n="creator_name"
+                        >
+                          محمود عبدالله زعيتر
+                        </div>
+                        <div
+                          class="job-tag p-2 text-center"
+                          data-i18n="creator_role"
+                        >
+                          ممثل مسرحية
+                        </div>
+                      </div>
+
+                      <div class="hover-overlay">
+                        <h4
+                          class="hover-title"
+                          data-i18n="creator_overlay_title"
+                        >
+                          تجربتي مع صوت
+                        </h4>
+                        <p class="hover-desc" data-i18n="creator_quote">
+                          تجربتي مع صوت كانت مختلفة، أخيراً لقيت مكان بيفهمني
+                          كمبدع ....
+                        </p>
+                        <span class="hover-arrow">
+                          <i class="fa-solid fa-arrow-up"></i>
+                        </span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="item">
+              <a href="#" class="text-decoration-none">
+                <div class="main-container">
+                  <div class="the-card position-relative">
+                    <div
+                      class="face front-face-img w-100 h-100 overflow-hidden text-white"
+                    >
+                      <div class="arrowDiv">
+                        <span class="followers" data-i18n="creator_followers">
+                          31.4K متابع
+                        </span>
+                      </div>
+
+                      <div class="d-flex flex-column align-items-center pt-2">
+                        <div
+                          class="img-circle rounded-circle p-2 mb-3 d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            class="rounded-circle object-fit-cover"
+                            style="width: 95px; height: 95px"
+                            src="/assets/images/محمود زعيتر 2.png"
+                            alt="محمود زعيتر"
+                          />
+                        </div>
+                        <div
+                          class="name-tag text-center mb-1"
+                          data-i18n="creator_name"
+                        >
+                          محمود عبدالله زعيتر
+                        </div>
+                        <div
+                          class="job-tag p-2 text-center"
+                          data-i18n="creator_role"
+                        >
+                          ممثل مسرحية
+                        </div>
+                      </div>
+
+                      <div class="hover-overlay">
+                        <h4
+                          class="hover-title"
+                          data-i18n="creator_overlay_title"
+                        >
+                          تجربتي مع صوت
+                        </h4>
+                        <p class="hover-desc" data-i18n="creator_quote">
+                          تجربتي مع صوت كانت مختلفة، أخيراً لقيت مكان بيفهمني
+                          كمبدع ....
+                        </p>
+                        <span class="hover-arrow">
+                          <i class="fa-solid fa-arrow-up"></i>
+                        </span>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="item">
+              <a href="#" class="text-decoration-none">
+                <div class="main-container">
+                  <div class="the-card position-relative">
+                    <div
+                      class="face front-face-img w-100 h-100 overflow-hidden text-white"
+                    >
+                      <div class="arrowDiv">
+                        <span class="followers" data-i18n="creator_followers">
+                          31.4K متابع
+                        </span>
+                      </div>
+
+                      <div class="d-flex flex-column align-items-center pt-2">
+                        <div
+                          class="img-circle rounded-circle p-2 mb-3 d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            class="rounded-circle object-fit-cover"
+                            style="width: 95px; height: 95px"
+                            src="/assets/images/محمود زعيتر 2.png"
+                            alt="محمود زعيتر"
+                          />
+                        </div>
+                        <div
+                          class="name-tag text-center mb-1"
+                          data-i18n="creator_name"
+                        >
+                          محمود عبدالله زعيتر
+                        </div>
+                        <div
+                          class="job-tag p-2 text-center"
+                          data-i18n="creator_role"
+                        >
+                          ممثل مسرحية
+                        </div>
+                      </div>
+
+                      <div class="hover-overlay">
+                        <h4
+                          class="hover-title"
+                          data-i18n="creator_overlay_title"
+                        >
+                          تجربتي مع صوت
+                        </h4>
+                        <p class="hover-desc" data-i18n="creator_quote">
+                          تجربتي مع صوت كانت مختلفة، أخيراً لقيت مكان بيفهمني
+                          كمبدع ....
+                        </p>
+                        <span class="hover-arrow">
+                          <i class="fa-solid fa-arrow-up"></i>
+                        </span>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="item">
+              <a href="#" class="text-decoration-none">
+                <div class="main-container">
+                  <div class="the-card position-relative">
+                    <div
+                      class="face front-face-img w-100 h-100 overflow-hidden text-white"
+                    >
+                      <div class="arrowDiv">
+                        <span class="followers" data-i18n="creator_followers">
+                          31.4K متابع
+                        </span>
+                      </div>
+
+                      <div class="d-flex flex-column align-items-center pt-2">
+                        <div
+                          class="img-circle rounded-circle p-2 mb-3 d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            class="rounded-circle object-fit-cover"
+                            style="width: 95px; height: 95px"
+                            src="/assets/images/محمود زعيتر 2.png"
+                            alt="محمود زعيتر"
+                          />
+                        </div>
+                        <div
+                          class="name-tag text-center mb-1"
+                          data-i18n="creator_name"
+                        >
+                          محمود عبدالله زعيتر
+                        </div>
+                        <div
+                          class="job-tag p-2 text-center"
+                          data-i18n="creator_role"
+                        >
+                          ممثل مسرحية
+                        </div>
+                      </div>
+
+                      <div class="hover-overlay">
+                        <h4
+                          class="hover-title"
+                          data-i18n="creator_overlay_title"
+                        >
+                          تجربتي مع صوت
+                        </h4>
+                        <p class="hover-desc" data-i18n="creator_quote">
+                          تجربتي مع صوت كانت مختلفة، أخيراً لقيت مكان بيفهمني
+                          كمبدع ....
+                        </p>
+                        <span class="hover-arrow">
+                          <i class="fa-solid fa-arrow-up"></i>
+                        </span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="item">
+              <a href="#" class="text-decoration-none">
+                <div class="main-container">
+                  <div class="the-card position-relative">
+                    <div
+                      class="face front-face-img w-100 h-100 overflow-hidden text-white"
+                    >
+                      <div class="arrowDiv">
+                        <span class="followers" data-i18n="creator_followers">
+                          31.4K متابع
+                        </span>
+                      </div>
+
+                      <div class="d-flex flex-column align-items-center pt-2">
+                        <div
+                          class="img-circle rounded-circle p-2 mb-3 d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            class="rounded-circle object-fit-cover"
+                            style="width: 95px; height: 95px"
+                            src="/assets/images/محمود زعيتر 2.png"
+                            alt="محمود زعيتر"
+                          />
+                        </div>
+                        <div
+                          class="name-tag text-center mb-1"
+                          data-i18n="creator_name"
+                        >
+                          محمود عبدالله زعيتر
+                        </div>
+                        <div
+                          class="job-tag p-2 text-center"
+                          data-i18n="creator_role"
+                        >
+                          ممثل مسرحية
+                        </div>
+                      </div>
+
+                      <div class="hover-overlay">
+                        <h4
+                          class="hover-title"
+                          data-i18n="creator_overlay_title"
+                        >
+                          تجربتي مع صوت
+                        </h4>
+                        <p class="hover-desc" data-i18n="creator_quote">
+                          تجربتي مع صوت كانت مختلفة، أخيراً لقيت مكان بيفهمني
+                          كمبدع ....
+                        </p>
+                        <span class="hover-arrow">
+                          <i class="fa-solid fa-arrow-up"></i>
+                        </span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <a href="#" class="px-4 py-2 fw-bold show-more-news">
+              <span data-i18n="view_all">عرض الكل</span>
+              <i class="fa-solid fa-angle-left me-2 arrow"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="platform-sections py-5 text-center mb-2">
+        <div class="container">
+          <div class="header-content mb-3">
+            <h2 class="text-black fw-bold" style="font-size: 42px !important">
+              <span data-i18n="platform_title_pre">أقسام</span>
+              <span
+                class="who-us"
+                style="font-size: 45px !important"
+                data-i18n="platform_title_highlight"
+                >المنصة</span
+              >
+            </h2>
+            <p
+              class="font-24"
+              style="color: rgba(72, 72, 72, 1)"
+              data-i18n="creators_subtitle"
+            >
+              تعرف على صُنّاع المحتوى في صوت، حيث كل فكرة إلها صوت، وكل مبدع إله
+              حكاية.
+            </p>
+          </div>
+
+          <div class="row g-4 mt-2 justify-content-center">
+            <div class="col-md-4">
+              <div class="platform-card">
+                <div class="image-container">
+                  <img
+                    src="/assets/images/Rectangle 592.png"
+                    alt="منصة المحتوى"
+                    class="img-fluid"
+                  />
+                  <div class="up-center-icon">
+                    <div class="center-img">
+                      <img
+                        class="w-100 h-100"
+                        src="/assets/images/شعار الحاضنة.png"
+                        alt="شعار الحاضنة"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="card-content mt-4">
+                  <h4
+                    class="text-black fw-bold"
+                    data-i18n="platform_card1_title"
+                  >
+                    منصة المحتوى
+                  </h4>
+                  <p data-i18n="platform_card1_desc">
+                    مكتبة غنية بالفيديوهات والقصص الإنسانية التي تروي واقع غزة
+                    بكرامة واحترافية.
+                  </p>
+
+                  <div class="stats d-flex justify-content-start gap-3 mb-2">
+                    <span
+                      class="text-light-muted lh-lg"
+                      style="color: rgba(127, 127, 127, 1)"
+                    >
+                      <i
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1.2em"
+                          height="1.2em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                          >
+                            <path
+                              d="M21.544 11.045c.304.426.456.64.456.955c0 .316-.152.529-.456.955C20.178 14.871 16.689 19 12 19c-4.69 0-8.178-4.13-9.544-6.045C2.152 12.529 2 12.315 2 12c0-.316.152-.529.456-.955C3.822 9.129 7.311 5 12 5c4.69 0 8.178 4.13 9.544 6.045Z"
+                            />
+                            <path d="M15 12a3 3 0 1 0-6 0a3 3 0 0 0 6 0Z" />
+                          </g>
+                        </svg>
+                      </i>
+                      <span data-i18n="stat_views_30m">+30 مليون مشاهدة</span>
+                    </span>
+
+                    <span
+                      class="text-light-muted lh-lg"
+                      style="color: rgba(127, 127, 127, 1)"
+                    >
+                      <i
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1.2em"
+                          height="1.2em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              d="M17.7 21.335c-1.172.165-2.7.165-4.75.165h-1.9c-4.03 0-6.046 0-7.298-1.252S2.5 16.98 2.5 12.95v-1.9c0-4.03 0-6.046 1.252-7.298S7.02 2.5 11.05 2.5h1.9c4.03 0 6.046 0 7.298 1.252S21.5 7.019 21.5 11.05v1.9c0 1.208 0 2.235-.034 3.115c-.027.705-.04 1.057-.307 1.19c-.267.13-.566-.08-1.163-.503L18.65 15.8"
+                            />
+                            <path
+                              d="M14.945 12.395c-.176.627-1.012 1.07-2.682 1.955c-1.615.856-2.422 1.285-3.073 1.113a1.66 1.66 0 0 1-.712-.393C8 14.62 8 13.746 8 12s0-2.62.478-3.07c.198-.186.443-.321.712-.392c.65-.173 1.458.256 3.073 1.112c1.67.886 2.506 1.329 2.682 1.955c.073.259.073.531 0 .79Z"
+                            />
+                          </g>
+                        </svg>
+                      </i>
+                      <span data-i18n="stat_clips_100">+100 مقطع</span>
+                    </span>
+                  </div>
+
+                  <a href="#" class="read-more-btn text-white">
+                    <span data-i18n="read_more">اقرأ المزيد</span>
+                    <span class="arrow"
+                      ><i class="fa-solid fa-angle-left"></i
+                    ></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="platform-card">
+                <div class="image-container">
+                  <img
+                    src="/assets/images/Rectangle 592.png"
+                    alt="منصة المحتوى"
+                    class="img-fluid"
+                  />
+                  <div class="up-center-icon">
+                    <div class="center-img">
+                      <img
+                        class="w-100 h-100"
+                        src="/assets/images/شعار الحاضنة.png"
+                        alt="شعار الحاضنة"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="card-content mt-4">
+                  <h4
+                    class="text-black fw-bold"
+                    data-i18n="platform_card2_title"
+                  >
+                    حاضنة صوت
+                  </h4>
+                  <p data-i18n="platform_card2_desc">
+                    برامج تدريبية متخصصة لتطوير مهارات صناع المحتوى وتمكينهم من
+                    الإبداع والتميز.
+                  </p>
+
+                  <div class="stats d-flex justify-content-start gap-3 mb-2">
+                    <span
+                      class="text-light-muted lh-lg"
+                      style="color: rgba(127, 127, 127, 1)"
+                    >
+                      <i
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1.2em"
+                          height="1.2em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                          >
+                            <path
+                              d="M21.544 11.045c.304.426.456.64.456.955c0 .316-.152.529-.456.955C20.178 14.871 16.689 19 12 19c-4.69 0-8.178-4.13-9.544-6.045C2.152 12.529 2 12.315 2 12c0-.316.152-.529.456-.955C3.822 9.129 7.311 5 12 5c4.69 0 8.178 4.13 9.544 6.045Z"
+                            />
+                            <path d="M15 12a3 3 0 1 0-6 0a3 3 0 0 0 6 0Z" />
+                          </g>
+                        </svg>
+                      </i>
+                      <span data-i18n="stat_views_30m">+30 مليون مشاهدة</span>
+                    </span>
+
+                    <span
+                      class="text-light-muted lh-lg"
+                      style="color: rgba(127, 127, 127, 1)"
+                    >
+                      <i
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1.2em"
+                          height="1.2em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              d="M17.7 21.335c-1.172.165-2.7.165-4.75.165h-1.9c-4.03 0-6.046 0-7.298-1.252S2.5 16.98 2.5 12.95v-1.9c0-4.03 0-6.046 1.252-7.298S7.02 2.5 11.05 2.5h1.9c4.03 0 6.046 0 7.298 1.252S21.5 7.019 21.5 11.05v1.9c0 1.208 0 2.235-.034 3.115c-.027.705-.04 1.057-.307 1.19c-.267.13-.566-.08-1.163-.503L18.65 15.8"
+                            />
+                            <path
+                              d="M14.945 12.395c-.176.627-1.012 1.07-2.682 1.955c-1.615.856-2.422 1.285-3.073 1.113a1.66 1.66 0 0 1-.712-.393C8 14.62 8 13.746 8 12s0-2.62.478-3.07c.198-.186.443-.321.712-.392c.65-.173 1.458.256 3.073 1.112c1.67.886 2.506 1.329 2.682 1.955c.073.259.073.531 0 .79Z"
+                            />
+                          </g>
+                        </svg>
+                      </i>
+                      <span data-i18n="stat_clips_100">+100 مقطع</span>
+                    </span>
+                  </div>
+
+                  <a href="#" class="read-more-btn text-white">
+                    <span data-i18n="read_more">اقرأ المزيد</span>
+                    <span class="arrow"
+                      ><i class="fa-solid fa-angle-left"></i
+                    ></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="platform-card">
+                <div class="image-container">
+                  <img
+                    src="/assets/images/Rectangle 592.png"
+                    alt="منصة المحتوى"
+                    class="img-fluid"
+                  />
+                  <div class="up-center-icon">
+                    <div class="center-img">
+                      <img
+                        class="w-100 h-100"
+                        src="/assets/images/شعار الحاضنة.png"
+                        alt="شعار الحاضنة"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="card-content mt-4">
+                  <h4
+                    class="text-black fw-bold"
+                    data-i18n="platform_card3_title"
+                  >
+                    صوت ميديا
+                  </h4>
+                  <p data-i18n="platform_card3_desc">
+                    شركة إنتاج إعلامي احترافية تقدم خدمات متكاملة من الكتابة إلى
+                    التسويق.
+                  </p>
+
+                  <div class="stats d-flex justify-content-start gap-3 mb-2">
+                    <span
+                      class="text-light-muted lh-lg"
+                      style="color: rgba(127, 127, 127, 1)"
+                    >
+                      <i
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1.2em"
+                          height="1.2em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                          >
+                            <path
+                              d="M16.5 20v-2.03c0-1.242-.56-2.46-1.69-2.975C13.431 14.366 11.778 14 10 14s-3.431.366-4.81.995c-1.13.515-1.69 1.733-1.69 2.975V20m17 .001v-2.03c0-1.242-.56-2.46-1.69-2.975q-.39-.18-.81-.328"
+                            />
+                            <circle cx="10" cy="7.5" r="3.5" />
+                            <path d="M15 4.145a3.502 3.502 0 0 1 0 6.71" />
+                          </g>
+                        </svg>
+                      </i>
+                      <span data-i18n="stat_clients_100">+100 عميل راض</span>
+                    </span>
+
+                    <span
+                      class="text-light-muted lh-lg"
+                      style="color: rgba(127, 127, 127, 1)"
+                    >
+                      <i>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1.2em"
+                          height="1.2em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M5.333 3c2.46-.003 4.836.887 6.667 2.5V21a10.07 10.07 0 0 0-6.667-2.5c-1.562 0-2.343 0-2.688-.22a1.16 1.16 0 0 1-.424-.425C2 17.51 2 16.895 2 15.663v-9.26c0-1.428 0-2.141.549-2.72c.548-.579 1.11-.609 2.234-.668Q5.056 3 5.333 3m13.334 0A10.07 10.07 0 0 0 12 5.5V21a10.07 10.07 0 0 1 6.667-2.5c1.562 0 2.343 0 2.688-.22c.207-.133.291-.218.424-.425c.221-.345.221-.96.221-2.192v-9.26c0-1.428 0-2.141-.549-2.72s-1.11-.609-2.234-.668Q18.944 3 18.667 3"
+                          />
+                        </svg>
+                      </i>
+                      <span data-i18n="stat_projects_done">مشاريع المنجزة</span>
+                    </span>
+                  </div>
+
+                  <a href="#" class="read-more-btn text-white">
+                    <span data-i18n="read_more">اقرأ المزيد</span>
+                    <span class="arrow"
+                      ><i class="fa-solid fa-angle-left"></i
+                    ></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-3">
+        <div class="partners-section text-center mb-5">
+          <h1 class="partners-title fw-bold" style="font-size: 42px">
+            <span data-i18n="partners_title_main">شركاؤنا</span>
+            <span class="partners-highlight who-us" data-i18n="at_sawt"
+              >في صوت</span
+            >
+          </h1>
+          <p class="partners-description font-24" data-i18n="creators_subtitle">
+            تعرف على صُنّاع المحتوى في صوت، حيث كل فكرة إلها صوت، وكل مبدع إله
+            حكاية.
+          </p>
+        </div>
+        <div class="marquee">
+          <div class="marquee-group">
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+          </div>
+          <div class="marquee-group" aria-hidden="true">
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+            <img src="/assets/images/صوت 8.png" alt="sout" />
+          </div>
+        </div>
+        <!-- <div class="text-center mt-3" style="color: white">
+          <a
+            href="#"
+            class="btn btn-dark rounded-pill px-4 py-2 text-white fw-bold"
+          >
+            <span data-i18n="be_partner">كن شريكاً لصوت</span>
+            <i class="fa-solid fa-arrow-left me-2"></i>
+          </a>
+        </div> -->
+      </section>
+
+      <!-- ===================== Real Stories (قصص من الواقع) ===================== -->
+      <section class="real-stories-section py-5">
+        <div class="container">
+          <div class="row g-4 align-items-center">
+            <!-- Slider column -->
+            <div class="col-lg-7 order-2 order-lg-2">
+              <div class="owl-carousel real-stories-carousel">
+                <!-- Card 1 — Tea -->
+                <div class="item">
+                  <div class="rs-card">
+                    <img
+                      class="rs-card-bg"
+                      src="/assets/images/tea.png"
+                      alt=""
+                    />
+                    <div class="rs-card-info">
+                      <div class="rs-card-text">
+                        <span class="rs-badge" data-i18n="rs_badge"
+                          >قصة نجاح</span
+                        >
+                        <h5 class="rs-card-title" data-i18n="rs_card1_title">
+                          أغلي كاسة شاي
+                        </h5>
+                        <p class="rs-card-desc" data-i18n="rs_card_desc">
+                          من غزة الى الأردن وأمل لايمشي مجددا
+                        </p>
+                        <p class="rs-card-full" data-i18n="rs_card1_full">
+                          من قلب غزة المحاصرة، حوّل صانع المحتوى كوب الشاي
+                          البسيط إلى رمزٍ للصمود وسط الحصار. التقطت منصة صوت
+                          حكايته وأوصلتها إلى العالم، لتتحوّل كاسة شاي إلى رسالة
+                          أملٍ وإصرار.
+                        </p>
+                      </div>
+                      <a
+                        href="#"
+                        class="rs-arrow"
+                        aria-label="عرض القصة"
+                        data-i18n-title="rs_view_story"
+                      >
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 2 — Samir -->
+                <div class="item">
+                  <div class="rs-card">
+                    <img
+                      class="rs-card-bg"
+                      src="/assets/images/boy.png"
+                      alt=""
+                    />
+                    <div class="rs-card-info">
+                      <div class="rs-card-text">
+                        <span class="rs-badge" data-i18n="rs_badge"
+                          >قصة نجاح</span
+                        >
+                        <h5 class="rs-card-title" data-i18n="rs_card2_title">
+                          سمير البطل
+                        </h5>
+                        <p class="rs-card-desc" data-i18n="rs_card_desc">
+                          من غزة الى الأردن وأمل لايمشي مجددا
+                        </p>
+                        <p class="rs-card-full" data-i18n="rs_card2_full">
+                          في وسط دمار غزة، اختُطف صانع المحتوى سمير وأُصيبت يده
+                          بوحشية، واضطر إلى الهجرة إلى الأردن بحثاً عن الأمان.
+                          منصة صوت التقطت صورته ونقلت قصته للعالم، فصار صوته
+                          أعلى من القنابل وحمل رسالة الأمل لآلاف الفلسطينيين.
+                        </p>
+                      </div>
+                      <a
+                        href="#"
+                        class="rs-arrow"
+                        aria-label="عرض القصة"
+                        data-i18n-title="rs_view_story"
+                      >
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 3 — placeholder (duplicate until real poster is ready) -->
+                <div class="item">
+                  <div class="rs-card">
+                    <img
+                      class="rs-card-bg"
+                      src="/assets/images/tea.png"
+                      alt=""
+                    />
+                    <div class="rs-card-info">
+                      <div class="rs-card-text">
+                        <span class="rs-badge" data-i18n="rs_badge"
+                          >قصة نجاح</span
+                        >
+                        <h5 class="rs-card-title" data-i18n="rs_card1_title">
+                          أغلي كاسة شاي
+                        </h5>
+                        <p class="rs-card-desc" data-i18n="rs_card_desc">
+                          من غزة الى الأردن وأمل لايمشي مجددا
+                        </p>
+                        <p class="rs-card-full" data-i18n="rs_card1_full">
+                          من قلب غزة المحاصرة، حوّل صانع المحتوى كوب الشاي
+                          البسيط إلى رمزٍ للصمود وسط الحصار. التقطت منصة صوت
+                          حكايته وأوصلتها إلى العالم، لتتحوّل كاسة شاي إلى رسالة
+                          أملٍ وإصرار.
+                        </p>
+                      </div>
+                      <a
+                        href="#"
+                        class="rs-arrow"
+                        aria-label="عرض القصة"
+                        data-i18n-title="rs_view_story"
+                      >
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item">
+                  <div class="rs-card">
+                    <img
+                      class="rs-card-bg"
+                      src="/assets/images/boy.png"
+                      alt=""
+                    />
+                    <div class="rs-card-info">
+                      <div class="rs-card-text">
+                        <span class="rs-badge" data-i18n="rs_badge"
+                          >قصة نجاح</span
+                        >
+                        <h5 class="rs-card-title" data-i18n="rs_card2_title">
+                          سمير البطل
+                        </h5>
+                        <p class="rs-card-desc" data-i18n="rs_card_desc">
+                          من غزة الى الأردن وأمل لايمشي مجددا
+                        </p>
+                        <p class="rs-card-full" data-i18n="rs_card2_full">
+                          في وسط دمار غزة، اختُطف صانع المحتوى سمير وأُصيبت يده
+                          بوحشية، واضطر إلى الهجرة إلى الأردن بحثاً عن الأمان.
+                          منصة صوت التقطت صورته ونقلت قصته للعالم، فصار صوته
+                          أعلى من القنابل وحمل رسالة الأمل لآلاف الفلسطينيين.
+                        </p>
+                      </div>
+                      <a
+                        href="#"
+                        class="rs-arrow"
+                        aria-label="عرض القصة"
+                        data-i18n-title="rs_view_story"
+                      >
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item">
+                  <div class="rs-card">
+                    <img
+                      class="rs-card-bg"
+                      src="/assets/images/tea.png"
+                      alt=""
+                    />
+                    <div class="rs-card-info">
+                      <div class="rs-card-text">
+                        <span class="rs-badge" data-i18n="rs_badge"
+                          >قصة نجاح</span
+                        >
+                        <h5 class="rs-card-title" data-i18n="rs_card1_title">
+                          أغلي كاسة شاي
+                        </h5>
+                        <p class="rs-card-desc" data-i18n="rs_card_desc">
+                          من غزة الى الأردن وأمل لايمشي مجددا
+                        </p>
+                        <p class="rs-card-full" data-i18n="rs_card1_full">
+                          من قلب غزة المحاصرة، حوّل صانع المحتوى كوب الشاي
+                          البسيط إلى رمزٍ للصمود وسط الحصار. التقطت منصة صوت
+                          حكايته وأوصلتها إلى العالم، لتتحوّل كاسة شاي إلى رسالة
+                          أملٍ وإصرار.
+                        </p>
+                      </div>
+                      <a
+                        href="#"
+                        class="rs-arrow"
+                        aria-label="عرض القصة"
+                        data-i18n-title="rs_view_story"
+                      >
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item">
+                  <div class="rs-card">
+                    <img
+                      class="rs-card-bg"
+                      src="/assets/images/boy.png"
+                      alt=""
+                    />
+                    <div class="rs-card-info">
+                      <div class="rs-card-text">
+                        <span class="rs-badge" data-i18n="rs_badge"
+                          >قصة نجاح</span
+                        >
+                        <h5 class="rs-card-title" data-i18n="rs_card2_title">
+                          سمير البطل
+                        </h5>
+                        <p class="rs-card-desc" data-i18n="rs_card_desc">
+                          من غزة الى الأردن وأمل لايمشي مجددا
+                        </p>
+                        <p class="rs-card-full" data-i18n="rs_card2_full">
+                          في وسط دمار غزة، اختُطف صانع المحتوى سمير وأُصيبت يده
+                          بوحشية، واضطر إلى الهجرة إلى الأردن بحثاً عن الأمان.
+                          منصة صوت التقطت صورته ونقلت قصته للعالم، فصار صوته
+                          أعلى من القنابل وحمل رسالة الأمل لآلاف الفلسطينيين.
+                        </p>
+                      </div>
+                      <a
+                        href="#"
+                        class="rs-arrow"
+                        aria-label="عرض القصة"
+                        data-i18n-title="rs_view_story"
+                      >
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text + comment column -->
+            <div class="col-lg-5 order-1 order-lg-1">
+              <div class="rs-intro">
+                <h2 class="rs-title fw-bold">
+                  <span>قصص</span>
+                  <span class="rs-title-word">من الواقع</span>
+                </h2>
+                <p class="rs-desc" data-i18n="realstories_desc">
+                  كلنا نملك قصة تستحق أن تُروى. في هذا القسم، نضع مساحة لك
+                  لتشارك قصتك الحقيقية. سواء كانت قصة نجاح، تحدي، إبداع، أو
+                  تجربة حياتية مؤثرة.
+                </p>
+                <div class="rs-count">
+                  <span class="rs-count-icon">
+                    <i
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.2em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M5.333 3c2.46-.003 4.836.887 6.667 2.5V21a10.07 10.07 0 0 0-6.667-2.5c-1.562 0-2.343 0-2.688-.22a1.16 1.16 0 0 1-.424-.425C2 17.51 2 16.895 2 15.663v-9.26c0-1.428 0-2.141.549-2.72c.548-.579 1.11-.609 2.234-.668Q5.056 3 5.333 3m13.334 0A10.07 10.07 0 0 0 12 5.5V21a10.07 10.07 0 0 1 6.667-2.5c1.562 0 2.343 0 2.688-.22c.207-.133.291-.218.424-.425c.221-.345.221-.96.221-2.192v-9.26c0-1.428 0-2.141-.549-2.72s-1.11-.609-2.234-.668Q18.944 3 18.667 3"
+                        />
+                      </svg>
+                    </i>
+                  </span>
+                  <span class="rs-count-text" data-i18n="realstories_count"
+                    >+100 قصة واقعية نقلتها صوت الى العالم</span
+                  >
+                </div>
+                <form class="rs-comment-box" onsubmit="return false;">
+                  <textarea
+                    class="rs-input"
+                    rows="4"
+                    placeholder="شاركنا قصتك"
+                    data-i18n-placeholder="realstories_input_placeholder"
+                  ></textarea>
+                  <button type="submit" class="rs-send" aria-label="إرسال">
+                    <i
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.5em"
+                        height="1.5em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="m9.498 15l7.5-7.5m-8.992.179l7.321-3.46c3.042-1.438 4.563-2.157 5.533-1.436s.693 2.365.138 5.652l-.954 5.662c-.363 2.149-.544 3.223-1.345 3.692s-1.842.109-3.923-.611l-6.365-2.202c-3.892-1.346-5.838-2.019-5.91-3.34c-.074-1.32 1.786-2.2 5.505-3.957M9.498 15.5v2.227c0 2.374 0 3.56.71 3.75s1.458-.798 2.954-2.773l.836-1.204"
+                        />
+                      </svg>
+                    </i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="team-section text-center">
+        <div class="bg-scattered-photos">
+          <img src="member1.jpg" class="pic-1" />
+          <img src="member2.jpg" class="pic-2" />
+          <img src="member3.jpg" class="pic-3" />
+          <img src="member4.jpg" class="pic-4" />
+        </div>
+        <img
+          src="/assets/images/leaf_cutout.png"
+          class="olive-branch branch-left-top"
+          alt="Olive Branch"
+        />
+        <img
+          src="/assets/images/leaf_cutout.png"
+          class="olive-branch branch-right-bottom"
+          alt="Olive Branch"
+        />
+
+        <div class="container font-42">
+          <h1 class="title">
+            <span data-i18n="team_title_pre">أعضاء</span>
+            <span>
+              <span class="who-us" data-i18n="team_title_highlight"
+                >فريقنا</span
+              >
+            </span>
+          </h1>
+          <p class="mb-5 describ-p" data-i18n="team_subtitle">
+            تعرّف على فريق صوت، مبدعين يصنعون الفرق
+          </p>
+          <div class="owl-carousel owl-theme team-carousel">
+            <div class="item">
+              <div class="mic-container">
+                <div class="member-photo-box"><img src="member1.jpg" /></div>
+                <img src="/assets/images/مايك عوض 6.png" class="mic-frame" />
+                <div class="member-name-tag" data-i18n="team_member_1">
+                  هديل طافش
+                </div>
+              </div>
+              <div class="btn-profile-wrapper">
+                <a href="#" class="btn-view-profile">
+                  <span data-i18n="view_profile">عرض الملف الشخصي</span>
+                  <i class="fa-solid fa-angle-left"></i>
+                </a>
+              </div>
+            </div>
+            <div class="item">
+              <div class="mic-container">
+                <div class="member-photo-box"><img src="member2.jpg" /></div>
+                <img src="/assets/images/مايك عوض 6.png" class="mic-frame" />
+                <div class="member-name-tag" data-i18n="team_member_2">
+                  محمد الأشقر
+                </div>
+              </div>
+              <div class="btn-profile-wrapper">
+                <a href="#" class="btn-view-profile">
+                  <span data-i18n="view_profile">عرض الملف الشخصي</span>
+                  <i class="fa-solid fa-angle-left"></i>
+                </a>
+              </div>
+            </div>
+            <div class="item">
+              <div class="mic-container">
+                <div class="member-photo-box"><img src="member3.jpg" /></div>
+                <img src="/assets/images/مايك عوض 6.png" class="mic-frame" />
+                <div class="member-name-tag" data-i18n="team_member_3">
+                  محمود الصالح
+                </div>
+              </div>
+              <div class="btn-profile-wrapper">
+                <a href="#" class="btn-view-profile">
+                  <span data-i18n="view_profile">عرض الملف الشخصي</span>
+                  <i class="fa-solid fa-angle-left"></i>
+                </a>
+              </div>
+            </div>
+            <div class="item">
+              <div class="mic-container">
+                <div class="member-photo-box"><img src="member4.jpg" /></div>
+                <img src="/assets/images/مايك عوض 6.png" class="mic-frame" />
+                <div class="member-name-tag" data-i18n="team_member_4">
+                  هديل طافش
+                </div>
+              </div>
+              <div class="btn-profile-wrapper">
+                <a href="#" class="btn-view-profile">
+                  <span data-i18n="view_profile">عرض الملف الشخصي</span>
+                  <i class="fa-solid fa-angle-left"></i>
+                </a>
+              </div>
+            </div>
+            <div class="item">
+              <div class="mic-container">
+                <div class="member-photo-box"><img src="member5.jpg" /></div>
+                <img src="/assets/images/مايك عوض 6.png" class="mic-frame" />
+                <div class="member-name-tag" data-i18n="team_member_5">
+                  انس مليحة
+                </div>
+              </div>
+              <div class="btn-profile-wrapper">
+                <a href="#" class="btn-view-profile">
+                  <span data-i18n="view_profile">عرض الملف الشخصي</span>
+                  <i class="fa-solid fa-angle-left"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="join-us-section">
+        <div class="join-us-banner">
+          <img src="/assets/images/join-img.jpg" alt="" class="join-us-bg" />
+          <div class="join-us-content text-center">
+            <h2 class="join-us-title" data-i18n="join_creator_title">
+              انضم إلينا كصانع محتوى
+            </h2>
+            <p class="join-us-desc" data-i18n="join_creator_desc">
+صوت تجمع صناع المحتوى , كن صوت من لاصوت له  
+            </p>
+            <a href="#" class="btn btn-dark-green join-us-btn">
+              <span data-i18n="join_creator_btn">طلب الانضمام</span>
+              <i class="fa-solid fa-angle-left arrow"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="stories-section reviews-section">
+        <div class="reviews-inner">
+          <div
+            class="row g-4 align-items-center justify-content-center"
+            style="
+              background-color: rgba(237, 239, 235, 1);
+              padding: 0px 30px 30px 30px;
+              border-radius: 20px;
+              margin-top: 10px;
+            "
+          >
+            <div class="col-lg-3 col-md-12">
+              <div class="reviews-intro">
+                <h2 class="reviews-title fw-bold">
+                  <span data-i18n="reviews_title_pre">أرائكم في</span>
+                  <span
+                    class="reviews-highlight"
+                    data-i18n="reviews_title_highlight"
+                    >المحتوى</span
+                  >
+                </h2>
+                <p class="reviews-desc" data-i18n-html="reviews_desc_html">
+                  نؤمن أن <span class="hl">رأيك</span> جزء أساسي من تطويرنا
+                  وتحسين خدماتنا. شاركنا تجربتك واقتراحاتك وساعدنا على تقديم
+                  تجربة أفضل تلبي احتياجاتك وتوقعاتك.
+                </p>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+              <div class="review-reels reels-container" id="reelsContainer">
+                @forelse ($reels as $i => $reel)
+<div class="reel-item" data-index="{{ $i }}" data-reel-id="{{ $reel['id'] }}">
+                  <div class="reel-media">
+                    <video
+                      src="{{ $reel['video_url'] }}"@if($reel['thumbnail']) poster="{{ $reel['thumbnail'] }}"@endif
+                      loop
+                      playsinline
+                      onclick="toggleVideoPlay(this)"
+                    ></video>
+                    <div class="reel-overlay"></div>
+                    <div class="reel-actions">
+                      <span onclick="toggleSave(this)">
+                        <i
+                          ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="1.5em"
+                            height="1.2em"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <path
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="1.5"
+                              d="M4 17.98V9.709c0-3.634 0-5.45 1.172-6.58S8.229 2 12 2s5.657 0 6.828 1.129C20 4.257 20 6.074 20 9.708v8.273c0 2.306 0 3.459-.773 3.871c-1.497.8-4.304-1.867-5.637-2.67c-.773-.465-1.16-.698-1.59-.698s-.817.233-1.59.698c-1.333.803-4.14 3.47-5.637 2.67C4 21.44 4 20.287 4 17.981"
+                            />
+                          </svg>
+                        </i>
+                      </span>
+                      <span onclick="toggleLike(this)">
+                        <i
+                          ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="1.5em"
+                            height="1.2em"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <path
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="1.5"
+                              d="M10.41 19.968C7.59 17.858 2 13.035 2 8.694C2 5.826 4.105 3.5 7 3.5c1.5 0 3 .5 5 2.5c2-2 3.5-2.5 5-2.5c2.895 0 5 2.326 5 5.194c0 4.34-5.59 9.164-8.41 11.274c-.95.71-2.23.71-3.18 0"
+                            />
+                          </svg>
+                        </i>
+                      </span>
+                      <span onclick="shareVideo()">
+                        <i
+                          ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="1.5em"
+                            height="1.5em"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <path
+                              fill="currentColor"
+                              d="M6.616 21q-.691 0-1.153-.462T5 19.385v-8.77q0-.69.463-1.152T6.616 9H8.23q.213 0 .357.143t.143.357t-.143.357T8.23 10H6.616q-.231 0-.424.192T6 10.616v8.769q0 .23.192.423t.423.192h10.77q.23 0 .423-.192t.192-.423v-8.77q0-.23-.192-.423T17.384 10H15.77q-.213 0-.357-.143T15.27 9.5t.143-.357T15.77 9h1.615q.691 0 1.153.463T19 10.616v8.769q0 .69-.463 1.153T17.385 21zm5.027-5.643Q11.5 15.214 11.5 15V4.614L9.754 6.36q-.146.146-.344.153q-.199.006-.364-.16q-.16-.164-.162-.353t.162-.354l2.388-2.388q.132-.131.268-.184q.137-.053.298-.053t.298.053t.268.184l2.388 2.388q.14.14.15.342q.01.2-.15.366q-.166.165-.357.165t-.357-.165l-1.74-1.74V15q0 .214-.143.357T12 15.5t-.357-.143"
+                            /></svg
+                        ></i>
+                      </span>
+                    </div>
+                    <div class="reel-seekbar">
+                      <span class="reel-time">0:00</span>
+                      <div class="reel-progress">
+                        <div class="reel-progress-fill"></div>
+                      </div>
+                    </div>
+                    <div class="play-overlay" onclick="togglePlay(this)">
+                      <i class="fa-solid fa-play"></i>
+                    </div>
+                  </div>
+                  <div class="reel-caption">
+                    <p class="reel-title" data-i18n="reel_title">
+                      {{ \Illuminate\Support\Str::limit($reel['caption'] ?: 'ريل من إنستغرام', 45) }}
+                    </p>
+                    <span class="reel-views" data-i18n="reel_views"
+                      >{{ $reel['likes'] }} إعجاب</span
+                    >
+                  </div>
+                </div>
+                                @empty
+                <p class="text-center text-muted py-4" style="width:100%">لا يوجد ريلز للعرض حالياً.</p>
+                @endforelse
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6">
+              <div class="comments-card reviews-comments">
+                <div class="reviews-comments-head p-4">
+                  <div class="comments-count-group">
+                    <span class="comments-head-icon">
+                      <i
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1.5em"
+                          height="1.5em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-width="1.5"
+                          >
+                            <path
+                              stroke-linejoin="round"
+                              d="M8 13.5h8m-8-5h4"
+                            />
+                            <path
+                              d="M6.099 19q-1.949-.192-2.927-1.172C2 16.657 2 14.771 2 11v-.5c0-3.771 0-5.657 1.172-6.828S6.229 2.5 10 2.5h4c3.771 0 5.657 0 6.828 1.172S22 6.729 22 10.5v.5c0 3.771 0 5.657-1.172 6.828S17.771 19 14 19c-.56.012-1.007.055-1.445.155c-1.199.276-2.309.89-3.405 1.424c-1.563.762-2.344 1.143-2.834.786c-.938-.698-.021-2.863.184-3.865"
+                            />
+                          </g>
+                        </svg>
+                      </i>
+                    </span>
+                    <span class="comments-count" data-i18n="comments_full_label"
+                      >التعليقات (341)</span
+                    >
+                  </div>
+                  <div class="tab-row">
+                    <button
+                      class="tab"
+                      onclick="setTab(this, 'الأقدم')"
+                      data-i18n="tab_oldest"
+                    >
+                      الأقدم
+                    </button>
+                    <button
+                      class="tab active"
+                      onclick="setTab(this, 'الأحدث')"
+                      data-i18n="tab_newest"
+                    >
+                      الأحدث
+                    </button>
+                  </div>
+                </div>
+                <div class="comments-list" id="commentsList"></div>
+
+                <div class="comment-input-row p-4">
+                  <textarea
+                    class="comment-input"
+                    id="newComment"
+                    rows="1"
+                    placeholder="اترك تعليقك هنا..."
+                    data-i18n-placeholder="comment_placeholder"
+                    style="text-align: start"
+                  ></textarea>
+                  <button class="rs-send" onclick="addComment()">
+                    <i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.4em"
+                        height="1.2em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="m9.498 15l7.5-7.5m-8.992.179l7.321-3.46c3.042-1.438 4.563-2.157 5.533-1.436s.693 2.365.138 5.652l-.954 5.662c-.363 2.149-.544 3.223-1.345 3.692s-1.842.109-3.923-.611l-6.365-2.202c-3.892-1.346-5.838-2.019-5.91-3.34c-.074-1.32 1.786-2.2 5.505-3.957M9.498 15.5v2.227c0 2.374 0 3.56.71 3.75s1.458-.798 2.954-2.773l.836-1.204"
+                        />
+                      </svg>
+                    </i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer-custom-bg pt-5 pb-4">
+      <div class="footer-custom-width" style="width: 95%; margin: 0 auto">
+        <div class="row g-4 text-end align-items-start">
+          <div class="col-lg-3 col-md-6" style="text-align: start">
+            <div class="footer-logo mb-3">
+              <img src="/assets/images/صوت ابيض.png" alt="صوت" width="100" />
+            </div>
+            <p class="lh-lg text-white font-16" data-i18n="footer_about">
+              منصة صوت، تأسست لتكون مساحة للمبدعين، تجمع الحاضنة، صوت ميديا،
+              والصوت نفسه، لتقديم محتوى ملهم وتجارب فريدة لكل من يسعى لصوته أن
+              يُسمع.
+            </p>
+          </div>
+
+          <div
+            class="col col-lg-3 col-md-6 text-white"
+            style="text-align: start"
+          >
+            <h5
+              class="fw-bold mb-4 text-white"
+              data-i18n="footer_main_sections"
+            >
+              الأقسام الرئيسية
+            </h5>
+            <div class="row">
+              <div class="col col-lg-6">
+                <ul class="list-unstyled footer-links">
+                  <li class="mb-4">
+                    <a href="#" class="text-white text-decoration-none small">
+                      <span data-i18n="nav_home">الرئيسية</span></a
+                    >
+                  </li>
+                  <li class="mb-4">
+                    <a href="#" class="text-white text-decoration-none small">
+                      <span data-i18n="nav_about">من نحن</span></a
+                    >
+                  </li>
+                  <li class="mb-4">
+                    <a href="#" class="text-white text-decoration-none small">
+                      <span data-i18n="nav_content">محتوانا</span></a
+                    >
+                  </li>
+                  <li class="mb-4">
+                    <a href="#" class="text-white text-decoration-none small">
+                      <span data-i18n="nav_team">الفريق</span></a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 main-links">
+                <ul class="list-unstyled p-0 footer-links">
+                  <li class="mb-4">
+                    <a href="#" class="text-white text-decoration-none small">
+                      <span data-i18n="nav_creators">صناع المحتوى</span></a
+                    >
+                  </li>
+                  <li class="mb-4">
+                    <a href="#" class="text-white text-decoration-none small">
+                      <span data-i18n="nav_incubator">حاضنة صوت</span></a
+                    >
+                  </li>
+                  <li class="mb-4">
+                    <a href="#" class="text-white text-decoration-none small">
+                      <span data-i18n="nav_media">صوت ميديا</span></a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="col col-lg-3 col-md-6 text-white"
+            style="text-align: start"
+          >
+            <h5 class="fw-bold mb-4 text-white" data-i18n="footer_quick_links">
+              روابط سريعة
+            </h5>
+            <ul class="list-unstyled p-0 footer-links">
+              <li class="mb-4">
+                <a href="#" class="text-white text-decoration-none small">
+                  <span data-i18n="footer_backstage">الكواليس</span></a
+                >
+              </li>
+              <li class="mb-4">
+                <a href="#" class="text-white text-decoration-none small">
+                  <span data-i18n="footer_media_kit">MEDIA KIT</span></a
+                >
+              </li>
+              <li class="mb-4">
+                <a href="#" class="text-white text-decoration-none small">
+                  <span data-i18n="footer_blog">المدونة</span></a
+                >
+              </li>
+              <li class="mb-4">
+                <a href="#" class="text-white text-decoration-none small">
+                  <span data-i18n="footer_faq">الأسئلة الشائعة</span></a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="col-lg-3 col-md-6 text-white"
+            style="text-align: start !important"
+          >
+            <h5
+              class="fw-bold mb-4 text-white footer-stay-updated"
+              data-i18n="footer_stay_updated"
+            >
+              ابقَ على اطلاع
+            </h5>
+            <p
+              class="mb-3 text-white font-16 footer-subscribe"
+              data-i18n="footer_subscribe"
+            >
+              اشترك في نشرتنا الإخبارية ..
+            </p>
+            <div class="custom-newsletter-input mb-4">
+              <div class="newsletter-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass"> </i>
+                <input
+                  type="email"
+                  placeholder="ادخل بريدك الالكتروني"
+                  class="font-18 fw-bold"
+                  data-i18n-placeholder="footer_email_placeholder"
+                />
+              </div>
+              <button class="rs-send">
+                <i>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.4em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="m9.498 15l7.5-7.5m-8.992.179l7.321-3.46c3.042-1.438 4.563-2.157 5.533-1.436s.693 2.365.138 5.652l-.954 5.662c-.363 2.149-.544 3.223-1.345 3.692s-1.842.109-3.923-.611l-6.365-2.202c-3.892-1.346-5.838-2.019-5.91-3.34c-.074-1.32 1.786-2.2 5.505-3.957M9.498 15.5v2.227c0 2.374 0 3.56.71 3.75s1.458-.798 2.954-2.773l.836-1.204"
+                    /></svg
+                ></i>
+              </button>
+            </div>
+
+            <div class="contact-info-footer text-white">
+              <p
+                class="mb-2 d-flex align-items-center justify-content-start font-16"
+              >
+                <i style="color: rgba(225, 114, 59, 1)">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.5em"
+                    height="1.5em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      fill="currentColor"
+                      d="M19.2 20q-2.702 0-5.418-1.244t-5.005-3.533q-2.27-2.289-3.523-5.021Q4 7.469 4 4.8V4h4.439l.848 4.083l-2.696 2.51q.684 1.186 1.417 2.167t1.527 1.769q.802.84 1.808 1.57t2.296 1.44l2.611-2.708l3.75.756V20zM6.121 9.654l2.092-1.92L7.635 5h-2.63q.03 1.144.309 2.305q.278 1.16.807 2.349m8.45 8.335q.923.463 2.09.723t2.339.277v-2.605l-2.388-.475zm0 0"
+                    />
+                  </svg>
+                </i>
+                +972567247177
+              </p>
+              <p
+                class="mb-0 font-16 d-flex align-items-center justify-content-start"
+              >
+                <i style="color: rgba(225, 114, 59, 1)">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.5em"
+                    height="1.5em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <g
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        d="m7 8.5l2.942 1.74c1.715 1.014 2.4 1.014 4.116 0L17 8.5"
+                      />
+                      <path
+                        d="M2.016 13.476c.065 3.065.098 4.598 1.229 5.733c1.131 1.136 2.705 1.175 5.854 1.254c1.94.05 3.862.05 5.802 0c3.149-.079 4.723-.118 5.854-1.254c1.131-1.135 1.164-2.668 1.23-5.733c.02-.986.02-1.966 0-2.952c-.066-3.065-.099-4.598-1.23-5.733c-1.131-1.136-2.705-1.175-5.854-1.254a115 115 0 0 0-5.802 0c-3.149.079-4.723.118-5.854 1.254c-1.131 1.135-1.164 2.668-1.23 5.733a69 69 0 0 0 0 2.952Z"
+                      />
+                    </g>
+                  </svg>
+                </i>
+                info@sawtgaza.com
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="text-white opacity-25" style="width: 95%; margin: 20px auto" />
+
+      <div style="width: 95%; margin: 0 auto">
+        <div class="row align-items-center gy-4">
+          <div class="col-12 col-md-6 order-md-2 text-center">
+            <div
+              class="d-flex gap-3 justify-content-md-end justify-content-center"
+            >
+              <a href="#" class="text-white footer-social-icon"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-white footer-social-icon"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-white footer-social-icon"
+                ><i class="fab fa-telegram-plane"></i
+              ></a>
+              <a href="#" class="text-white footer-social-icon"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-white footer-social-icon"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 order-md-1 text-center text-md-end">
+            <p class="mb-0 small">
+              <span data-i18n="footer_copyright">
+                © جميع الحقوق محفوظة. 2026</span
+              >
+              <span
+                class="text-white"
+                style="background-color: #e1723b"
+                data-i18n="footer_rights_brand"
+                >SAWTGAZA</span
+              >
+            </p>
+          </div>
+
+          <!-- <div class="col-12 col-md-4 order-md-3">
+            <div
+              class="d-flex align-items-center justify-content-center justify-content-md-start gap-3 flex-wrap"
+            >
+              <a
+                href="#"
+                class="text-white ps-3"
+                style="text-decoration: underline !important"
+                data-i18n="footer_privacy"
+                >سياسة الخصوصية</a
+              >
+              <a
+                href="#"
+                class="text-white"
+                style="text-decoration: underline !important"
+                data-i18n="footer_terms"
+                >شروط الاستخدام</a
+              >
+
+              <div
+                class="d-flex flex-column align-items-center control-wrapper theme-toggle-and-up"
+              >
+                <button
+                  class="btn-control-custom rounded-circle"
+                  id="theme-toggle"
+                >
+                  <i class="fas fa-moon"></i>
+                </button>
+                <button
+                  class="btn-control-custom rounded-circle"
+                  onclick="scrollToTop()"
+                >
+                  <i class="fas fa-angles-up"></i>
+                </button>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </footer>
+    <!-- Modal -->
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+      integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
+      integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"
+      integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      // تعليقات كل ريل قادمة من إنستغرام (مفتاحها معرّف الريل)
+      window.reelComments = {
+        @foreach (($reels ?? []) as $reel)
+        @json((string) $reel['id']): @json($reel['comment_items'] ?? []),
+        @endforeach
+      };
+      window.reelCommentCounts = {
+        @foreach (($reels ?? []) as $reel)
+        @json((string) $reel['id']): {{ (int) ($reel['comments'] ?? 0) }},
+        @endforeach
+      };
+    </script>
+    <script>
+      // نصوص الصفحة الرئيسية القابلة للتعديل من لوحة التحكم (عربي/إنجليزي)
+      window.i18nOverrides = @json($i18nOverrides, JSON_UNESCAPED_UNICODE);
+    </script>
+    <script src="/assets/js/script.js"></script>
+    <script src="/assets/js/translate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $(".creators-carousel").owlCarousel({
+          loop: true,
+          margin: 20,
+          rtl: true, // مهم عشان العربي
+          nav: true,
+          dots: false,
+
+          navText: [
+            "<span class='arrow'>‹</span>",
+            "<span class='arrow'>›</span>",
+          ],
+
+          responsive: {
+            0: {
+              items: 1,
+            },
+            600: {
+              items: 2,
+            },
+            1000: {
+              items: 3,
+            },
+          },
+        });
+      });
+      $(document).ready(function () {
+        $(".creators-carousel2").owlCarousel({
+          loop: true,
+          margin: 25,
+          rtl: true, // مهم عشان العربي
+          nav: true,
+          dots: false,
+
+          navText: [
+            "<span class='arrow'>‹</span>",
+            "<span class='arrow'>›</span>",
+          ],
+
+          responsive: {
+            0: {
+              items: 1,
+            },
+            600: {
+              items: 2,
+            },
+            1100: {
+              items: 3,
+            },
+            1300: {
+              items: 4,
+            },
+            1500: {
+              items: 5,
+            },
+          },
+        });
+      });
+
+      $(document).ready(function () {
+        $(".real-stories-carousel").owlCarousel({
+          loop: true,
+          margin: 20,
+          rtl: true,
+          nav: false,
+          dots: true,
+          responsive: {
+            0: { items: 1 },
+            768: { items: 2 },
+          },
+        });
+      });
+
+      $(document).ready(function () {
+        var owl = $(".team-carousel");
+
+        owl.owlCarousel({
+          rtl: true,
+          loop: true,
+          margin: 20,
+          nav: true,
+          dots: false,
+          navText: [
+            "<i class='fas fa-chevron-right'></i>",
+            "<i class='fas fa-chevron-left'></i>",
+          ],
+          responsive: {
+            0: { items: 1 },
+            600: { items: 2 },
+            1000: { items: 4 },
+          },
+          onTranslated: highlightMiddle,
+          onInitialized: highlightMiddle,
+        });
+
+        function highlightMiddle() {
+          $(".team-carousel .owl-item").removeClass("center-highlight");
+          var activeItems = $(".team-carousel .owl-item.active");
+          if (activeItems.length === 4) {
+            $(activeItems[1]).addClass("center-highlight");
+            $(activeItems[2]).addClass("center-highlight");
+          } else {
+            activeItems.addClass("center-highlight");
+          }
+        }
+      });
+    </script>
+
+  </body>
 </html>

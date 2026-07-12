@@ -34,8 +34,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Violet,
             ])
+            ->font('Cairo')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->darkMode(true)
             ->defaultThemeMode(ThemeMode::System)
             ->brandName(fn (): string => config('app.name', 'Sawt'))
