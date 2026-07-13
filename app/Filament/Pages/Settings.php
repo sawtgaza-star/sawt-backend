@@ -104,6 +104,43 @@ class Settings extends Page implements HasForms
             'home_welcome_desc_ar' => ['home', 'text', ''],
             'home_welcome_desc_en' => ['home', 'text', ''],
 
+            // صفحة من نحن
+            'about_header_bg' => ['about', 'string', ''],
+            'about_intro_image' => ['about', 'string', ''],
+            'about_platform_image' => ['about', 'string', ''],
+            'about_join_bg' => ['about', 'string', ''],
+            'about_hero_title_ar' => ['about', 'string', 'صناع الأثر.. الفريق خلف منصة صوت'],
+            'about_hero_title_en' => ['about', 'string', 'Impact Makers.. The Team Behind Sawt Platform'],
+            'about_hero_desc_ar' => ['about', 'text', 'في هذه الصفحة، نشارككم قصة فريق من الناس إلى الناس، رؤيتنا، رسالتنا، وكيف بدأنا لنكون صوتًا حيًّا ومعينًا لمن لا صوت لهم، وكيف منحنا الناس الأمل.'],
+            'about_hero_desc_en' => ['about', 'text', 'On this page, we share with you the story of a team from the people to the people — our vision, our message, and how we began to be a living, supportive voice for the voiceless, and how we gave people hope.'],
+            'about_header_ar' => ['about', 'string', 'من نحن'],
+            'about_header_en' => ['about', 'string', 'About Sawt'],
+            'about_intro_ar' => ['about', 'text', 'فريق منصة صوت حاضنة لأصوات غزة. لم نبدأ من فكرةٍ خارقة أو خطةٍ مُحكمة، بل من قرارٍ بسيط: أن نكون حاضرِين، نستمع، ونُعلِن صوت غزة للعالم. نحن من الناس ونعيش معاناتهم عن قرب، فرأينا أن الحاجة واضحة فقررنا ألا نصمت. نعمل بدون أن نتكلم نيابةً عن أحد، وبدون وعودٍ تفوق قدراتنا. وظيفتنا توصيل صوت أهل غزة وإيصاله إلى العالم، مع الحفاظ على كرامة الناس وصوتهم. هدفنا أن نكون جسرًا صادقًا بين من يقدّم الانتباه والدعم لصوت غزة ومن ينتظر من يسمعهم حقًا. اليوم نحن أكثر من فكرة آمن بها شخص واحد؛ نحن حاضنة لأصوات غزة، فريق عمل متكامل.'],
+            'about_intro_en' => ['about', 'text', 'The Sawt platform team is an incubator for the voices of Gaza. We did not start from an extraordinary idea or a tight plan, but from a simple decision: to be present, to listen, and to announce the voice of Gaza to the world.'],
+            'about_platform_question_ar' => ['about', 'string', 'ما الذي يدفعنا لنكون صوتك؟'],
+            'about_platform_question_en' => ['about', 'string', 'What drives us to be your voice?'],
+            'about_platform_desc_ar' => ['about', 'text', 'نؤمن أن لكل إنسان قصة تستحق أن تُروى، لذلك جاءت صوت لتكون مساحة حرة للتعبير، حيث يلتقي الأفراد لمشاركة تجاربهم وأفكارهم بصدق. نساعدك على إيصال صوتك إلى الآخرين، ونمنح المحتوى الإنساني مساحة حقيقية ليُرى، ويُسمع، ويترك أثرًا.'],
+            'about_platform_desc_en' => ['about', 'text', 'We believe every person has a story worth telling. That\'s why Sawt was created as a free space for expression, where individuals come together to share their experiences and ideas with sincerity.'],
+            'about_core_values_subtitle_ar' => ['about', 'text', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر'],
+            'about_core_values_subtitle_en' => ['about', 'text', 'Our values are the foundation on which we build Sawt, and they guide the way we work and continuously improve.'],
+            'about_core_values' => ['about', 'json', [
+                ['title_ar' => 'التمكين', 'title_en' => 'Empowerment', 'desc_ar' => 'نسعى لأن نكون منبرًا يُمكّن الإنسان، ويصنع تأثيرًا إيجابيًا حقيقيًا يساهم في إيصال صوتنا وصوت المجتمع إلى العالم.', 'desc_en' => 'We strive to be a platform that empowers people and creates a real positive impact, helping carry our voice and our community\'s voice to the world.'],
+                ['title_ar' => 'الموثوقية', 'title_en' => 'Reliability', 'desc_ar' => 'نحرص على صون الأمانة الإعلامية وحماية الرواية وتوثيقها، معتمدين على معايير أخلاقية راسخة في كل ما ننشر.', 'desc_en' => 'We are committed to preserving media integrity, protecting and documenting the narrative, relying on firm ethical standards in everything we publish.'],
+                ['title_ar' => 'الشراكة', 'title_en' => 'Partnership', 'desc_ar' => 'نؤمن أن قوة "صوت غزة" نبع من تلاحم المجتمع، ونعمل كجسر يصل بين الأصوات المختلفة لتعزيز الدعم المتبادل.', 'desc_en' => 'We believe the strength of "Sawt Gaza" springs from the cohesion of the community, and we act as a bridge connecting different voices to foster mutual support.'],
+                ['title_ar' => 'الابتكار', 'title_en' => 'Innovation', 'desc_ar' => 'نلتزم بنقل الأخبار والقصص بمهنية عالية وأمانة صحفية، لنكون المصدر الموثوق الذي يعبّر عن الواقع بدقة.', 'desc_en' => 'We commit to delivering news and stories with high professionalism and journalistic integrity, to be the trusted source that reflects reality accurately.'],
+            ]],
+            'about_story_subtitle_ar' => ['about', 'text', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر'],
+            'about_story_subtitle_en' => ['about', 'text', 'Our values are the foundation on which we build Sawt, and they guide the way we work and continuously improve.'],
+            'about_story_cards' => ['about', 'json', [
+                ['title_ar' => 'التأثير', 'title_en' => 'Impact', 'desc_ar' => 'منذ انطلاقنا، استطعنا إيصال أصوات الآلاف من الأشخاص الذين كانوا صامتين، وكشفنا حقائق عديدة تم إخفاؤها عن الرأي العام. قصصنا وصلت لملايين المتابعين، وساهمت في لفت انتباه العالم إلى قضايا مهمشة.', 'desc_en' => 'Since we began, we have managed to carry the voices of thousands of people who were silenced, and uncovered many facts that were hidden from public opinion.'],
+                ['title_ar' => 'ما نقدم', 'title_en' => 'What We Offer', 'desc_ar' => 'نحن نقدم إعلامًا حقيقيًا يعتمد على القصص الحقيقية والأصوات الصادقة، بعيدًا عن ضغوط الإعلام التقليدي والسرديات الرسمية. منصاتنا تتيح لأي إنسان أن يُسمع صوته ويُسرد قصته بحرية ومصداقية، حيث نوثّق القصص الحقيقية من المناطق المتضررة.', 'desc_en' => 'We provide genuine media built on real stories and honest voices, away from the pressures of traditional media and official narratives.'],
+                ['title_ar' => 'رحلتنا', 'title_en' => 'Our Journey', 'desc_ar' => 'بدأت رحلة "صوت" في ظل ظروف صعبة، حيث كانت الكثير من القصص الحقيقية مخفية والأصوات الصادقة مكتومة تحت ضغوط الإعلام التقليدي والسرديات الرسمية. آمنّا بأن الحقيقة تستحق أن تُروى، وكل إنسان يستحق أن يُسمع صوته.', 'desc_en' => 'The journey of "Sawt" began under difficult circumstances, when many real stories were hidden and honest voices were muted under the pressures of traditional media and official narratives.'],
+            ]],
+            'about_join_title_ar' => ['about', 'string', 'قد تكون قصتك بداية التغيير'],
+            'about_join_title_en' => ['about', 'string', 'Your story could be the start of change'],
+            'about_join_desc_ar' => ['about', 'text', 'كل صوت مهم، إذا كانت لديك قصة تستحق أن تُسمع فإن صوت ستدعمك من أول محادثة إلى التأثير العام.'],
+            'about_join_desc_en' => ['about', 'text', 'Every voice matters. If you have a story worth hearing, Sawt will support you from the first conversation to public impact.'],
+
             // stats (تظهر بصفحة صنّاع المحتوى بالموقع العام)
             'reach_count' => ['stats', 'number', 4000000],
             'supporters_count' => ['stats', 'number', 250000],
@@ -213,6 +250,89 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('home_welcome_title_en')->label('Main title (English)'),
                         Forms\Components\Textarea::make('home_welcome_desc_ar')->label('الوصف (عربي)')->rows(4)->columnSpanFull(),
                         Forms\Components\Textarea::make('home_welcome_desc_en')->label('Description (English)')->rows(4)->columnSpanFull(),
+                    ])->columns(2),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('من نحن')->icon('heroicon-o-user-group')->schema([
+                    Forms\Components\Section::make('الصور')->schema([
+                        Forms\Components\FileUpload::make('about_header_bg')
+                            ->label('خلفية الهيرو')
+                            ->image()->disk('public')->directory('about')->imageEditor()
+                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية'),
+                        Forms\Components\FileUpload::make('about_intro_image')
+                            ->label('صورة قسم المقدمة')
+                            ->image()->disk('public')->directory('about')->imageEditor(),
+                        Forms\Components\FileUpload::make('about_platform_image')
+                            ->label('صورة قسم المنصة')
+                            ->image()->disk('public')->directory('about')->imageEditor(),
+                        Forms\Components\FileUpload::make('about_join_bg')
+                            ->label('خلفية بانر الانضمام')
+                            ->image()->disk('public')->directory('about')->imageEditor(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('الهيرو والمقدمة')->schema([
+                        Forms\Components\TextInput::make('about_hero_title_ar')->label('عنوان الهيرو (عربي)'),
+                        Forms\Components\TextInput::make('about_hero_title_en')->label('Hero title (English)'),
+                        Forms\Components\Textarea::make('about_hero_desc_ar')->label('وصف الهيرو (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('about_hero_desc_en')->label('Hero description (English)')->rows(3),
+                        Forms\Components\TextInput::make('about_header_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('about_header_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('about_intro_ar')->label('نص المقدمة (عربي)')->rows(5)->columnSpanFull(),
+                        Forms\Components\Textarea::make('about_intro_en')->label('Intro text (English)')->rows(5)->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('نبذة عن المنصة')->schema([
+                        Forms\Components\TextInput::make('about_platform_question_ar')->label('السؤال (عربي)'),
+                        Forms\Components\TextInput::make('about_platform_question_en')->label('Question (English)'),
+                        Forms\Components\Textarea::make('about_platform_desc_ar')->label('الوصف (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('about_platform_desc_en')->label('Description (English)')->rows(4),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('القيم الأساسية')->schema([
+                        Forms\Components\Textarea::make('about_core_values_subtitle_ar')->label('العنوان الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('about_core_values_subtitle_en')->label('Subtitle (English)')->rows(2),
+                        Forms\Components\Repeater::make('about_core_values')
+                            ->label('القيم')
+                            ->schema([
+                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('title_en')->label('Title (English)'),
+                                Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(3),
+                                Forms\Components\Textarea::make('desc_en')->label('Description (English)')->rows(3),
+                            ])
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->cloneable()
+                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'قيمة')
+                            ->addActionLabel('➕ إضافة قيمة')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('قصة صوت')->schema([
+                        Forms\Components\Textarea::make('about_story_subtitle_ar')->label('العنوان الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('about_story_subtitle_en')->label('Subtitle (English)')->rows(2),
+                        Forms\Components\Repeater::make('about_story_cards')
+                            ->label('بطاقات القصة')
+                            ->schema([
+                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('title_en')->label('Title (English)'),
+                                Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(3),
+                                Forms\Components\Textarea::make('desc_en')->label('Description (English)')->rows(3),
+                            ])
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->cloneable()
+                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'بطاقة')
+                            ->addActionLabel('➕ إضافة بطاقة')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('بانر الانضمام')->schema([
+                        Forms\Components\TextInput::make('about_join_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('about_join_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('about_join_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('about_join_desc_en')->label('Description (English)')->rows(3),
                     ])->columns(2),
                 ]),
 
