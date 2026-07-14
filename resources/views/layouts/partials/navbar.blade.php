@@ -33,7 +33,7 @@
         <li class="nav-item ms-lg-3">
           <a
             class="nav-link font-16 {{ ($activeNav ?? '') === 'content' ? 'active' : '' }}"
-            href="#"
+            href="{{ route('content') }}"
             data-i18n="nav_content"
           >محتوانا</a>
         </li>
