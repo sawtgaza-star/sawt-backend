@@ -28,7 +28,7 @@
                 </a>
               </li>
               <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
+                <a href="{{ route('content') }}" class="text-white text-decoration-none small">
                   <span data-i18n="nav_content">محتوانا</span>
                 </a>
               </li>

@@ -401,7 +401,7 @@ class Settings extends Page implements HasForms
                 Forms\Components\Tabs\Tab::make('ريلز إنستغرام')->icon('heroicon-o-film')->schema([
                     Forms\Components\Toggle::make('reels_enabled')
                         ->label('تفعيل عرض الريلز')
-                        ->helperText('لما يكون مفعّل، بيتم جلب الريلز من حساب إنستغرام وعرضها بالأسفل وعبر /api/reels')
+                        ->helperText('لما يكون مفعّل، بيتم جلب الريلز من حساب إنستغرام وعرضها بالأسفل وعبر /api/v1/reels')
                         ->columnSpanFull(),
                     Forms\Components\TextInput::make('instagram_user_id')
                         ->label('معرّف حساب إنستغرام (Business ID)')

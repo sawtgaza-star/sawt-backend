@@ -65,17 +65,27 @@ class CourseResource extends Resource
                     ->label('الحالة')
                     ->options(['draft' => 'مسودة', 'published' => 'منشور'])
                     ->default('draft')->required(),
+                Forms\Components\Hidden::make('delivery_mode')->default('offline'),
             ])->columns(2),
 
-            Forms\Components\Section::make('التسعير')->schema([
-                Forms\Components\Toggle::make('is_free')
-                    ->label('كورس مجاني')->live()->columnSpanFull(),
-                Forms\Components\TextInput::make('price')
-                    ->label('السعر')->numeric()->default(0)->prefix('$')
-                    ->required(fn (Forms\Get $get) => ! $get('is_free'))
-                    ->disabled(fn (Forms\Get $get) => (bool) $get('is_free')),
-                Forms\Components\TextInput::make('currency')
-                    ->label('العملة')->default('USD')->maxLength(3)->required(),
+            Forms\Components\Section::make('تفاصيل الحضور')->schema([
+                Forms\Components\TextInput::make('location')
+                    ->label('المكان')->maxLength(255)->required(),
+                Forms\Components\TextInput::make('location_details')
+                    ->label('تفاصيل المكان')->maxLength(255),
+                Forms\Components\DateTimePicker::make('starts_at')
+                    ->label('تاريخ/وقت البدء'),
+                Forms\Components\DateTimePicker::make('ends_at')
+                    ->label('تاريخ/وقت الانتهاء'),
+                Forms\Components\TextInput::make('max_seats')
+                    ->label('الحد الأقصى للمقاعد')
+                    ->numeric()
+                    ->minValue(1)
+                    ->helperText('اتركه فارغاً إذا لم يكن هناك حد'),
+                Forms\Components\TagsInput::make('requirements')
+                    ->label('المتطلبات')
+                    ->placeholder('أضف متطلباً ثم Enter')
+                    ->columnSpanFull(),
             ])->columns(2),
         ]);
     }
@@ -86,10 +96,14 @@ class CourseResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')->label('')->circular(),
                 Tables\Columns\TextColumn::make('title')->label('العنوان')->searchable()->limit(40),
+                Tables\Columns\TextColumn::make('location')->label('المكان')->toggleable()->limit(25),
+                Tables\Columns\TextColumn::make('starts_at')->label('البدء')->dateTime('Y-m-d')->toggleable(),
                 Tables\Columns\TextColumn::make('instructor.username')->label('المدرّب')->toggleable(),
-                Tables\Columns\TextColumn::make('price')->label('السعر')->money(fn ($record) => $record->currency)->sortable(),
-                Tables\Columns\IconColumn::make('is_free')->label('مجاني')->boolean(),
-                Tables\Columns\TextColumn::make('students_count')->label('الطلاب')->numeric()->sortable(),
+                Tables\Columns\TextColumn::make('students_count')->label('المقبولون')->numeric()->sortable(),
+                Tables\Columns\TextColumn::make('join_requests_count')
+                    ->counts('joinRequests')
+                    ->label('الطلبات')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('الحالة')->badge()
                     ->colors(['gray' => 'draft', 'success' => 'published'])
                     ->formatStateUsing(fn ($state) => $state === 'published' ? 'منشور' : 'مسودة'),
@@ -112,8 +126,7 @@ class CourseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\SectionsRelationManager::class,
-            RelationManagers\LessonsRelationManager::class,
+            RelationManagers\JoinRequestsRelationManager::class,
         ];
     }
 

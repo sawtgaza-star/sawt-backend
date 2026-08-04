@@ -12,29 +12,44 @@ class Setting extends Model
     protected static function booted(): void
     {
         // أي حفظ أو حذف بيمسح الكاش تلقائياً — هيك الأدمن يعدل والتغيير يبان فوراً
-        static::saved(fn (Setting $setting) => Cache::forget("setting.{$setting->key}"));
-        static::deleted(fn (Setting $setting) => Cache::forget("setting.{$setting->key}"));
+        static::saved(fn (Setting $setting) => Cache::forget(static::cacheKey($setting->key)));
+        static::deleted(fn (Setting $setting) => Cache::forget(static::cacheKey($setting->key)));
+    }
+
+    public static function cacheKey(string $key): string
+    {
+        // v2: لا نخزّن القيم الافتراضية في الكاش (كانت تسبب ظهور بيانات ثابتة في الـ API)
+        return "setting.v2.{$key}";
     }
 
     /**
-     * قراءة إعداد — من الكاش أول شي، ولو مو موجود بتجيبه من الـ DB وتخزنه بالكاش للأبد.
+     * قراءة إعداد من الكاش أو الـ DB.
+     * القيمة الافتراضية تُستخدم فقط عند غياب السجل — ولا تُخزَّن في الكاش.
      */
     public static function get(string $key, mixed $default = null): mixed
     {
-        return Cache::rememberForever("setting.{$key}", function () use ($key, $default) {
-            $setting = static::where('key', $key)->first();
+        $cacheKey = static::cacheKey($key);
 
-            if (! $setting) {
-                return $default;
-            }
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
 
-            return match ($setting->type) {
-                'boolean' => (bool) $setting->value,
-                'number' => (float) $setting->value,
-                'json' => json_decode($setting->value, true),
-                default => $setting->value,
-            };
-        });
+        $setting = static::where('key', $key)->first();
+
+        if (! $setting) {
+            return $default;
+        }
+
+        $value = match ($setting->type) {
+            'boolean' => (bool) $setting->value,
+            'number' => (float) $setting->value,
+            'json' => json_decode($setting->value, true),
+            default => $setting->value,
+        };
+
+        Cache::forever($cacheKey, $value);
+
+        return $value;
     }
 
     /**

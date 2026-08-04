@@ -162,7 +162,7 @@ $storyIcons = [
           <div class="about-sec-img-wrapper">
             <img src="{{ $introImage }}" alt="" class="about-sec-img" />
             <div class="member-card about-sec-leaf" dir="rtl">
-              <img src="{{ $logoUrl }}" alt="" width="100" height="100" />
+              <img src="{{ $logoUrl }}" alt="" width="120" height="70" />
             </div>
           </div>
         </div>

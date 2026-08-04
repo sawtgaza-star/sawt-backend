@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, JWTSubject
 {
-    use Notifiable, HasRoles, HasUuid;
+    use HasRoles, HasUuid, Notifiable;
 
     protected $fillable = [
         'name', 'email', 'phone', 'country_code', 'password', 'avatar', 'status',
@@ -27,6 +28,16 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
 
     public function creator()
@@ -49,14 +60,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Donation::class);
     }
 
-    public function enrollments()
+    public function courseJoinRequests()
     {
-        return $this->hasMany(CourseEnrollment::class);
-    }
-
-    public function lessonProgress()
-    {
-        return $this->hasMany(LessonProgress::class);
+        return $this->hasMany(CourseJoinRequest::class);
     }
 
     public function payments()
@@ -64,7 +70,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Payment::class);
     }
 
-    // يتحكم مين يقدر يدخل لوحة Filament (لازم يكون عنده أي دور معطى من الأدمن)
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->status === 'active' && $this->hasAnyRole(['super_admin', 'admin', 'moderator']);

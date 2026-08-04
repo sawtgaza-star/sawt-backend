@@ -39,6 +39,12 @@
         </li>
         <li class="nav-item ms-lg-3">
           <a
+            class="nav-link font-16 {{ ($activeNav ?? '') === 'courses' ? 'active' : '' }}"
+            href="{{ route('courses.index') }}"
+          >الكورسات</a>
+        </li>
+        <li class="nav-item ms-lg-3">
+          <a
             class="nav-link font-16 {{ ($activeNav ?? '') === 'team' ? 'active' : '' }}"
             href="#"
             data-i18n="nav_team"
@@ -98,13 +104,23 @@
         </div>
       </div>
 
-      <div class="contact-info-nav small d-flex">
-        <div class="register-btn">
-          <a href="{{ route('register') }}" data-i18n="register_account">أنشئ حساب</a>
-        </div>
-        <div class="sign-in-btn">
-          <a href="{{ route('login') }}" data-i18n="sign_in">تسجيل الدخول</a>
-        </div>
+      <div class="contact-info-nav small d-flex align-items-center gap-2">
+        @auth
+          <span class="fw-bold font-14" style="color: #38422a">{{ auth()->user()->name }}</span>
+          <form method="POST" action="{{ route('logout') }}" class="m-0">
+            @csrf
+            <button type="submit" class="sign-in-btn border-0 bg-transparent p-0">
+              <span style="cursor: pointer">تسجيل الخروج</span>
+            </button>
+          </form>
+        @else
+          <div class="register-btn">
+            <a href="{{ route('register') }}" data-i18n="register_account">أنشئ حساب</a>
+          </div>
+          <div class="sign-in-btn">
+            <a href="{{ route('login') }}" data-i18n="sign_in">تسجيل الدخول</a>
+          </div>
+        @endauth
       </div>
       <div class="searchDiv d-flex align-items-center gap-2">
         <button class="btn rounded-nav nav-bttn" type="button">

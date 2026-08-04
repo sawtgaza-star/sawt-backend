@@ -70,7 +70,7 @@
         }
 
         // 1) نجيب إعدادات PayPal (client id + العملة) ثم نحمّل الـ SDK
-        fetch('/api/paypal/config')
+        fetch('/api/v1/paypal/config')
             .then(r => r.json())
             .then(cfg => {
                 if (!cfg.configured) {
@@ -89,7 +89,7 @@
                 // إنشاء الطلب على الخادم
                 createOrder: () => {
                     const campaignEl = document.getElementById('campaign_id');
-                    return fetch('/api/paypal/donations/order', {
+                    return fetch('/api/v1/paypal/donations/order', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify({
@@ -107,7 +107,7 @@
                 },
                 // بعد موافقة المستخدم: نلتقط الدفع على الخادم
                 onApprove: (data) => {
-                    return fetch(`/api/paypal/orders/${data.orderID}/capture`, {
+                    return fetch(`/api/v1/paypal/orders/${data.orderID}/capture`, {
                         method: 'POST',
                         headers: { 'Accept': 'application/json' },
                     })

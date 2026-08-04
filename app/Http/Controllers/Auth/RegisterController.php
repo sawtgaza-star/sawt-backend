@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
@@ -22,21 +21,32 @@ class RegisterController extends Controller
         $data = $request->validate([
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', Password::min(8)],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'confirmed', Password::min(8)],
+        ], [
+            'first_name.required' => 'الاسم الأول مطلوب.',
+            'last_name.required' => 'اسم العائلة مطلوب.',
+            'email.required' => 'البريد الإلكتروني مطلوب.',
+            'email.email' => 'صيغة البريد الإلكتروني غير صحيحة.',
+            'email.unique' => 'هذا البريد مسجّل مسبقاً.',
+            'password.required' => 'كلمة المرور مطلوبة.',
+            'password.confirmed' => 'تأكيد كلمة المرور غير مطابق.',
+            'password.min' => 'كلمة المرور يجب أن تكون 8 أحرف على الأقل.',
         ]);
 
         $user = User::create([
             'name' => trim($data['first_name'].' '.$data['last_name']),
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'], // hashed cast on User model
             'status' => 'active',
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user, $request->boolean('remember'));
+        Auth::login($user);
 
-        return redirect('/');
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('home'));
     }
 }

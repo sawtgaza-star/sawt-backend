@@ -13,16 +13,30 @@ class Course extends Model
     public array $translatable = ['title', 'description'];
 
     protected $fillable = [
-        'instructor_id', 'category_id', 'title', 'slug', 'description', 'image',
-        'level', 'price', 'currency', 'is_free', 'duration_minutes',
-        'students_count', 'status',
+        'instructor_id',
+        'category_id',
+        'title',
+        'slug',
+        'description',
+        'image',
+        'level',
+        'students_count',
+        'status',
+        'delivery_mode',
+        'location',
+        'location_details',
+        'starts_at',
+        'ends_at',
+        'max_seats',
+        'requirements',
     ];
 
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
-            'is_free' => 'boolean',
+            'starts_at' => 'datetime',
+            'ends_at' => 'datetime',
+            'requirements' => 'array',
         ];
     }
 
@@ -36,19 +50,9 @@ class Course extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function sections()
+    public function joinRequests()
     {
-        return $this->hasMany(CourseSection::class)->orderBy('sort_order');
-    }
-
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class)->orderBy('sort_order');
-    }
-
-    public function enrollments()
-    {
-        return $this->hasMany(CourseEnrollment::class);
+        return $this->hasMany(CourseJoinRequest::class);
     }
 
     public function scopePublished($query)
@@ -56,21 +60,49 @@ class Course extends Model
         return $query->where('status', 'published');
     }
 
-    public function isFree(): bool
-    {
-        return $this->is_free || (float) $this->price <= 0;
-    }
-
-    /** هل هذا المستخدم مسجّل ودفع (وصول فعّال)؟ */
-    public function isPurchasedBy(?User $user): bool
+    public function isJoinedBy(?User $user): bool
     {
         if (! $user) {
             return false;
         }
 
-        return $this->enrollments()
+        return $this->joinRequests()
             ->where('user_id', $user->id)
-            ->where('status', 'active')
+            ->where('status', 'accepted')
             ->exists();
+    }
+
+    public function joinRequestFor(?User $user): ?CourseJoinRequest
+    {
+        if (! $user) {
+            return null;
+        }
+
+        return $this->joinRequests()
+            ->where('user_id', $user->id)
+            ->first();
+    }
+
+    public function pendingJoinRequestFor(?User $user): ?CourseJoinRequest
+    {
+        if (! $user) {
+            return null;
+        }
+
+        return $this->joinRequests()
+            ->where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->first();
+    }
+
+    public function hasAvailableSeats(): bool
+    {
+        if ($this->max_seats === null) {
+            return true;
+        }
+
+        $accepted = $this->joinRequests()->where('status', 'accepted')->count();
+
+        return $accepted < $this->max_seats;
     }
 }

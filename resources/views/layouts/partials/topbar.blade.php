@@ -35,13 +35,23 @@
       </a>
     </div>
 
-    <div class="contact-info small d-flex justify-content-center align-items-center">
-      <div class="register-btn">
-        <a href="{{ route('register') }}" data-i18n="register_account">أنشئ حساب</a>
-      </div>
-      <div class="sign-in-btn">
-        <a href="{{ route('login') }}" data-i18n="sign_in">تسجيل الدخول</a>
-      </div>
+    <div class="contact-info small d-flex justify-content-center align-items-center gap-2">
+      @auth
+        <span class="fw-bold" style="color: rgba(76, 92, 55, 1)">{{ auth()->user()->name }}</span>
+        <form method="POST" action="{{ route('logout') }}" class="m-0">
+          @csrf
+          <button type="submit" class="sign-in-btn border-0 bg-transparent p-0" style="cursor: pointer">
+            تسجيل الخروج
+          </button>
+        </form>
+      @else
+        <div class="register-btn">
+          <a href="{{ route('register') }}" data-i18n="register_account">أنشئ حساب</a>
+        </div>
+        <div class="sign-in-btn">
+          <a href="{{ route('login') }}" data-i18n="sign_in">تسجيل الدخول</a>
+        </div>
+      @endauth
     </div>
   </div>
 </div>

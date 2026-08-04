@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,12 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/content', [PageController::class, 'content'])->name('content');
 
+/* ===== الكورسات الحضورية ===== */
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
+Route::post('/courses/{course}/join', [CourseController::class, 'join'])
+    ->middleware('auth')
+    ->name('courses.join');
 
 /* ===== نظام المصادقة (واجهة المستخدمين) ===== */
 Route::middleware('guest')->group(function () {
