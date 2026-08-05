@@ -104,6 +104,13 @@ class Settings extends Page implements HasForms
             'home_welcome_desc_ar' => ['home', 'text', ''],
             'home_welcome_desc_en' => ['home', 'text', ''],
 
+            // الهوية و SEO
+            'site_favicon' => ['branding', 'string', ''],
+            'meta_title' => ['seo', 'string', 'منصة صوت | نروي قصص غزة ونصنع جيلاً من المبدعين'],
+            'meta_description' => ['seo', 'text', 'منصة صوت — مساحة فلسطينية للمبدعين في غزة: نروي القصص بكرامة، ندعم صنّاع المحتوى، ونبني مجتمعاً إبداعياً مؤثراً.'],
+            'meta_keywords' => ['seo', 'string', 'صوت, منصة صوت, غزة, فلسطين, صناع المحتوى, قصص غزة, ريلز'],
+            'og_image' => ['seo', 'string', ''],
+
             // stats (تظهر بصفحة صنّاع المحتوى بالموقع العام)
             'reach_count' => ['stats', 'number', 4000000],
             'supporters_count' => ['stats', 'number', 250000],
@@ -163,17 +170,46 @@ class Settings extends Page implements HasForms
         return $form->schema([
             Forms\Components\Tabs::make('Settings')->columnSpanFull()->tabs([
 
-                Forms\Components\Tabs\Tab::make('الصفحة الرئيسية')->icon('heroicon-o-home')->schema([
-                    Forms\Components\Section::make('الشعار والصور')->schema([
+                Forms\Components\Tabs\Tab::make('الهوية و SEO')->icon('heroicon-o-identification')->schema([
+                    Forms\Components\Section::make('الهوية البصرية')->schema([
                         Forms\Components\FileUpload::make('home_logo')
-                            ->label('شعار المنصة (الهيدر)')
-                            ->image()->disk('public')->directory('home')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الشعار الافتراضي'),
-                        Forms\Components\FileUpload::make('home_hero_image')
-                            ->label('صورة القسم الرئيسي (Hero)')
-                            ->image()->disk('public')->directory('home')->imageEditor()
-                            ->helperText('الصورة الكبيرة بجانب "من نحن"'),
+                            ->label('شعار الهيدر')
+                            ->image()->disk('public')->directory('branding')->imageEditor()
+                            ->helperText('يظهر أعلى الموقع — اتركه فارغاً للشعار الافتراضي'),
+                        Forms\Components\FileUpload::make('site_favicon')
+                            ->label('أيقونة الموقع (Favicon)')
+                            ->image()->disk('public')->directory('branding')
+                            ->helperText('تظهر بتبويب المتصفح — يُفضّل صورة مربعة 512×512'),
                     ])->columns(2),
+
+                    Forms\Components\Section::make('تحسين محركات البحث (SEO)')->schema([
+                        Forms\Components\TextInput::make('meta_title')
+                            ->label('عنوان الصفحة (Title)')
+                            ->helperText('يظهر بتبويب المتصفح ونتائج جوجل — يُفضّل أقل من 60 حرفاً')
+                            ->maxLength(70)->columnSpanFull(),
+                        Forms\Components\Textarea::make('meta_description')
+                            ->label('وصف الميتا (Description)')
+                            ->helperText('يظهر تحت العنوان بنتائج البحث — 150–160 حرفاً مثالي')
+                            ->rows(3)->maxLength(200)->columnSpanFull(),
+                        Forms\Components\TextInput::make('meta_keywords')
+                            ->label('الكلمات المفتاحية')
+                            ->helperText('مفصولة بفاصلة')
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('og_image')
+                            ->label('صورة المشاركة (Open Graph)')
+                            ->image()->disk('public')->directory('branding')->imageEditor()
+                            ->helperText('تظهر عند مشاركة الرابط على فيسبوك/تويتر/واتساب — 1200×630')
+                            ->columnSpanFull(),
+                    ]),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('الصفحة الرئيسية')->icon('heroicon-o-home')->schema([
+                    Forms\Components\Section::make('صورة قسم "من نحن"')->schema([
+                        Forms\Components\FileUpload::make('home_hero_image')
+                            ->label('الصورة الكبيرة بجانب "من نحن"')
+                            ->image()->disk('public')->directory('home')->imageEditor()
+                            ->helperText('شعار الهيدر يُعدّل من تبويب «الهوية و SEO»'),
+                    ]),
 
                     Forms\Components\Section::make('شرائح الكاروسيل الرئيسي (Hero) — أضف/احذف/رتّب')->schema([
                         Forms\Components\Repeater::make('home_hero_slides')

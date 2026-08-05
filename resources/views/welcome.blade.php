@@ -8,6 +8,15 @@
     $heroRaw = Setting::get('home_hero_image');
     $heroUrl = $heroRaw ? Storage::disk('public')->url($heroRaw) : '/assets/images/swat.png';
 
+    // الهوية و SEO
+    $favRaw = Setting::get('site_favicon');
+    $faviconUrl = $favRaw ? Storage::disk('public')->url($favRaw) : '/assets/images/icon.png';
+    $ogRaw = Setting::get('og_image');
+    $ogUrl = $ogRaw ? Storage::disk('public')->url($ogRaw) : $logoUrl;
+    $metaTitle = Setting::get('meta_title', 'منصة صوت | نروي قصص غزة ونصنع جيلاً من المبدعين');
+    $metaDesc = Setting::get('meta_description', 'منصة صوت — مساحة فلسطينية للمبدعين في غزة: نروي القصص بكرامة، ندعم صنّاع المحتوى، ونبني مجتمعاً إبداعياً مؤثراً.');
+    $metaKeywords = Setting::get('meta_keywords', 'صوت, منصة صوت, غزة, فلسطين, صناع المحتوى, قصص غزة, ريلز');
+
     // النصوص القابلة للتعديل ثنائية اللغة — تُحقن فوق قاموس translate.js
     $i18nKeys = ['who_we_are', 'welcome_lead', 'welcome_title', 'welcome_desc'];
     $i18nOverrides = ['ar' => [], 'en' => []];
@@ -58,12 +67,7 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Sawt</title>
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      href="/assets/images/icon.png"
-    />
+    @include('partials.seo')
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
