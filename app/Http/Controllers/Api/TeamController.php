@@ -17,7 +17,7 @@ class TeamController extends Controller
     ) {}
 
     /**
-     * Team page: majors (tabs) + members.
+     * Team listing: hero + majors + members.
      * Query: ?major=design  OR  ?major_uuid=xxxxx
      */
     public function index(Request $request): JsonResponse
@@ -36,8 +36,40 @@ class TeamController extends Controller
 
         return response()->json([
             'data' => [
+                'hero' => $payload['hero'],
+                'filters' => $payload['filters'],
                 'majors' => MajorResource::collection($payload['majors']),
                 'members' => TeamMemberResource::collection($payload['members']),
+            ],
+        ]);
+    }
+
+    /**
+     * Team member detail page (hero + profile + intro + related members).
+     * Header / footer are not included.
+     */
+    public function show(string $uuid): JsonResponse
+    {
+        try {
+            $payload = $this->team->member($uuid);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'لا يوجد عضو بهذا المعرّف.',
+                'error' => 'member_not_found',
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => [
+                'hero' => $payload['hero'],
+                'member' => new TeamMemberResource($payload['member']),
+                'labels' => $payload['labels'],
+                'intro' => $payload['intro'],
+                'related' => [
+                    'title' => $payload['related']['title'],
+                    'view_all' => $payload['related']['view_all'],
+                    'members' => TeamMemberResource::collection($payload['related']['members']),
+                ],
             ],
         ]);
     }

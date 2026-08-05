@@ -13,7 +13,10 @@ class TeamMemberResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->getTranslations('name'),
             'role' => $this->getTranslations('role'),
+            'years_of_experience' => $this->years_of_experience,
+            'bio' => $this->getTranslations('bio'),
             'photo_url' => $this->photo_url,
+            'socials' => $this->socialLinks(),
             'sort_order' => $this->sort_order,
             'major' => $this->whenLoaded('major', fn () => [
                 'uuid' => $this->major->uuid,

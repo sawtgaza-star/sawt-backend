@@ -30,6 +30,7 @@ $textKeys = [
     'about_story_subtitle' => 'sawt_story_subtitle',
     'about_join_title' => 'join_us_title',
     'about_join_desc' => 'join_us_desc',
+    'about_join_button_text' => 'join_us_support',
 ];
 foreach ($textKeys as $settingBase => $i18nKey) {
     $ar = Setting::get("{$settingBase}_ar");
@@ -54,10 +55,10 @@ if (filled($qEn)) {
 }
 
 $coreValuesDefault = [
-    ['title_ar' => 'التمكين', 'title_en' => 'Empowerment', 'desc_ar' => 'نسعى لأن نكون منبرًا يُمكّن الإنسان، ويصنع تأثيرًا إيجابيًا حقيقيًا يساهم في إيصال صوتنا وصوت المجتمع إلى العالم.', 'desc_en' => 'We strive to be a platform that empowers people and creates a real positive impact.'],
-    ['title_ar' => 'الموثوقية', 'title_en' => 'Reliability', 'desc_ar' => 'نحرص على صون الأمانة الإعلامية وحماية الرواية وتوثيقها، معتمدين على معايير أخلاقية راسخة في كل ما ننشر.', 'desc_en' => 'We are committed to preserving media integrity.'],
-    ['title_ar' => 'الشراكة', 'title_en' => 'Partnership', 'desc_ar' => 'نؤمن أن قوة "صوت غزة" نبع من تلاحم المجتمع، ونعمل كجسر يصل بين الأصوات المختلفة لتعزيز الدعم المتبادل.', 'desc_en' => 'We believe the strength of "Sawt Gaza" springs from the cohesion of the community.'],
-    ['title_ar' => 'الابتكار', 'title_en' => 'Innovation', 'desc_ar' => 'نلتزم بنقل الأخبار والقصص بمهنية عالية وأمانة صحفية، لنكون المصدر الموثوق الذي يعبّر عن الواقع بدقة.', 'desc_en' => 'We commit to delivering news and stories with high professionalism.'],
+    ['title_ar' => 'المصداقية', 'title_en' => 'Credibility', 'desc_ar' => 'ننقل القصص والحقائق بدقة وموضوعية.', 'desc_en' => 'We convey stories and facts accurately.'],
+    ['title_ar' => 'الإنسانية', 'title_en' => 'Humanity', 'desc_ar' => 'نضع الإنسان في قلب كل قصة.', 'desc_en' => 'We put the human at the heart of every story.'],
+    ['title_ar' => 'التأثير', 'title_en' => 'Impact', 'desc_ar' => 'نسعى لصناعة محتوى يرفع الوعي.', 'desc_en' => 'We strive to create content that raises awareness.'],
+    ['title_ar' => 'الاستقلالية', 'title_en' => 'Independence', 'desc_ar' => 'نلتزم بإعلام مستقل يعكس الواقع بصدق.', 'desc_en' => 'We are committed to independent media.'],
 ];
 $coreValues = Setting::get('about_core_values', $coreValuesDefault);
 if (! is_array($coreValues) || empty($coreValues)) {
@@ -80,9 +81,9 @@ foreach (array_values($coreValues) as $i => $v) {
 }
 
 $storyDefault = [
-    ['title_ar' => 'التأثير', 'title_en' => 'Impact', 'desc_ar' => 'منذ انطلاقنا، استطعنا إيصال أصوات الآلاف من الأشخاص الذين كانوا صامتين، وكشفنا حقائق عديدة تم إخفاؤها عن الرأي العام. قصصنا وصلت لملايين المتابعين، وساهمت في لفت انتباه العالم إلى قضايا مهمشة.', 'desc_en' => 'Since we began, we have managed to carry the voices of thousands of people who were silenced.'],
-    ['title_ar' => 'ما نقدم', 'title_en' => 'What We Offer', 'desc_ar' => 'نحن نقدم إعلامًا حقيقيًا يعتمد على القصص الحقيقية والأصوات الصادقة، بعيدًا عن ضغوط الإعلام التقليدي والسرديات الرسمية. منصاتنا تتيح لأي إنسان أن يُسمع صوته ويُسرد قصته بحرية ومصداقية، حيث نوثّق القصص الحقيقية من المناطق المتضررة.', 'desc_en' => 'We provide genuine media built on real stories and honest voices.'],
-    ['title_ar' => 'رحلتنا', 'title_en' => 'Our Journey', 'desc_ar' => 'بدأت رحلة "صوت" في ظل ظروف صعبة، حيث كانت الكثير من القصص الحقيقية مخفية والأصوات الصادقة مكتومة تحت ضغوط الإعلام التقليدي والسرديات الرسمية. آمنّا بأن الحقيقة تستحق أن تُروى، وكل إنسان يستحق أن يُسمع صوته.', 'desc_en' => 'The journey of "Sawt" began under difficult circumstances.'],
+    ['title_ar' => 'رحلتنا', 'title_en' => 'Our Journey', 'desc_ar' => 'بدأت رحلة «صوت» في ظل ظروف صعبة.', 'desc_en' => 'The journey of Sawt began under difficult circumstances.'],
+    ['title_ar' => 'ما نقدم', 'title_en' => 'What We Offer', 'desc_ar' => 'نحن نقدم إعلاماً حقيقياً.', 'desc_en' => 'We provide genuine media.'],
+    ['title_ar' => 'التأثير', 'title_en' => 'Impact', 'desc_ar' => 'منذ انطلاقنا، استطعنا إيصال أصوات آلاف.', 'desc_en' => 'Since launch, we have amplified thousands of voices.'],
 ];
 $storyCards = Setting::get('about_story_cards', $storyDefault);
 if (! is_array($storyCards) || empty($storyCards)) {
@@ -105,15 +106,17 @@ foreach (array_values($storyCards) as $i => $c) {
 }
 
 $heroTitle = Setting::get('about_hero_title_ar', 'صناع الأثر.. الفريق خلف منصة صوت');
-$heroDesc = Setting::get('about_hero_desc_ar', 'في هذه الصفحة، نشارككم قصة فريق من الناس إلى الناس، رؤيتنا، رسالتنا، وكيف بدأنا لنكون صوتًا حيًّا ومعينًا لمن لا صوت لهم، وكيف منحنا الناس الأمل.');
+$heroDesc = Setting::get('about_hero_desc_ar', '');
 $headerTitle = Setting::get('about_header_ar', 'من نحن');
-$introText = Setting::get('about_intro_ar', 'فريق منصة صوت حاضنة لأصوات غزة.');
+$introText = Setting::get('about_intro_ar', '');
 $platformQuestion = Setting::get('about_platform_question_ar', 'ما الذي يدفعنا لنكون صوتك؟');
-$platformDesc = Setting::get('about_platform_desc_ar', 'نؤمن أن لكل إنسان قصة تستحق أن تُروى.');
-$coreValuesSubtitle = Setting::get('about_core_values_subtitle_ar', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر');
-$storySubtitle = Setting::get('about_story_subtitle_ar', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر');
-$joinTitle = Setting::get('about_join_title_ar', 'قد تكون قصتك بداية التغيير');
-$joinDesc = Setting::get('about_join_desc_ar', 'كل صوت مهم، إذا كانت لديك قصة تستحق أن تُسمع فإن صوت ستدعمك من أول محادثة إلى التأثير العام.');
+$platformDesc = Setting::get('about_platform_desc_ar', '');
+$coreValuesSubtitle = Setting::get('about_core_values_subtitle_ar', '');
+$storySubtitle = Setting::get('about_story_subtitle_ar', '');
+$joinTitle = Setting::get('about_join_title_ar', 'لأن بعض الأصوات لا يجب أن تُنسى');
+$joinDesc = Setting::get('about_join_desc_ar', '');
+$joinButtonText = Setting::get('about_join_button_text_ar', 'مساهمة بإيصال صوت');
+$joinButtonUrl = Setting::get('about_join_button_url') ?: route('donate');
 
 $valueIcons = [
     '<svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 14 14"><path d="M0 0h14v14H0z" fill="none"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M9.568 1.255a.466.466 0 0 1 .864 0l.587 1.433l1.593.14c.416.036.578.56.255.824l-.947.778a.47.47 0 0 0-.16.46l.314 1.452a.466.466 0 0 1-.715.486L10 5.92l-1.359.91a.466.466 0 0 1-.715-.487L8.24 4.89a.47.47 0 0 0-.16-.459l-.947-.778a.466.466 0 0 1 .255-.825l1.593-.14zM.983 6.37l.692-.043a8 8 0 0 1 2.448.227l1.16.292a1.32 1.32 0 0 1 .99 1.416v0c-.078.765-.79 1.3-1.546 1.166L3.622 9.23l3.897.699l4.037-.958a1.24 1.24 0 0 1 1.482.887v0c.16.603-.153 1.23-.73 1.465l-3.23 1.311a6.93 6.93 0 0 1-4.918.113L.813 11.562"/></svg>',
@@ -189,7 +192,11 @@ $storyIcons = [
           <div class="col-12 col-sm-6 col-lg-3">
             <div class="value-card">
               <div class="value-card-icon">
-                <i>{!! $valueIcons[$i % count($valueIcons)] !!}</i>
+                @if (! empty($value['icon']))
+                  <img src="{{ $mediaUrl($value['icon'], '') }}" alt="" width="28" height="28" />
+                @else
+                  <i>{!! $valueIcons[$i % count($valueIcons)] !!}</i>
+                @endif
               </div>
               <h3 class="value-card-title" data-i18n="core_value_{{ $n }}_title">
                 {{ $value['title_ar'] ?? '' }}
@@ -242,7 +249,11 @@ $storyIcons = [
           <div class="col-12 col-md-6 col-lg-4 sawt-story-grid-col">
             <div class="sawt-story-card">
               <div class="sawt-story-icon">
-                <i>{!! $storyIcons[$i % count($storyIcons)] !!}</i>
+                @if (! empty($card['icon']))
+                  <img src="{{ $mediaUrl($card['icon'], '') }}" alt="" width="24" height="24" />
+                @else
+                  <i>{!! $storyIcons[$i % count($storyIcons)] !!}</i>
+                @endif
               </div>
               <h3 class="sawt-story-card-title" data-i18n="sawt_story_{{ $n }}_title">
                 {{ $card['title_ar'] ?? '' }}
@@ -263,8 +274,8 @@ $storyIcons = [
       <div class="join-us-content text-center">
         <h2 class="join-us-title" data-i18n="join_us_title">{{ $joinTitle }}</h2>
         <p class="join-us-desc" data-i18n="join_us_desc">{{ $joinDesc }}</p>
-        <a href="{{ route('donate') }}" class="btn btn-dark-green join-us-btn">
-          <span data-i18n="join_us_support">ادعم منصة صوت</span>
+        <a href="{{ $joinButtonUrl }}" class="btn btn-dark-green join-us-btn">
+          <span data-i18n="join_us_support">{{ $joinButtonText }}</span>
           <i class="fa-solid fa-angle-left arrow"></i>
         </a>
       </div>

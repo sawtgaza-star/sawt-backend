@@ -17,4 +17,9 @@ interface TeamRepositoryInterface
     public function activeMembers(?string $majorSlug = null, ?string $majorUuid = null): Collection;
 
     public function findMemberByUuid(string $uuid): ?TeamMember;
+
+    /**
+     * Other active members for the detail page grid (excludes current).
+     */
+    public function relatedMembers(string $excludeUuid, int $limit = 5): Collection;
 }

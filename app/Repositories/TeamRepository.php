@@ -44,8 +44,20 @@ class TeamRepository implements TeamRepositoryInterface
     {
         return TeamMember::query()
             ->active()
-            ->with('major')
+            ->with(['major' => fn ($q) => $q->active()])
             ->where('uuid', $uuid)
             ->first();
+    }
+
+    public function relatedMembers(string $excludeUuid, int $limit = 5): Collection
+    {
+        return TeamMember::query()
+            ->active()
+            ->with(['major' => fn ($q) => $q->active()])
+            ->whereHas('major', fn ($q) => $q->active())
+            ->where('uuid', '!=', $excludeUuid)
+            ->orderBy('sort_order')
+            ->limit(max(1, $limit))
+            ->get();
     }
 }

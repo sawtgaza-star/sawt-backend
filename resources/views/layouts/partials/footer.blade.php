@@ -3,96 +3,65 @@
     <div class="row g-4 text-end align-items-start">
       <div class="col-lg-3 col-md-6" style="text-align: start">
         <div class="footer-logo mb-3">
-          <img src="/assets/images/صوت ابيض.png" alt="صوت" width="100" />
+          <img src="{{ $footerLogoUrl }}" alt="صوت" width="100" />
         </div>
         <p class="lh-lg text-white font-16" data-i18n="footer_about">
-          منصة صوت، تأسست لتكون مساحة للمبدعين، تجمع الحاضنة، صوت ميديا،
-          والصوت نفسه، لتقديم محتوى ملهم وتجارب فريدة لكل من يسعى لصوته أن
-          يُسمع.
+          {{ $footerAboutAr }}
         </p>
       </div>
 
       <div class="col col-lg-3 col-md-6 text-white" style="text-align: start">
-        <h5 class="fw-bold mb-4 text-white" data-i18n="footer_main_sections">الأقسام الرئيسية</h5>
+        <h5 class="fw-bold mb-4 text-white" data-i18n="footer_main_sections">{{ $footerMainTitleAr }}</h5>
         <div class="row">
+          @php
+            $mainMid = (int) ceil(count($footerMainLinks) / 2);
+            $mainLeft = array_slice($footerMainLinks, 0, $mainMid);
+            $mainRight = array_slice($footerMainLinks, $mainMid);
+          @endphp
           <div class="col col-lg-6">
             <ul class="list-unstyled footer-links">
-              <li class="mb-4">
-                <a href="{{ url('/') }}" class="text-white text-decoration-none small">
-                  <span data-i18n="nav_home">الرئيسية</span>
-                </a>
-              </li>
-              <li class="mb-4">
-                <a href="{{ route('about') }}" class="text-white text-decoration-none small">
-                  <span data-i18n="nav_about">من نحن</span>
-                </a>
-              </li>
-              <li class="mb-4">
-                <a href="{{ route('content') }}" class="text-white text-decoration-none small">
-                  <span data-i18n="nav_content">محتوانا</span>
-                </a>
-              </li>
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="nav_team">الفريق</span>
-                </a>
-              </li>
+              @foreach ($mainLeft as $fi => $link)
+                <li class="mb-4">
+                  <a href="{{ \App\Support\LayoutLinks::hrefForKey($link['key'] ?? null) }}" class="text-white text-decoration-none small">
+                    <span data-i18n="footer_main_{{ $fi }}">{{ $link['label_ar'] ?? '' }}</span>
+                  </a>
+                </li>
+              @endforeach
             </ul>
           </div>
           <div class="col-lg-6 main-links">
             <ul class="list-unstyled p-0 footer-links">
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="nav_creators">صناع المحتوى</span>
-                </a>
-              </li>
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="nav_incubator">حاضنة صوت</span>
-                </a>
-              </li>
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="nav_media">صوت ميديا</span>
-                </a>
-              </li>
+              @foreach ($mainRight as $ri => $link)
+                <li class="mb-4">
+                  <a href="{{ \App\Support\LayoutLinks::hrefForKey($link['key'] ?? null) }}" class="text-white text-decoration-none small">
+                    <span data-i18n="footer_main_{{ $mainMid + $ri }}">{{ $link['label_ar'] ?? '' }}</span>
+                  </a>
+                </li>
+              @endforeach
             </ul>
           </div>
         </div>
       </div>
 
       <div class="col col-lg-3 col-md-6 text-white" style="text-align: start">
-        <h5 class="fw-bold mb-4 text-white" data-i18n="footer_quick_links">روابط سريعة</h5>
+        <h5 class="fw-bold mb-4 text-white" data-i18n="footer_quick_links">{{ $footerQuickTitleAr }}</h5>
         <ul class="list-unstyled p-0 footer-links">
-          <li class="mb-4">
-            <a href="#" class="text-white text-decoration-none small">
-              <span data-i18n="footer_backstage">الكواليس</span>
-            </a>
-          </li>
-          <li class="mb-4">
-            <a href="#" class="text-white text-decoration-none small">
-              <span data-i18n="footer_media_kit">MEDIA KIT</span>
-            </a>
-          </li>
-          <li class="mb-4">
-            <a href="#" class="text-white text-decoration-none small">
-              <span data-i18n="footer_blog">المدونة</span>
-            </a>
-          </li>
-          <li class="mb-4">
-            <a href="#" class="text-white text-decoration-none small">
-              <span data-i18n="footer_faq">الأسئلة الشائعة</span>
-            </a>
-          </li>
+          @foreach ($footerQuickLinks as $qi => $link)
+            <li class="mb-4">
+              <a href="{{ \App\Support\LayoutLinks::hrefForItem($link) }}" class="text-white text-decoration-none small" @if(filled($link['url'] ?? null) && ($link['url'] ?? '') !== '#' && str_starts_with((string) ($link['url'] ?? ''), 'http')) target="_blank" rel="noopener" @endif>
+                <span data-i18n="footer_quick_{{ $qi }}">{{ $link['label_ar'] ?? '' }}</span>
+              </a>
+            </li>
+          @endforeach
         </ul>
       </div>
 
       <div class="col-lg-3 col-md-6 text-white" style="text-align: start !important">
         <h5 class="fw-bold mb-4 text-white footer-stay-updated" data-i18n="footer_stay_updated">
-          ابقَ على اطلاع
+          {{ $footerNewsletterTitleAr }}
         </h5>
         <p class="mb-3 text-white font-16 footer-subscribe" data-i18n="footer_subscribe">
-          اشترك في نشرتنا الإخبارية ..
+          {{ $footerNewsletterDescAr }}
         </p>
         <div class="custom-newsletter-input mb-4">
           <div class="newsletter-input-wrapper">
@@ -179,8 +148,8 @@
 
       <div class="col-12 col-md-6 order-md-1 text-center text-md-end">
         <p class="mb-0 small">
-          <span data-i18n="footer_copyright">© جميع الحقوق محفوظة. 2026</span>
-          <span class="text-white" style="background-color: #e1723b" data-i18n="footer_rights_brand">SAWTGAZA</span>
+          <span data-i18n="footer_copyright">{{ $footerCopyrightAr }}</span>
+          <span class="text-white" style="background-color: #e1723b" data-i18n="footer_rights_brand">{{ $footerBrand }}</span>
         </p>
       </div>
     </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PayPalController;
 use App\Http\Controllers\Api\ReelController;
@@ -9,8 +10,13 @@ use Illuminate\Support\Facades\Route;
 // Public: Instagram reels from the platform's own account
 Route::get('/reels', [ReelController::class, 'index'])->name('reels');
 
-// Team page (majors tabs + members)
-Route::get('/team', [TeamController::class, 'index'])->name('team');
+// ===== Pages (about, team, …) — no header/footer =====
+Route::prefix('pages')->name('pages.')->group(function () {
+    Route::get('/about', [AboutController::class, 'show'])->name('about');
+
+    Route::get('/team', [TeamController::class, 'index'])->name('team');
+    Route::get('/team/{uuid}', [TeamController::class, 'show'])->name('team.show');
+});
 
 // ===== Auth (JWT) =====
 Route::prefix('auth')->group(function () {
@@ -34,6 +40,6 @@ Route::prefix('paypal')->group(function () {
     // Capture an approved order (from Smart Button onApprove)
     Route::post('/orders/{orderId}/capture', [PayPalController::class, 'capture'])->name('paypal.orders.capture');
 
-    // Server-to-server webhook (verified inside the controller)
+    // Server-to-server webhook   (verified inside the controller)
     Route::post('/webhook', [PayPalController::class, 'webhook'])->name('paypal.webhook');
 });

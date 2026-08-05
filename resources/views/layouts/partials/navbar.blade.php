@@ -16,64 +16,23 @@
       id="mainNav"
     >
       <ul class="navbar-nav mb-2 mb-lg-0 fw-bold" style="text-align: start">
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link font-16 {{ ($activeNav ?? '') === 'home' ? 'active' : '' }}"
-            href="{{ url('/') }}"
-            data-i18n="nav_home"
-          >الرئيسية</a>
-        </li>
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link font-16 {{ ($activeNav ?? '') === 'about' ? 'active' : '' }}"
-            href="{{ route('about') }}"
-            data-i18n="nav_about"
-          >من نحن</a>
-        </li>
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link font-16 {{ ($activeNav ?? '') === 'content' ? 'active' : '' }}"
-            href="{{ route('content') }}"
-            data-i18n="nav_content"
-          >محتوانا</a>
-        </li>
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link font-16 {{ ($activeNav ?? '') === 'courses' ? 'active' : '' }}"
-            href="{{ route('courses.index') }}"
-          >الكورسات</a>
-        </li>
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link font-16 {{ ($activeNav ?? '') === 'team' ? 'active' : '' }}"
-            href="#"
-            data-i18n="nav_team"
-          >الفريق</a>
-        </li>
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link font-16 {{ ($activeNav ?? '') === 'creators' ? 'active' : '' }}"
-            href="#"
-            data-i18n="nav_creators"
-          >صناع المحتوى</a>
-        </li>
-        <div class="v-divider d-none d-lg-block mx-3"></div>
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link nav-link-back font-16"
-            href="#"
-            style="color: rgba(76, 92, 55, 1) !important"
-            data-i18n="nav_incubator"
-          >حاضنة صوت</a>
-        </li>
-        <li class="nav-item ms-lg-3">
-          <a
-            class="nav-link nav-link-back font-16 font-color-green"
-            href="#"
-            style="color: rgba(76, 92, 55, 1) !important"
-            data-i18n="nav_media"
-          >صوت ميديا</a>
-        </li>
+        @forelse ($headerNavLinks as $hi => $link)
+          @if (in_array($link['key'] ?? '', ['incubator', 'media'], true) && ($hi === 0 || ! in_array($headerNavLinks[$hi - 1]['key'] ?? '', ['incubator', 'media'], true)))
+            <div class="v-divider d-none d-lg-block mx-3"></div>
+          @endif
+          <li class="nav-item ms-lg-3">
+            <a
+              class="nav-link font-16 {{ in_array($link['key'] ?? '', ['incubator', 'media'], true) ? 'nav-link-back font-color-green' : '' }} {{ ($activeNav ?? '') === ($link['key'] ?? '') ? 'active' : '' }}"
+              href="{{ \App\Support\LayoutLinks::hrefForKey($link['key'] ?? null) }}"
+              @if (in_array($link['key'] ?? '', ['incubator', 'media'], true)) style="color: rgba(76, 92, 55, 1) !important" @endif
+              data-i18n="nav_custom_{{ $hi }}"
+            >{{ $link['label_ar'] ?? '' }}</a>
+          </li>
+        @empty
+          <li class="nav-item ms-lg-3">
+            <a class="nav-link font-16 {{ ($activeNav ?? '') === 'home' ? 'active' : '' }}" href="{{ url('/') }}">الرئيسية</a>
+          </li>
+        @endforelse
       </ul>
 
       <div class="d-flex gap-2 nav-search-div">
@@ -131,7 +90,7 @@
             <path d="M0 0h24v24H0z" fill="none" />
             <g fill="none" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="10" />
-              <path stroke-linejoin="round" d="M8 12c0 6 4 10 4 10s4-4 4-10s-4-10-4-10s-4 4-4 10Z" />
+              <path stroke-linejoin="round" d="M8 12c0 6 4 10 4 10s4-4 4-10s-4-10s-4 10s-4 4-4 10Z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 15H3m18-6H3" />
             </g>
           </svg>

@@ -53,44 +53,68 @@ class TeamMemberResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make()->schema([
-                Forms\Components\Select::make('major_id')
-                    ->label('القسم (Major)')
-                    ->relationship('major', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->helperText('اختر القسم من قائمة الـ Majors'),
+            Forms\Components\Tabs::make('Member')->columnSpanFull()->tabs([
+                Forms\Components\Tabs\Tab::make('البطاقة')->schema([
+                    Forms\Components\Select::make('major_id')
+                        ->label('القسم (Major)')
+                        ->relationship('major', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->helperText('اختر القسم من قائمة الـ Majors'),
 
-                Forms\Components\TextInput::make('name')
-                    ->label('الاسم')
-                    ->required()
-                    ->maxLength(255),
+                    Forms\Components\TextInput::make('name')
+                        ->label('الاسم')
+                        ->required()
+                        ->maxLength(255),
 
-                Forms\Components\TextInput::make('role')
-                    ->label('المسمى الوظيفي')
-                    ->required()
-                    ->placeholder('UI/UX Designer')
-                    ->maxLength(255),
+                    Forms\Components\TextInput::make('role')
+                        ->label('المسمى الوظيفي')
+                        ->required()
+                        ->placeholder('UI/UX Designer')
+                        ->maxLength(255),
 
-                Forms\Components\FileUpload::make('photo')
-                    ->label('الصورة')
-                    ->image()
-                    ->disk('public')
-                    ->directory('team/members')
-                    ->visibility('public')
-                    ->imagePreviewHeight('180')
-                    ->columnSpanFull(),
+                    Forms\Components\FileUpload::make('photo')
+                        ->label('الصورة (البطاقة وصفحة التفاصيل)')
+                        ->image()
+                        ->disk('public')
+                        ->directory('team/members')
+                        ->visibility('public')
+                        ->imagePreviewHeight('180')
+                        ->columnSpanFull(),
 
-                Forms\Components\TextInput::make('sort_order')
-                    ->label('ترتيب العرض')
-                    ->numeric()
-                    ->default(0),
+                    Forms\Components\TextInput::make('sort_order')
+                        ->label('ترتيب العرض')
+                        ->numeric()
+                        ->default(0),
 
-                Forms\Components\Toggle::make('is_active')
-                    ->label('مفعّل')
-                    ->default(true),
-            ])->columns(2),
+                    Forms\Components\Toggle::make('is_active')
+                        ->label('مفعّل')
+                        ->default(true),
+                ])->columns(2),
+
+                Forms\Components\Tabs\Tab::make('صفحة التفاصيل')->schema([
+                    Forms\Components\TextInput::make('years_of_experience')
+                        ->label('سنوات الخبرة')
+                        ->numeric()
+                        ->minValue(0)
+                        ->placeholder('5')
+                        ->helperText('تظهر كـ «5 سنوات من الخبرة»'),
+
+                    Forms\Components\Textarea::make('bio')
+                        ->label('النبذة')
+                        ->rows(6)
+                        ->columnSpanFull()
+                        ->helperText('نص «نبذة عنه» في صفحة العضو'),
+
+                    Forms\Components\Section::make('روابط التواصل (العضو)')->schema([
+                        Forms\Components\TextInput::make('facebook_url')->label('Facebook')->url()->placeholder('https://…'),
+                        Forms\Components\TextInput::make('linkedin_url')->label('LinkedIn')->url()->placeholder('https://…'),
+                        Forms\Components\TextInput::make('twitter_url')->label('X / Twitter')->url()->placeholder('https://…'),
+                        Forms\Components\TextInput::make('instagram_url')->label('Instagram')->url()->placeholder('https://…'),
+                    ])->columns(2),
+                ])->columns(2),
+            ]),
         ]);
     }
 
@@ -104,6 +128,7 @@ class TeamMemberResource extends Resource
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('role')->label('المسمى')->searchable(),
+                Tables\Columns\TextColumn::make('years_of_experience')->label('الخبرة')->suffix(' سنة')->placeholder('—'),
                 Tables\Columns\TextColumn::make('major.name')->label('القسم')->badge()->sortable(),
                 Tables\Columns\IconColumn::make('is_active')->label('مفعّل')->boolean(),
                 Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),

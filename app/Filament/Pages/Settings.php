@@ -82,6 +82,50 @@ class Settings extends Page implements HasForms
             'telegram_url' => ['social', 'string', ''],
             'youtube_url' => ['social', 'string', ''],
 
+            // الهيدر (تعديل العناوين والترتيب والإظهار فقط — الروابط ثابتة حسب الصفحة)
+            'header_nav_links' => ['header', 'json', [
+                ['key' => 'home', 'label_ar' => 'الرئيسية', 'label_en' => 'Home', 'is_visible' => true],
+                ['key' => 'about', 'label_ar' => 'من نحن', 'label_en' => 'About Us', 'is_visible' => true],
+                ['key' => 'content', 'label_ar' => 'محتوانا', 'label_en' => 'Our Content', 'is_visible' => true],
+                ['key' => 'courses', 'label_ar' => 'الكورسات', 'label_en' => 'Courses', 'is_visible' => true],
+                ['key' => 'team', 'label_ar' => 'الفريق', 'label_en' => 'Team', 'is_visible' => true],
+                ['key' => 'creators', 'label_ar' => 'صناع المحتوى', 'label_en' => 'Content Creators', 'is_visible' => true],
+                ['key' => 'support', 'label_ar' => 'ادعم صوت', 'label_en' => 'Support Sawt', 'is_visible' => true],
+                ['key' => 'incubator', 'label_ar' => 'حاضنة صوت', 'label_en' => 'Sawt Incubator', 'is_visible' => true],
+                ['key' => 'media', 'label_ar' => 'صوت ميديا', 'label_en' => 'Sawt Media', 'is_visible' => true],
+            ]],
+
+            // الفوتر
+            'footer_logo' => ['footer', 'string', ''],
+            'footer_about_ar' => ['footer', 'text', 'منصة صوت، تأسست لتكون مساحة للمبدعين، تجمع الحاضنة، صوت ميديا، والصوت نفسه، لتقديم محتوى ملهم وتجارب فريدة لكل من يسعى لصوته أن يُسمع.'],
+            'footer_about_en' => ['footer', 'text', 'Sawt platform was founded as a space for creators — bringing together the incubator, Sawt Media, and Sawt itself to deliver inspiring content and unique experiences.'],
+            'footer_main_title_ar' => ['footer', 'string', 'الأقسام الرئيسية'],
+            'footer_main_title_en' => ['footer', 'string', 'Main Sections'],
+            'footer_main_links' => ['footer', 'json', [
+                ['key' => 'home', 'label_ar' => 'الرئيسية', 'label_en' => 'Home', 'is_visible' => true],
+                ['key' => 'about', 'label_ar' => 'من نحن', 'label_en' => 'About Us', 'is_visible' => true],
+                ['key' => 'content', 'label_ar' => 'محتوانا', 'label_en' => 'Our Content', 'is_visible' => true],
+                ['key' => 'team', 'label_ar' => 'الفريق', 'label_en' => 'Team', 'is_visible' => true],
+                ['key' => 'creators', 'label_ar' => 'صناع المحتوى', 'label_en' => 'Content Creators', 'is_visible' => true],
+                ['key' => 'incubator', 'label_ar' => 'حاضنة صوت', 'label_en' => 'Sawt Incubator', 'is_visible' => true],
+                ['key' => 'media', 'label_ar' => 'صوت ميديا', 'label_en' => 'Sawt Media', 'is_visible' => true],
+            ]],
+            'footer_quick_title_ar' => ['footer', 'string', 'روابط سريعة'],
+            'footer_quick_title_en' => ['footer', 'string', 'Quick Links'],
+            'footer_quick_links' => ['footer', 'json', [
+                ['key' => 'backstage', 'label_ar' => 'الكواليس', 'label_en' => 'Behind the Scenes', 'url' => '#', 'is_visible' => true],
+                ['key' => 'media_kit', 'label_ar' => 'MEDIA KIT', 'label_en' => 'MEDIA KIT', 'url' => '#', 'is_visible' => true],
+                ['key' => 'blog', 'label_ar' => 'المدونة', 'label_en' => 'Blog', 'url' => '#', 'is_visible' => true],
+                ['key' => 'faq', 'label_ar' => 'الأسئلة الشائعة', 'label_en' => 'FAQs', 'url' => '#', 'is_visible' => true],
+            ]],
+            'footer_newsletter_title_ar' => ['footer', 'string', 'ابقَ على اطلاع'],
+            'footer_newsletter_title_en' => ['footer', 'string', 'Stay Updated'],
+            'footer_newsletter_desc_ar' => ['footer', 'string', 'اشترك في نشرتنا الإخبارية ..'],
+            'footer_newsletter_desc_en' => ['footer', 'string', 'Subscribe to our newsletter..'],
+            'footer_copyright_ar' => ['footer', 'string', '© جميع الحقوق محفوظة. 2026'],
+            'footer_copyright_en' => ['footer', 'string', '© All rights reserved. 2026'],
+            'footer_brand' => ['footer', 'string', 'SAWTGAZA'],
+
             // الصفحة الرئيسية (محتوى قابل للتعديل — شعار، أرقام، نصوص ثنائية اللغة، صور)
             'home_logo' => ['home', 'string', ''],
             'home_hero_image' => ['home', 'string', ''],
@@ -121,25 +165,54 @@ class Settings extends Page implements HasForms
             'about_platform_question_en' => ['about', 'string', 'What drives us to be your voice?'],
             'about_platform_desc_ar' => ['about', 'text', 'نؤمن أن لكل إنسان قصة تستحق أن تُروى، لذلك جاءت صوت لتكون مساحة حرة للتعبير، حيث يلتقي الأفراد لمشاركة تجاربهم وأفكارهم بصدق. نساعدك على إيصال صوتك إلى الآخرين، ونمنح المحتوى الإنساني مساحة حقيقية ليُرى، ويُسمع، ويترك أثرًا.'],
             'about_platform_desc_en' => ['about', 'text', 'We believe every person has a story worth telling. That\'s why Sawt was created as a free space for expression, where individuals come together to share their experiences and ideas with sincerity.'],
+            'about_core_values_title_ar' => ['about', 'string', 'أهم القيم التي نركز عليها'],
+            'about_core_values_title_en' => ['about', 'string', 'The values we focus on'],
             'about_core_values_subtitle_ar' => ['about', 'text', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر'],
             'about_core_values_subtitle_en' => ['about', 'text', 'Our values are the foundation on which we build Sawt, and they guide the way we work and continuously improve.'],
             'about_core_values' => ['about', 'json', [
-                ['title_ar' => 'التمكين', 'title_en' => 'Empowerment', 'desc_ar' => 'نسعى لأن نكون منبرًا يُمكّن الإنسان، ويصنع تأثيرًا إيجابيًا حقيقيًا يساهم في إيصال صوتنا وصوت المجتمع إلى العالم.', 'desc_en' => 'We strive to be a platform that empowers people and creates a real positive impact, helping carry our voice and our community\'s voice to the world.'],
-                ['title_ar' => 'الموثوقية', 'title_en' => 'Reliability', 'desc_ar' => 'نحرص على صون الأمانة الإعلامية وحماية الرواية وتوثيقها، معتمدين على معايير أخلاقية راسخة في كل ما ننشر.', 'desc_en' => 'We are committed to preserving media integrity, protecting and documenting the narrative, relying on firm ethical standards in everything we publish.'],
-                ['title_ar' => 'الشراكة', 'title_en' => 'Partnership', 'desc_ar' => 'نؤمن أن قوة "صوت غزة" نبع من تلاحم المجتمع، ونعمل كجسر يصل بين الأصوات المختلفة لتعزيز الدعم المتبادل.', 'desc_en' => 'We believe the strength of "Sawt Gaza" springs from the cohesion of the community, and we act as a bridge connecting different voices to foster mutual support.'],
-                ['title_ar' => 'الابتكار', 'title_en' => 'Innovation', 'desc_ar' => 'نلتزم بنقل الأخبار والقصص بمهنية عالية وأمانة صحفية، لنكون المصدر الموثوق الذي يعبّر عن الواقع بدقة.', 'desc_en' => 'We commit to delivering news and stories with high professionalism and journalistic integrity, to be the trusted source that reflects reality accurately.'],
+                ['icon' => null, 'title_ar' => 'المصداقية', 'title_en' => 'Credibility', 'desc_ar' => 'ننقل القصص والحقائق بدقة وموضوعية، ملتزمين بالتحقق من المعلومات واحترام ثقة جمهورنا.', 'desc_en' => 'We convey stories and facts accurately and objectively, committed to verifying information and respecting our audience\'s trust.'],
+                ['icon' => null, 'title_ar' => 'الإنسانية', 'title_en' => 'Humanity', 'desc_ar' => 'نضع الإنسان في قلب كل قصة، ونؤمن بأن لكل فرد حقاً في أن يُسمع ويُمثل بكرامة واحترام.', 'desc_en' => 'We put the human at the heart of every story, and believe every individual has a right to be heard with dignity and respect.'],
+                ['icon' => null, 'title_ar' => 'التأثير', 'title_en' => 'Impact', 'desc_ar' => 'نسعى لصناعة محتوى يرفع الوعي، ويحدث أثراً إيجابياً في المجتمع، ويحفز التغيير نحو الأفضل.', 'desc_en' => 'We strive to create content that raises awareness, creates positive impact, and stimulates change for the better.'],
+                ['icon' => null, 'title_ar' => 'الاستقلالية', 'title_en' => 'Independence', 'desc_ar' => 'نلتزم بإعلام مستقل يعكس الواقع بصدق، بعيداً عن أي تحيزات أو أجندات تؤثر على رسالتنا.', 'desc_en' => 'We are committed to independent media that reflects reality honestly, away from biases or agendas.'],
             ]],
-            'about_story_subtitle_ar' => ['about', 'text', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر'],
-            'about_story_subtitle_en' => ['about', 'text', 'Our values are the foundation on which we build Sawt, and they guide the way we work and continuously improve.'],
+            'about_story_title_ar' => ['about', 'string', 'قصة صوت'],
+            'about_story_title_en' => ['about', 'string', 'Sawt Story'],
+            'about_story_subtitle_ar' => ['about', 'text', 'من فكرة بسيطة إلى منصة تحمل صوت الناس وتصل لقلوبهم.'],
+            'about_story_subtitle_en' => ['about', 'text', 'From a simple idea to a platform that carries people\'s voices.'],
             'about_story_cards' => ['about', 'json', [
-                ['title_ar' => 'التأثير', 'title_en' => 'Impact', 'desc_ar' => 'منذ انطلاقنا، استطعنا إيصال أصوات الآلاف من الأشخاص الذين كانوا صامتين، وكشفنا حقائق عديدة تم إخفاؤها عن الرأي العام. قصصنا وصلت لملايين المتابعين، وساهمت في لفت انتباه العالم إلى قضايا مهمشة.', 'desc_en' => 'Since we began, we have managed to carry the voices of thousands of people who were silenced, and uncovered many facts that were hidden from public opinion.'],
-                ['title_ar' => 'ما نقدم', 'title_en' => 'What We Offer', 'desc_ar' => 'نحن نقدم إعلامًا حقيقيًا يعتمد على القصص الحقيقية والأصوات الصادقة، بعيدًا عن ضغوط الإعلام التقليدي والسرديات الرسمية. منصاتنا تتيح لأي إنسان أن يُسمع صوته ويُسرد قصته بحرية ومصداقية، حيث نوثّق القصص الحقيقية من المناطق المتضررة.', 'desc_en' => 'We provide genuine media built on real stories and honest voices, away from the pressures of traditional media and official narratives.'],
-                ['title_ar' => 'رحلتنا', 'title_en' => 'Our Journey', 'desc_ar' => 'بدأت رحلة "صوت" في ظل ظروف صعبة، حيث كانت الكثير من القصص الحقيقية مخفية والأصوات الصادقة مكتومة تحت ضغوط الإعلام التقليدي والسرديات الرسمية. آمنّا بأن الحقيقة تستحق أن تُروى، وكل إنسان يستحق أن يُسمع صوته.', 'desc_en' => 'The journey of "Sawt" began under difficult circumstances, when many real stories were hidden and honest voices were muted under the pressures of traditional media and official narratives.'],
+                ['icon' => null, 'title_ar' => 'رحلتنا', 'title_en' => 'Our Journey', 'desc_ar' => 'بدأت رحلة «صوت» في ظل ظروف صعبة حيث كانت الكثير من القصص الحقيقية مخفية والأصوات الصادقة مكبوتة تحت ضغوط الإعلام التقليدي.', 'desc_en' => 'The journey of Sawt began under difficult circumstances, when many real stories were hidden and honest voices muted.'],
+                ['icon' => null, 'title_ar' => 'ما نقدم', 'title_en' => 'What We Offer', 'desc_ar' => 'نحن نقدم إعلاماً حقيقياً يعتمد على القصص الحقيقية والأصوات الصادقة بعيداً عن ضغوط الإعلام التقليدي والسرديات الرسمية.', 'desc_en' => 'We provide genuine media built on real stories and honest voices, away from traditional media pressures.'],
+                ['icon' => null, 'title_ar' => 'التأثير', 'title_en' => 'Impact', 'desc_ar' => 'منذ انطلاقنا، استطعنا إيصال أصوات آلاف من الأشخاص الذين كانوا صامتين، وكشفنا حقائق عديدة لم يتناولها الرأي العام.', 'desc_en' => 'Since launch, we have amplified thousands of silent voices and uncovered facts missed by public opinion.'],
             ]],
-            'about_join_title_ar' => ['about', 'string', 'قد تكون قصتك بداية التغيير'],
-            'about_join_title_en' => ['about', 'string', 'Your story could be the start of change'],
-            'about_join_desc_ar' => ['about', 'text', 'كل صوت مهم، إذا كانت لديك قصة تستحق أن تُسمع فإن صوت ستدعمك من أول محادثة إلى التأثير العام.'],
-            'about_join_desc_en' => ['about', 'text', 'Every voice matters. If you have a story worth hearing, Sawt will support you from the first conversation to public impact.'],
+            'about_join_title_ar' => ['about', 'string', 'لأن بعض الأصوات لا يجب أن تُنسى'],
+            'about_join_title_en' => ['about', 'string', 'Because some voices should not be forgotten'],
+            'about_join_desc_ar' => ['about', 'text', 'مساهمتك ليست دعماً لمنصة إعلامية فحسب، بل دعماً لأصوات وقصص تنتظر من ينقلها'],
+            'about_join_desc_en' => ['about', 'text', 'Your contribution is not just support for a media platform, but support for voices and stories waiting to be told.'],
+            'about_join_button_text_ar' => ['about', 'string', 'مساهمة بإيصال صوت'],
+            'about_join_button_text_en' => ['about', 'string', 'Help amplify a voice'],
+            'about_join_button_url' => ['about', 'string', '/donate'],
+
+            // صفحة الفريق
+            'team_header_bg' => ['team', 'string', ''],
+            'team_hero_title_ar' => ['team', 'string', 'صناع الأثر.. الفريق خلف منصة صوت'],
+            'team_hero_title_en' => ['team', 'string', 'Impact Makers.. The Team Behind Sawt'],
+            'team_hero_desc_ar' => ['team', 'text', ''],
+            'team_hero_desc_en' => ['team', 'text', ''],
+            'team_all_label_ar' => ['team', 'string', 'الكل'],
+            'team_all_label_en' => ['team', 'string', 'All'],
+            'team_bio_label_ar' => ['team', 'string', 'نبذة عنه'],
+            'team_bio_label_en' => ['team', 'string', 'About'],
+            'team_experience_suffix_ar' => ['team', 'string', 'سنوات من الخبرة'],
+            'team_experience_suffix_en' => ['team', 'string', 'years of experience'],
+            'team_follow_label_ar' => ['team', 'string', 'تابعنا على :'],
+            'team_follow_label_en' => ['team', 'string', 'Follow us on:'],
+            'team_detail_intro_image' => ['team', 'string', ''],
+            'team_detail_intro_ar' => ['team', 'text', 'في صوت، كل فرد في الفريق يحمل رؤية مشتركة: أن يكون الصوت الحر مساحة آمنة للتعبير، والإبداع، والتأثير.'],
+            'team_detail_intro_en' => ['team', 'text', 'At Sawt, every team member shares one vision: a free, safe space for expression, creativity, and impact.'],
+            'team_members_section_title_ar' => ['team', 'string', 'اعضاء الفريق'],
+            'team_members_section_title_en' => ['team', 'string', 'Team Members'],
+            'team_view_all_label_ar' => ['team', 'string', 'عرض الكل'],
+            'team_view_all_label_en' => ['team', 'string', 'View all'],
 
             // stats (تظهر بصفحة صنّاع المحتوى بالموقع العام)
             'reach_count' => ['stats', 'number', 4000000],
@@ -254,46 +327,41 @@ class Settings extends Page implements HasForms
                 ]),
 
                 Forms\Components\Tabs\Tab::make('من نحن')->icon('heroicon-o-user-group')->schema([
-                    Forms\Components\Section::make('الصور')->schema([
+                    Forms\Components\Section::make('1) الهيرو')->schema([
                         Forms\Components\FileUpload::make('about_header_bg')
-                            ->label('خلفية الهيرو')
+                            ->label('صورة خلفية الهيرو')
                             ->image()->disk('public')->directory('about')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية'),
+                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('about_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('about_hero_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('about_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('about_hero_desc_en')->label('Description (English)')->rows(3),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('2) من نحن (المقدمة)')->schema([
                         Forms\Components\FileUpload::make('about_intro_image')
-                            ->label('صورة قسم المقدمة')
-                            ->image()->disk('public')->directory('about')->imageEditor(),
-                        Forms\Components\FileUpload::make('about_platform_image')
-                            ->label('صورة قسم المنصة')
-                            ->image()->disk('public')->directory('about')->imageEditor(),
-                        Forms\Components\FileUpload::make('about_join_bg')
-                            ->label('خلفية بانر الانضمام')
-                            ->image()->disk('public')->directory('about')->imageEditor(),
+                            ->label('صورة القسم')
+                            ->image()->disk('public')->directory('about')->imageEditor()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('about_header_ar')->label('العنوان (عربي)')->placeholder('من نحن'),
+                        Forms\Components\TextInput::make('about_header_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('about_intro_ar')->label('النص (عربي)')->rows(5)->columnSpanFull(),
+                        Forms\Components\Textarea::make('about_intro_en')->label('Body (English)')->rows(5)->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('الهيرو والمقدمة')->schema([
-                        Forms\Components\TextInput::make('about_hero_title_ar')->label('عنوان الهيرو (عربي)'),
-                        Forms\Components\TextInput::make('about_hero_title_en')->label('Hero title (English)'),
-                        Forms\Components\Textarea::make('about_hero_desc_ar')->label('وصف الهيرو (عربي)')->rows(3),
-                        Forms\Components\Textarea::make('about_hero_desc_en')->label('Hero description (English)')->rows(3),
-                        Forms\Components\TextInput::make('about_header_ar')->label('عنوان القسم (عربي)'),
-                        Forms\Components\TextInput::make('about_header_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('about_intro_ar')->label('نص المقدمة (عربي)')->rows(5)->columnSpanFull(),
-                        Forms\Components\Textarea::make('about_intro_en')->label('Intro text (English)')->rows(5)->columnSpanFull(),
-                    ])->columns(2),
-
-                    Forms\Components\Section::make('نبذة عن المنصة')->schema([
-                        Forms\Components\TextInput::make('about_platform_question_ar')->label('السؤال (عربي)'),
-                        Forms\Components\TextInput::make('about_platform_question_en')->label('Question (English)'),
-                        Forms\Components\Textarea::make('about_platform_desc_ar')->label('الوصف (عربي)')->rows(4),
-                        Forms\Components\Textarea::make('about_platform_desc_en')->label('Description (English)')->rows(4),
-                    ])->columns(2),
-
-                    Forms\Components\Section::make('القيم الأساسية')->schema([
-                        Forms\Components\Textarea::make('about_core_values_subtitle_ar')->label('العنوان الفرعي (عربي)')->rows(2),
+                    Forms\Components\Section::make('3) القيم')->schema([
+                        Forms\Components\TextInput::make('about_core_values_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('about_core_values_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('about_core_values_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
                         Forms\Components\Textarea::make('about_core_values_subtitle_en')->label('Subtitle (English)')->rows(2),
                         Forms\Components\Repeater::make('about_core_values')
-                            ->label('القيم')
+                            ->label('بطاقات القيم')
                             ->schema([
+                                Forms\Components\FileUpload::make('icon')
+                                    ->label('الأيقونة')
+                                    ->image()->disk('public')->directory('about/values')
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
                                 Forms\Components\TextInput::make('title_en')->label('Title (English)'),
                                 Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(3),
@@ -308,12 +376,29 @@ class Settings extends Page implements HasForms
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('قصة صوت')->schema([
-                        Forms\Components\Textarea::make('about_story_subtitle_ar')->label('العنوان الفرعي (عربي)')->rows(2),
+                    Forms\Components\Section::make('4) ما الذي يدفعنا لنكون صوتك؟')->schema([
+                        Forms\Components\FileUpload::make('about_platform_image')
+                            ->label('صورة القسم')
+                            ->image()->disk('public')->directory('about')->imageEditor()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('about_platform_question_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('about_platform_question_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('about_platform_desc_ar')->label('الوصف (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('about_platform_desc_en')->label('Description (English)')->rows(4),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('5) قصة صوت')->schema([
+                        Forms\Components\TextInput::make('about_story_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('about_story_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('about_story_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
                         Forms\Components\Textarea::make('about_story_subtitle_en')->label('Subtitle (English)')->rows(2),
                         Forms\Components\Repeater::make('about_story_cards')
                             ->label('بطاقات القصة')
                             ->schema([
+                                Forms\Components\FileUpload::make('icon')
+                                    ->label('الأيقونة')
+                                    ->image()->disk('public')->directory('about/story')
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
                                 Forms\Components\TextInput::make('title_en')->label('Title (English)'),
                                 Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(3),
@@ -328,11 +413,62 @@ class Settings extends Page implements HasForms
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('بانر الانضمام')->schema([
+                    Forms\Components\Section::make('6) بانر المساهمة / الانضمام')->schema([
+                        Forms\Components\FileUpload::make('about_join_bg')
+                            ->label('صورة الخلفية')
+                            ->image()->disk('public')->directory('about')->imageEditor()
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('about_join_title_ar')->label('العنوان (عربي)'),
                         Forms\Components\TextInput::make('about_join_title_en')->label('Title (English)'),
                         Forms\Components\Textarea::make('about_join_desc_ar')->label('الوصف (عربي)')->rows(3),
                         Forms\Components\Textarea::make('about_join_desc_en')->label('Description (English)')->rows(3),
+                        Forms\Components\TextInput::make('about_join_button_text_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('about_join_button_text_en')->label('Button text (English)'),
+                        Forms\Components\TextInput::make('about_join_button_url')->label('رابط الزر')->placeholder('/donate')->columnSpanFull(),
+                    ])->columns(2),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('الفريق')->icon('heroicon-o-users')->schema([
+                    Forms\Components\Section::make('1) الهيرو')->schema([
+                        Forms\Components\FileUpload::make('team_header_bg')
+                            ->label('صورة خلفية الهيرو')
+                            ->image()->disk('public')->directory('team')->imageEditor()
+                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('team_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('team_hero_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('team_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('team_hero_desc_en')->label('Description (English)')->rows(3),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('2) فلتر الأقسام')->schema([
+                        Forms\Components\TextInput::make('team_all_label_ar')->label('تسمية «الكل» (عربي)')->placeholder('الكل'),
+                        Forms\Components\TextInput::make('team_all_label_en')->label('"All" label (English)')->placeholder('All'),
+                        Forms\Components\Placeholder::make('team_majors_hint')
+                            ->content('إدارة الأقسام (فريق التصميم، التسويق…) من قائمة **الفريق → الأقسام (Majors)** في الشريط الجانبي.')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('3) صفحة تفاصيل العضو')->schema([
+                        Forms\Components\TextInput::make('team_bio_label_ar')->label('عنوان النبذة (عربي)')->placeholder('نبذة عنه'),
+                        Forms\Components\TextInput::make('team_bio_label_en')->label('Bio heading (English)'),
+                        Forms\Components\TextInput::make('team_experience_suffix_ar')->label('لاحقة الخبرة (عربي)')->placeholder('سنوات من الخبرة'),
+                        Forms\Components\TextInput::make('team_experience_suffix_en')->label('Experience suffix (English)'),
+                        Forms\Components\TextInput::make('team_follow_label_ar')->label('عنوان المتابعة (عربي)')->placeholder('تابعنا على :'),
+                        Forms\Components\TextInput::make('team_follow_label_en')->label('Follow label (English)'),
+                        Forms\Components\FileUpload::make('team_detail_intro_image')
+                            ->label('صورة قسم المقدمة أسفل الصفحة')
+                            ->image()->disk('public')->directory('team')->imageEditor()
+                            ->columnSpanFull(),
+                        Forms\Components\Textarea::make('team_detail_intro_ar')->label('نص المقدمة (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('team_detail_intro_en')->label('Intro text (English)')->rows(4),
+                        Forms\Components\TextInput::make('team_members_section_title_ar')->label('عنوان شبكة الأعضاء (عربي)'),
+                        Forms\Components\TextInput::make('team_members_section_title_en')->label('Members grid title (English)'),
+                        Forms\Components\TextInput::make('team_view_all_label_ar')->label('نص «عرض الكل» (عربي)'),
+                        Forms\Components\TextInput::make('team_view_all_label_en')->label('"View all" (English)'),
+                        Forms\Components\Placeholder::make('team_members_hint')
+                            ->content('روابط التواصل لكل عضو تُعدّل من **الفريق → أعضاء الفريق → تاب صفحة التفاصيل**.')
+                            ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
@@ -343,6 +479,102 @@ class Settings extends Page implements HasForms
                         ->label('اللغة الافتراضية')
                         ->options(['ar' => 'العربية', 'en' => 'English'])
                         ->required(),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('الهيدر')->icon('heroicon-o-bars-3')->schema([
+                    Forms\Components\Section::make('الشعار')->schema([
+                        Forms\Components\FileUpload::make('home_logo')
+                            ->label('شعار الهيدر')
+                            ->image()->disk('public')->directory('home')->imageEditor()
+                            ->helperText('يظهر في شريط التنقل')
+                            ->columnSpanFull(),
+                    ]),
+                    Forms\Components\Repeater::make('header_nav_links')
+                        ->label('عناصر القائمة — اسحب لإعادة الترتيب')
+                        ->schema([
+                            Forms\Components\Hidden::make('key'),
+                            Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                            Forms\Components\TextInput::make('label_en')->label('Label (English)'),
+                            Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
+                        ])
+                        ->columns(2)
+                        ->reorderable()
+                        ->collapsible()
+                        ->deletable(false)
+                        ->addable(false)
+                        ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
+                        ->columnSpanFull(),
+                    Forms\Components\Placeholder::make('header_social_hint')
+                        ->label('')
+                        ->content('روابط السوشيال ميديا للهيدر/الفوتر تُعدّل من تبويب «التواصل الاجتماعي».')
+                        ->columnSpanFull(),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('الفوتر')->icon('heroicon-o-rectangle-group')->schema([
+                    Forms\Components\Section::make('الشعار والنبذة')->schema([
+                        Forms\Components\FileUpload::make('footer_logo')
+                            ->label('شعار الفوتر')
+                            ->image()->disk('public')->directory('footer')->imageEditor()
+                            ->helperText('اتركه فارغاً لاستخدام الشعار الأبيض الافتراضي')
+                            ->columnSpanFull(),
+                        Forms\Components\Textarea::make('footer_about_ar')->label('نبذة (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('footer_about_en')->label('About (English)')->rows(3),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('الأقسام الرئيسية')->schema([
+                        Forms\Components\TextInput::make('footer_main_title_ar')->label('عنوان العمود (عربي)'),
+                        Forms\Components\TextInput::make('footer_main_title_en')->label('Column title (English)'),
+                        Forms\Components\Repeater::make('footer_main_links')
+                            ->label('العناصر — اسحب لإعادة الترتيب')
+                            ->schema([
+                                Forms\Components\Hidden::make('key'),
+                                Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_en')->label('Label (English)'),
+                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
+                            ])
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->deletable(false)
+                            ->addable(false)
+                            ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('روابط سريعة')->schema([
+                        Forms\Components\TextInput::make('footer_quick_title_ar')->label('عنوان العمود (عربي)'),
+                        Forms\Components\TextInput::make('footer_quick_title_en')->label('Column title (English)'),
+                        Forms\Components\Repeater::make('footer_quick_links')
+                            ->label('العناصر — اسحب لإعادة الترتيب')
+                            ->schema([
+                                Forms\Components\Hidden::make('key'),
+                                Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_en')->label('Label (English)'),
+                                Forms\Components\TextInput::make('url')
+                                    ->label('الرابط')
+                                    ->placeholder('https://example.com أو /page')
+                                    ->helperText('رابط خارجي أو مسار داخلي — اترك # إن لم يكن جاهزاً')
+                                    ->columnSpanFull(),
+                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
+                            ])
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->deletable(false)
+                            ->addable(false)
+                            ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('حقوق النشر')->schema([
+                        Forms\Components\TextInput::make('footer_copyright_ar')->label('حقوق النشر (عربي)'),
+                        Forms\Components\TextInput::make('footer_copyright_en')->label('Copyright (English)'),
+                        Forms\Components\TextInput::make('footer_brand')->label('العلامة (مثل SAWTGAZA)'),
+                        Forms\Components\TextInput::make('footer_newsletter_title_ar')->label('عنوان النشرة (عربي)'),
+                        Forms\Components\TextInput::make('footer_newsletter_title_en')->label('Newsletter title (English)'),
+                        Forms\Components\TextInput::make('footer_newsletter_desc_ar')->label('وصف النشرة (عربي)'),
+                        Forms\Components\TextInput::make('footer_newsletter_desc_en')->label('Newsletter description (English)'),
+                    ])->columns(2),
                 ]),
 
                 Forms\Components\Tabs\Tab::make('الدفع')->icon('heroicon-o-credit-card')->schema([
