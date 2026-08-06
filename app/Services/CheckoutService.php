@@ -2,47 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\Course;
-use App\Models\CourseEnrollment;
 use App\Models\Donation;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use RuntimeException;
 
 class CheckoutService
 {
     public function __construct(protected PayPalService $paypal) {}
-
-    /**
-     * Begin a course purchase: create (or reuse) a pending enrollment + payment and a PayPal order.
-     *
-     * @return array{order_id: string, payment: Payment}
-     */
-    public function startCourseOrder(Course $course, User $user): array
-    {
-        if ($course->isFree()) {
-            throw new RuntimeException('Course is free — no payment required.');
-        }
-
-        if ($course->isPurchasedBy($user)) {
-            throw new RuntimeException('Course already purchased.');
-        }
-
-        $enrollment = CourseEnrollment::firstOrCreate(
-            ['course_id' => $course->id, 'user_id' => $user->id],
-            ['status' => 'pending', 'price_paid' => $course->price, 'currency' => $course->currency],
-        );
-
-        return $this->startOrder(
-            $enrollment,
-            $user->id,
-            (float) $course->price,
-            $course->currency,
-            "course:{$course->id}",
-            'Course: '.$course->getTranslation('title', 'en'),
-        );
-    }
 
     /**
      * Begin a donation: create a pending donation + payment and a PayPal order.
@@ -70,9 +37,6 @@ class CheckoutService
     }
 
     /**
-     * Shared: create the pending Payment first, then a PayPal order tagged with the
-     * payment UUID as custom_id so webhooks map straight back to it.
-     *
      * @return array{order_id: string, payment: Payment}
      */
     protected function startOrder(object $payable, ?int $userId, float $amount, string $currency, string $reference, string $description): array
@@ -94,10 +58,6 @@ class CheckoutService
         });
     }
 
-    /**
-     * Capture an approved order and fulfill it. Idempotent — safe to call from both
-     * the client onApprove and the webhook.
-     */
     public function capture(string $orderId): Payment
     {
         $payment = Payment::where('gateway_order_id', $orderId)->firstOrFail();
@@ -105,9 +65,6 @@ class CheckoutService
         return $this->completeFromCapture($payment, fn () => $this->paypal->captureOrder($orderId));
     }
 
-    /**
-     * Resolve a Payment from a webhook custom_id ("payment:{uuid}").
-     */
     public function findByCustomId(?string $customId): ?Payment
     {
         if (! $customId || ! str_starts_with($customId, 'payment:')) {
@@ -117,9 +74,6 @@ class CheckoutService
         return Payment::where('uuid', substr($customId, strlen('payment:')))->first();
     }
 
-    /**
-     * Mark a payment completed from an already-captured webhook resource (no extra API call).
-     */
     public function completeFromWebhook(Payment $payment, array $captureResource): Payment
     {
         return $this->completeFromCapture($payment, fn () => [
@@ -129,12 +83,12 @@ class CheckoutService
     }
 
     /**
-     * @param  callable(): array  $resolver  returns a PayPal order/capture payload
+     * @param  callable(): array  $resolver
      */
     protected function completeFromCapture(Payment $payment, callable $resolver): Payment
     {
         if ($payment->isCompleted()) {
-            return $payment; // already handled
+            return $payment;
         }
 
         $result = $resolver();
@@ -159,15 +113,9 @@ class CheckoutService
         });
     }
 
-    /** Grant what was paid for. */
     protected function fulfill(Payment $payment): void
     {
         $payable = $payment->payable;
-
-        if ($payable instanceof CourseEnrollment && $payable->status !== 'active') {
-            $payable->update(['status' => 'active', 'enrolled_at' => now()]);
-            $payable->course()->increment('students_count');
-        }
 
         if ($payable instanceof Donation && $payable->status !== 'succeeded') {
             $payable->update(['status' => 'succeeded']);

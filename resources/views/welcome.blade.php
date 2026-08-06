@@ -58,293 +58,32 @@
         $heroSlides[$hi]['subtitle'] = $hs['subtitle_ar'] ?? '';
     }
 @endphp
-<!doctype html>
-<html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    @include('partials.seo')
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">-->
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-      integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
-      integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css"
-      integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/assets/css/style.css" />
-  </head>
+@extends('layouts.app', [
+    'activeNav' => 'home',
+    'headerWrapperClass' => 'main-header-wrapper',
+    'i18nOverrides' => $i18nOverrides,
+])
 
-  <body>
-    <header>
-      <div class="main-header-wrapper py-1">
-        <div
-          class="container nav-face py-2 text-white border-bottom border-light border-opacity-25"
-        >
-          <div
-            class="container d-flex justify-content-between align-items-center"
-          >
-            <div class="social-links">
-              <span
-                class="font-18 ms-2"
-                data-i18n="follow_us"
-                style="
-                  color: rgba(127, 127, 127, 1);
-                  font-weight: bold;
-                  font-size: 16px;
-                "
-                >وسائل التواصل الاجتماعي</span
-              >
-              <a href="#" class="text-white ms-2">
-                <i class="fab fa-linkedin-in font-18"></i>
-              </a>
+@section('title', Setting::get('site_name', 'Sawt'))
 
-              <a href="#" class="text-white ms-2"
-                ><i class="fab fa-facebook-f font-18"></i
-              ></a>
-
-              <a href="#" class="text-white ms-2"
-                ><i class="fa-solid fa-paper-plane"></i
-              ></a>
-
-              <a href="#" class="text-white ms-2"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.3em"
-                  height="1.3em"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path
-                    fill="rgba(76, 92, 55, 1)"
-                    d="M19.57 4.488a.75.75 0 0 0-1.14-.976l-5.368 6.274l-5.224-5.938a1.8 1.8 0 0 0-1.357-.598H5.007c-.68 0-1.264.352-1.56.885a1.55 1.55 0 0 0 .204 1.795l6.286 7.147l-5.507 6.435a.75.75 0 1 0 1.14.976l5.368-6.274l5.224 5.938c.345.392.85.598 1.357.598h1.474c.681 0 1.264-.352 1.56-.885a1.55 1.55 0 0 0-.203-1.795l-6.287-7.146z"
-                  />
-                </svg>
-              </a>
-
-              <a href="#" class="text-white ms-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  class="icon"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path
-                    fill="rgba(76, 92, 55, 1)"
-                    d="M9.367 2.25c-1.092 0-1.958 0-2.655.057c-.714.058-1.317.18-1.868.46a4.75 4.75 0 0 0-2.076 2.077c-.281.55-.403 1.154-.461 1.868c-.057.697-.057 1.563-.057 2.655v5.266c0 1.092 0 1.958.057 2.655c.058.714.18 1.317.46 1.869a4.75 4.75 0 0 0 2.077 2.075c.55.281 1.154.403 1.868.461c.697.057 1.563.057 2.655.057h5.266c1.092 0 1.958 0 2.655-.057c.714-.058 1.317-.18 1.869-.46a4.75 4.75 0 0 0 2.075-2.076c.281-.552.403-1.155.461-1.869c.057-.697.057-1.563.057-2.655V9.367c0-1.092 0-1.958-.057-2.655c-.058-.714-.18-1.317-.46-1.868a4.75 4.75 0 0 0-2.076-2.076c-.552-.281-1.155-.403-1.869-.461c-.697-.057-1.563-.057-2.655-.057zM16.25 6.5a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 0 1.5H17a.75.75 0 0 1-.75-.75m-6.207 1.728a4.25 4.25 0 1 1 3.914 7.544a4.25 4.25 0 0 1-3.914-7.544"
-                  />
-                </svg>
-              </a>
-            </div>
-
-            <div
-              class="contact-info small d-flex justify-content-center align-items-center"
-            >
-              <div class="register-btn">
-                <a href="/register" data-i18n="register_account"
-                  >أنشئ حساب</a
-                >
-              </div>
-              <div class="sign-in-btn">
-                <a href="/login" data-i18n="sign_in">تسجيل الدخول</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <nav class="navbar navbar-expand-lg py-1">
-          <div class="container bg-white shadow-sm py-1">
-            <a class="navbar-brand" href="#" style="margin-right: 0 !important">
-              <img src="{{ $logoUrl }}" alt="Sawt Logo" height="60" />
-            </a>
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#mainNav"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div
-              class="collapse navbar-collapse flex-column flex-lg-row align-items-start align-items-lg-center"
-              id="mainNav"
-            >
-              <ul
-                class="navbar-nav mb-2 mb-lg-0 fw-bold"
-                style="text-align: start"
-              >
-                <li class="nav-item ms-lg-3">
-                  <a
-                    class="nav-link active font-16"
-                    href="#"
-                    data-i18n="nav_home"
-                    >الرئيسية</a
-                  >
-                </li>
-                <li class="nav-item ms-lg-3">
-                  <a
-                    class="nav-link font-16"
-                    href="/about.html"
-                    target="_self"
-                    data-i18n="nav_about"
-                    >من نحن</a
-                  >
-                </li>
-                <li class="nav-item ms-lg-3">
-                  <a
-                    class="nav-link font-16"
-                    href="/content.html"
-                    data-i18n="nav_content"
-                    >محتوانا</a
-                  >
-                </li>
-                <li class="nav-item ms-lg-3">
-                  <a class="nav-link font-16" href="#" data-i18n="nav_team"
-                    >الفريق</a
-                  >
-                </li>
-                <li class="nav-item ms-lg-3">
-                  <a class="nav-link font-16" href="#" data-i18n="nav_creators"
-                    >صناع المحتوى</a
-                  >
-                </li>
-                <div class="v-divider d-none d-lg-block mx-3"></div>
-                <li class="nav-item ms-lg-3">
-                  <a
-                    class="nav-link nav-link-back font-16"
-                    href="#"
-                    style="color: rgba(76, 92, 55, 1) !important"
-                    data-i18n="nav_incubator"
-                    >حاضنة صوت</a
-                  >
-                </li>
-                <li class="nav-item ms-lg-3">
-                  <a
-                    class="nav-link nav-link-back font-16 font-color-green"
-                    href="#"
-                    style="color: rgba(76, 92, 55, 1) !important"
-                    data-i18n="nav_media"
-                    >صوت ميديا</a
-                  >
-                </li>
-              </ul>
-
-              <div class="d-flex gap-2 nav-search-div">
-                <div class="position-relative nav-search-div">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    class="fa fa-search position-absolute top-50 end-0 translate-middle-y me-3"
-                  >
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path
-                      fill="none"
-                      stroke="rgba(145, 145, 145, 1)"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="m17 17l4 4m-2-10a8 8 0 1 0-16 0a8 8 0 0 0 16 0"
-                    />
-                  </svg>
-
-                  <input
-                    type="text"
-                    class="form-control custom-placeholder py-2 search-input"
-                    placeholder="ابحث هنا..."
-                    data-i18n-placeholder="search_placeholder"
-                  />
-                </div>
-              </div>
-
-              <div class="contact-info-nav small d-flex">
-                <div class="register-btn">
-                  <a href="/register" data-i18n="register_account"
-                    >أنشئ حساب</a
-                  >
-                </div>
-                <div class="sign-in-btn">
-                  <a href="/login" data-i18n="sign_in">تسجيل الدخول</a>
-                </div>
-              </div>
-              <div class="searchDiv d-flex align-items-center gap-2">
-                <button class="btn rounded-nav nav-bttn">
-                  <i class="ri-moon-line"></i>
-                </button>
-
-                <button class="btn rounded-nav language-btn nav-bttn">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="2em"
-                    height="3em"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <g fill="none" stroke="currentColor" stroke-width="1.5">
-                      <circle cx="12" cy="12" r="10" />
-                      <path
-                        stroke-linejoin="round"
-                        d="M8 12c0 6 4 10 4 10s4-4 4-10s-4-10-4-10s-4 4-4 10Z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21 15H3m18-6H3"
-                      />
-                    </g>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </nav>
-
+@push('styles')
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+    integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css"
+    integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+@endpush
+@section('header_extra')
         <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-indicators">
             @foreach ($heroSlides as $hi => $hs)
@@ -407,7 +146,6 @@
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-      </div>
 
       <div class="stats-bar">
         <div class="box-element container front-face text-white rounded-4 py-4">
@@ -557,7 +295,9 @@
           </div>
         </div>
       </div>
-    </header>
+@endsection
+
+@section('content')
     <main class="my-5">
       <section class="sout-section py-5">
         <div class="container">
@@ -2099,7 +1839,7 @@
               انضم إلينا كصانع محتوى
             </h2>
             <p class="join-us-desc" data-i18n="join_creator_desc">
-صوت تجمع صناع المحتوى , كن صوت من لاصوت له  
+صوت تجمع صناع المحتوى , كن صوت من لاصوت له
             </p>
             <a href="#" class="btn btn-dark-green join-us-btn">
               <span data-i18n="join_creator_btn">طلب الانضمام</span>
@@ -2321,311 +2061,13 @@
         </div>
       </section>
     </main>
-    <footer class="footer-custom-bg pt-5 pb-4">
-      <div class="footer-custom-width" style="width: 95%; margin: 0 auto">
-        <div class="row g-4 text-end align-items-start">
-          <div class="col-lg-3 col-md-6" style="text-align: start">
-            <div class="footer-logo mb-3">
-              <img src="/assets/images/صوت ابيض.png" alt="صوت" width="100" />
-            </div>
-            <p class="lh-lg text-white font-16" data-i18n="footer_about">
-              منصة صوت، تأسست لتكون مساحة للمبدعين، تجمع الحاضنة، صوت ميديا،
-              والصوت نفسه، لتقديم محتوى ملهم وتجارب فريدة لكل من يسعى لصوته أن
-              يُسمع.
-            </p>
-          </div>
+@endsection
 
-          <div
-            class="col col-lg-3 col-md-6 text-white"
-            style="text-align: start"
-          >
-            <h5
-              class="fw-bold mb-4 text-white"
-              data-i18n="footer_main_sections"
-            >
-              الأقسام الرئيسية
-            </h5>
-            <div class="row">
-              <div class="col col-lg-6">
-                <ul class="list-unstyled footer-links">
-                  <li class="mb-4">
-                    <a href="#" class="text-white text-decoration-none small">
-                      <span data-i18n="nav_home">الرئيسية</span></a
-                    >
-                  </li>
-                  <li class="mb-4">
-                    <a href="#" class="text-white text-decoration-none small">
-                      <span data-i18n="nav_about">من نحن</span></a
-                    >
-                  </li>
-                  <li class="mb-4">
-                    <a href="#" class="text-white text-decoration-none small">
-                      <span data-i18n="nav_content">محتوانا</span></a
-                    >
-                  </li>
-                  <li class="mb-4">
-                    <a href="#" class="text-white text-decoration-none small">
-                      <span data-i18n="nav_team">الفريق</span></a
-                    >
-                  </li>
-                </ul>
-              </div>
-              <div class="col-lg-6 main-links">
-                <ul class="list-unstyled p-0 footer-links">
-                  <li class="mb-4">
-                    <a href="#" class="text-white text-decoration-none small">
-                      <span data-i18n="nav_creators">صناع المحتوى</span></a
-                    >
-                  </li>
-                  <li class="mb-4">
-                    <a href="#" class="text-white text-decoration-none small">
-                      <span data-i18n="nav_incubator">حاضنة صوت</span></a
-                    >
-                  </li>
-                  <li class="mb-4">
-                    <a href="#" class="text-white text-decoration-none small">
-                      <span data-i18n="nav_media">صوت ميديا</span></a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="col col-lg-3 col-md-6 text-white"
-            style="text-align: start"
-          >
-            <h5 class="fw-bold mb-4 text-white" data-i18n="footer_quick_links">
-              روابط سريعة
-            </h5>
-            <ul class="list-unstyled p-0 footer-links">
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="footer_backstage">الكواليس</span></a
-                >
-              </li>
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="footer_media_kit">MEDIA KIT</span></a
-                >
-              </li>
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="footer_blog">المدونة</span></a
-                >
-              </li>
-              <li class="mb-4">
-                <a href="#" class="text-white text-decoration-none small">
-                  <span data-i18n="footer_faq">الأسئلة الشائعة</span></a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div
-            class="col-lg-3 col-md-6 text-white"
-            style="text-align: start !important"
-          >
-            <h5
-              class="fw-bold mb-4 text-white footer-stay-updated"
-              data-i18n="footer_stay_updated"
-            >
-              ابقَ على اطلاع
-            </h5>
-            <p
-              class="mb-3 text-white font-16 footer-subscribe"
-              data-i18n="footer_subscribe"
-            >
-              اشترك في نشرتنا الإخبارية ..
-            </p>
-            <div class="custom-newsletter-input mb-4">
-              <div class="newsletter-input-wrapper">
-                <i class="fa-solid fa-magnifying-glass"> </i>
-                <input
-                  type="email"
-                  placeholder="ادخل بريدك الالكتروني"
-                  class="font-18 fw-bold"
-                  data-i18n-placeholder="footer_email_placeholder"
-                />
-              </div>
-              <button class="rs-send">
-                <i>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.4em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="m9.498 15l7.5-7.5m-8.992.179l7.321-3.46c3.042-1.438 4.563-2.157 5.533-1.436s.693 2.365.138 5.652l-.954 5.662c-.363 2.149-.544 3.223-1.345 3.692s-1.842.109-3.923-.611l-6.365-2.202c-3.892-1.346-5.838-2.019-5.91-3.34c-.074-1.32 1.786-2.2 5.505-3.957M9.498 15.5v2.227c0 2.374 0 3.56.71 3.75s1.458-.798 2.954-2.773l.836-1.204"
-                    /></svg
-                ></i>
-              </button>
-            </div>
-
-            <div class="contact-info-footer text-white">
-              <p
-                class="mb-2 d-flex align-items-center justify-content-start font-16"
-              >
-                <i style="color: rgba(225, 114, 59, 1)">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.5em"
-                    height="1.5em"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path
-                      fill="currentColor"
-                      d="M19.2 20q-2.702 0-5.418-1.244t-5.005-3.533q-2.27-2.289-3.523-5.021Q4 7.469 4 4.8V4h4.439l.848 4.083l-2.696 2.51q.684 1.186 1.417 2.167t1.527 1.769q.802.84 1.808 1.57t2.296 1.44l2.611-2.708l3.75.756V20zM6.121 9.654l2.092-1.92L7.635 5h-2.63q.03 1.144.309 2.305q.278 1.16.807 2.349m8.45 8.335q.923.463 2.09.723t2.339.277v-2.605l-2.388-.475zm0 0"
-                    />
-                  </svg>
-                </i>
-                +972567247177
-              </p>
-              <p
-                class="mb-0 font-16 d-flex align-items-center justify-content-start"
-              >
-                <i style="color: rgba(225, 114, 59, 1)">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.5em"
-                    height="1.5em"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <g
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        d="m7 8.5l2.942 1.74c1.715 1.014 2.4 1.014 4.116 0L17 8.5"
-                      />
-                      <path
-                        d="M2.016 13.476c.065 3.065.098 4.598 1.229 5.733c1.131 1.136 2.705 1.175 5.854 1.254c1.94.05 3.862.05 5.802 0c3.149-.079 4.723-.118 5.854-1.254c1.131-1.135 1.164-2.668 1.23-5.733c.02-.986.02-1.966 0-2.952c-.066-3.065-.099-4.598-1.23-5.733c-1.131-1.136-2.705-1.175-5.854-1.254a115 115 0 0 0-5.802 0c-3.149.079-4.723.118-5.854 1.254c-1.131 1.135-1.164 2.668-1.23 5.733a69 69 0 0 0 0 2.952Z"
-                      />
-                    </g>
-                  </svg>
-                </i>
-                info@sawtgaza.com
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="text-white opacity-25" style="width: 95%; margin: 20px auto" />
-
-      <div style="width: 95%; margin: 0 auto">
-        <div class="row align-items-center gy-4">
-          <div class="col-12 col-md-6 order-md-2 text-center">
-            <div
-              class="d-flex gap-3 justify-content-md-end justify-content-center"
-            >
-              <a href="#" class="text-white footer-social-icon"
-                ><i class="fab fa-instagram"></i
-              ></a>
-              <a href="#" class="text-white footer-social-icon"
-                ><i class="fab fa-twitter"></i
-              ></a>
-              <a href="#" class="text-white footer-social-icon"
-                ><i class="fab fa-telegram-plane"></i
-              ></a>
-              <a href="#" class="text-white footer-social-icon"
-                ><i class="fab fa-facebook-f"></i
-              ></a>
-              <a href="#" class="text-white footer-social-icon"
-                ><i class="fab fa-linkedin-in"></i
-              ></a>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 order-md-1 text-center text-md-end">
-            <p class="mb-0 small">
-              <span data-i18n="footer_copyright">
-                © جميع الحقوق محفوظة. 2026</span
-              >
-              <span
-                class="text-white"
-                style="background-color: #e1723b"
-                data-i18n="footer_rights_brand"
-                >SAWTGAZA</span
-              >
-            </p>
-          </div>
-
-          <!-- <div class="col-12 col-md-4 order-md-3">
-            <div
-              class="d-flex align-items-center justify-content-center justify-content-md-start gap-3 flex-wrap"
-            >
-              <a
-                href="#"
-                class="text-white ps-3"
-                style="text-decoration: underline !important"
-                data-i18n="footer_privacy"
-                >سياسة الخصوصية</a
-              >
-              <a
-                href="#"
-                class="text-white"
-                style="text-decoration: underline !important"
-                data-i18n="footer_terms"
-                >شروط الاستخدام</a
-              >
-
-              <div
-                class="d-flex flex-column align-items-center control-wrapper theme-toggle-and-up"
-              >
-                <button
-                  class="btn-control-custom rounded-circle"
-                  id="theme-toggle"
-                >
-                  <i class="fas fa-moon"></i>
-                </button>
-                <button
-                  class="btn-control-custom rounded-circle"
-                  onclick="scrollToTop()"
-                >
-                  <i class="fas fa-angles-up"></i>
-                </button>
-              </div>
-            </div>
-          </div> -->
-        </div>
-      </div>
-    </footer>
-    <!-- Modal -->
-
+@push('scripts')
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
       integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
       crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://code.jquery.com/jquery-3.7.0.min.js"
-      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
-      integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     ></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
@@ -2641,26 +2083,18 @@
     ></script>
     <script>
       // تعليقات كل ريل قادمة من إنستغرام (مفتاحها معرّف الريل)
-      window.reelComments = {
-        @foreach (($reels ?? []) as $reel)
-        @json((string) $reel['id']): @json($reel['comment_items'] ?? []),
-        @endforeach
-      };
-      window.reelCommentCounts = {
-        @foreach (($reels ?? []) as $reel)
-        @json((string) $reel['id']): {{ (int) ($reel['comments'] ?? 0) }},
-        @endforeach
-      };
+      window.reelComments = <?php
+        $reelComments = [];
+        $reelCommentCounts = [];
+        foreach (($reels ?? []) as $reel) {
+            $id = (string) $reel['id'];
+            $reelComments[$id] = $reel['comment_items'] ?? [];
+            $reelCommentCounts[$id] = (int) ($reel['comments'] ?? 0);
+        }
+        echo json_encode($reelComments, JSON_UNESCAPED_UNICODE);
+      ?>;
+      window.reelCommentCounts = <?php echo json_encode($reelCommentCounts, JSON_UNESCAPED_UNICODE); ?>;
     </script>
-    <script>
-      // نصوص الصفحة الرئيسية القابلة للتعديل من لوحة التحكم (عربي/إنجليزي)
-      window.i18nOverrides = @json($i18nOverrides, JSON_UNESCAPED_UNICODE);
-    </script>
-    <script src="/assets/js/script.js"></script>
-    <script src="/assets/js/translate.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-
     <script>
       $(document).ready(function () {
         $(".creators-carousel").owlCarousel({
@@ -2769,6 +2203,4 @@
         }
       });
     </script>
-
-  </body>
-</html>
+@endpush

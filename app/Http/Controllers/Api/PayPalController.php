@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
 use App\Services\CheckoutService;
 use App\Services\PayPalService;
 use Illuminate\Http\JsonResponse;
@@ -27,18 +26,6 @@ class PayPalController extends Controller
             'mode' => $this->paypal->mode(),
             'currency' => 'USD',
         ]);
-    }
-
-    /** Create an order for a paid course (auth required). */
-    public function createCourseOrder(Request $request, Course $course): JsonResponse
-    {
-        try {
-            $result = $this->checkout->startCourseOrder($course, $request->user());
-
-            return response()->json(['id' => $result['order_id']]);
-        } catch (Throwable $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
-        }
     }
 
     /** Create an order for a donation (guest allowed). */
