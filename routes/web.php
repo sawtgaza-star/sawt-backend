@@ -81,6 +81,11 @@ Route::get('/robots.txt', function () {
         ->header('Content-Type', 'text/plain');
 });
 
+// تنزيل إثبات التحويل — للوحة التحكم فقط (الملفات على قرص خاص)
+Route::get('/admin/support/proofs/{uuid}', [\App\Http\Controllers\SupportProofController::class, 'download'])
+    ->middleware('auth')
+    ->name('support.proofs.download');
+
 Route::get('/lang/{locale}', function (string $locale) {
     if (in_array($locale, ['ar', 'en'], true)) {
         session(['locale' => $locale]);

@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class PayPalService
@@ -137,6 +138,177 @@ class PayPalService
         }
 
         return $response->json();
+    }
+
+    /* =========================================================================
+     | PayPal Billing — المنتجات والخطط والاشتراكات الدورية (شهري / سنوي)
+     ========================================================================= */
+
+    /**
+     * Create (or reuse) the catalog product every subscription plan hangs off.
+     */
+    public function createProduct(string $name, string $description = ''): array
+    {
+        $response = Http::withToken($this->accessToken())
+            ->withHeaders(['PayPal-Request-Id' => 'product-'.md5($name)])
+            ->post("{$this->baseUrl()}/v1/catalogs/products", [
+                'name' => mb_substr($name, 0, 127),
+                'description' => mb_substr($description, 0, 256) ?: null,
+                'type' => 'SERVICE',
+                'category' => 'CHARITY',
+            ]);
+
+        if ($response->failed()) {
+            Log::error('PayPal create product failed', ['body' => $response->json()]);
+            throw new RuntimeException('Unable to create PayPal product.');
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Create a billing plan (MONTH / YEAR) for recurring support.
+     *
+     * @param  string  $interval  monthly|yearly
+     */
+    public function createPlan(string $productId, string $name, float $amount, string $currency, string $interval): array
+    {
+        $response = Http::withToken($this->accessToken())
+            ->post("{$this->baseUrl()}/v1/billing/plans", [
+                'product_id' => $productId,
+                'name' => mb_substr($name, 0, 127),
+                'status' => 'ACTIVE',
+                'billing_cycles' => [[
+                    'frequency' => [
+                        'interval_unit' => $interval === 'yearly' ? 'YEAR' : 'MONTH',
+                        'interval_count' => 1,
+                    ],
+                    'tenure_type' => 'REGULAR',
+                    'sequence' => 1,
+                    'total_cycles' => 0, // 0 = يستمر حتى الإلغاء
+                    'pricing_scheme' => [
+                        'fixed_price' => [
+                            'value' => number_format($amount, 2, '.', ''),
+                            'currency_code' => strtoupper($currency),
+                        ],
+                    ],
+                ]],
+                'payment_preferences' => [
+                    'auto_bill_outstanding' => true,
+                    'setup_fee_failure_action' => 'CONTINUE',
+                    'payment_failure_threshold' => 3,
+                ],
+            ]);
+
+        if ($response->failed()) {
+            Log::error('PayPal create plan failed', ['body' => $response->json()]);
+            throw new RuntimeException('Unable to create PayPal billing plan.');
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Start a subscription against a plan. Returns the decoded subscription
+     * (contains "id" and the approve link the donor must visit).
+     *
+     * @param  array{name?: string, email?: string}  $subscriber
+     */
+    public function createSubscription(string $planId, array $subscriber = [], ?string $customId = null, ?string $returnUrl = null, ?string $cancelUrl = null): array
+    {
+        $payload = ['plan_id' => $planId];
+
+        if ($customId !== null) {
+            $payload['custom_id'] = $customId;
+        }
+
+        if (filled($subscriber['email'] ?? null) || filled($subscriber['name'] ?? null)) {
+            $payload['subscriber'] = array_filter([
+                'email_address' => $subscriber['email'] ?? null,
+                'name' => filled($subscriber['name'] ?? null) ? [
+                    'given_name' => Str::before(trim($subscriber['name']), ' ') ?: $subscriber['name'],
+                    'surname' => Str::after(trim($subscriber['name']), ' ') ?: '-',
+                ] : null,
+            ]);
+        }
+
+        if ($returnUrl || $cancelUrl) {
+            $payload['application_context'] = array_filter([
+                'brand_name' => Setting::get('site_name', 'Sawt'),
+                'user_action' => 'SUBSCRIBE_NOW',
+                'return_url' => $returnUrl,
+                'cancel_url' => $cancelUrl,
+            ]);
+        }
+
+        $response = Http::withToken($this->accessToken())
+            ->post("{$this->baseUrl()}/v1/billing/subscriptions", $payload);
+
+        if ($response->failed()) {
+            Log::error('PayPal create subscription failed', ['body' => $response->json()]);
+            throw new RuntimeException('Unable to create PayPal subscription.');
+        }
+
+        return $response->json();
+    }
+
+    public function getSubscription(string $subscriptionId): array
+    {
+        $response = Http::withToken($this->accessToken())
+            ->get("{$this->baseUrl()}/v1/billing/subscriptions/{$subscriptionId}");
+
+        if ($response->failed()) {
+            Log::error('PayPal get subscription failed', ['id' => $subscriptionId, 'body' => $response->json()]);
+            throw new RuntimeException('Unable to fetch PayPal subscription.');
+        }
+
+        return $response->json();
+    }
+
+    public function cancelSubscription(string $subscriptionId, string $reason = 'Cancelled by donor'): bool
+    {
+        $response = Http::withToken($this->accessToken())
+            ->post("{$this->baseUrl()}/v1/billing/subscriptions/{$subscriptionId}/cancel", [
+                'reason' => mb_substr($reason, 0, 127),
+            ]);
+
+        if ($response->failed()) {
+            Log::error('PayPal cancel subscription failed', ['id' => $subscriptionId, 'body' => $response->json()]);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function suspendSubscription(string $subscriptionId, string $reason = 'Paused by donor'): bool
+    {
+        return Http::withToken($this->accessToken())
+            ->post("{$this->baseUrl()}/v1/billing/subscriptions/{$subscriptionId}/suspend", [
+                'reason' => mb_substr($reason, 0, 127),
+            ])->successful();
+    }
+
+    public function activateSubscription(string $subscriptionId, string $reason = 'Resumed by donor'): bool
+    {
+        return Http::withToken($this->accessToken())
+            ->post("{$this->baseUrl()}/v1/billing/subscriptions/{$subscriptionId}/activate", [
+                'reason' => mb_substr($reason, 0, 127),
+            ])->successful();
+    }
+
+    /**
+     * Pull the donor-facing approval link out of a create-subscription response.
+     */
+    public function approvalLink(array $subscription): ?string
+    {
+        foreach ($subscription['links'] ?? [] as $link) {
+            if (($link['rel'] ?? null) === 'approve') {
+                return $link['href'] ?? null;
+            }
+        }
+
+        return null;
     }
 
     /**
