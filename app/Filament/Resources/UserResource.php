@@ -4,13 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
+use App\Support\ContentCreatorPermissions;
 use App\Support\WebsiteUserPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -31,17 +31,17 @@ class UserResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Website Users');
+        return __('Users');
     }
 
     public static function getModelLabel(): string
     {
-        return __('Website User');
+        return __('User');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Website Users');
+        return __('Users');
     }
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -49,13 +49,6 @@ class UserResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return ['name', 'email', 'phone', 'uuid'];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        // Website / API users only — never Filament staff
-        return parent::getEloquentQuery()
-            ->whereDoesntHave('roles', fn (Builder $q) => $q->whereIn('name', User::FILAMENT_ROLES));
     }
 
     public static function form(Form $form): Form
@@ -86,9 +79,20 @@ class UserResource extends Resource
                     ->default('active')
                     ->required(),
 
+                Forms\Components\Select::make('type')
+                    ->label('النوع')
+                    ->options([
+                        User::TYPE_USER => 'مستخدم',
+                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                    ])
+                    ->default(User::TYPE_USER)
+                    ->disabled()
+                    ->dehydrated()
+                    ->helperText('يُحدَّث تلقائياً عند قبول طلب الانضمام كصانع محتوى.'),
+
                 Forms\Components\Placeholder::make('role_hint')
                     ->label('الدور')
-                    ->content('يُعيَّن تلقائياً دور user (صلاحيات الموقع/API فقط — بدون دخول Filament).')
+                    ->content('يُعيَّن تلقائياً دور user أو content_creator حسب النوع — بدون دخول Filament.')
                     ->columnSpanFull(),
             ])->columns(2),
         ]);
@@ -105,8 +109,19 @@ class UserResource extends Resource
                     ->height(40),
                 Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('البريد')->searchable(),
-                Tables\Columns\TextColumn::make('phone')->label('الهاتف'),
+                Tables\Columns\TextColumn::make('phone')->label('الهاتف')->toggleable(),
                 Tables\Columns\TextColumn::make('roles.name')->label('الأدوار')->badge()->default(User::ROLE_USER),
+                Tables\Columns\BadgeColumn::make('type')->label('النوع')
+                    ->colors([
+                        'gray' => User::TYPE_USER,
+                        'success' => User::TYPE_CONTENT_CREATOR,
+                        'danger' => User::TYPE_ADMIN,
+                    ])
+                    ->formatStateUsing(fn (?string $state) => match ($state) {
+                        User::TYPE_ADMIN => 'مدير',
+                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                        default => 'مستخدم',
+                    }),
                 Tables\Columns\BadgeColumn::make('status')->label('الحالة')
                     ->colors(['success' => 'active', 'gray' => 'inactive', 'danger' => 'banned'])
                     ->formatStateUsing(fn (string $state) => ['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور'][$state] ?? $state),
@@ -117,9 +132,19 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     ->label('الحالة')
                     ->options(['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور']),
+                Tables\Filters\SelectFilter::make('type')
+                    ->label('النوع')
+                    ->options([
+                        User::TYPE_USER => 'مستخدم',
+                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                        User::TYPE_ADMIN => 'مدير',
+                    ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->url(fn (User $record): string => $record->isAdmin()
+                        ? AdminResource::getUrl('edit', ['record' => $record])
+                        : static::getUrl('edit', ['record' => $record])),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -140,6 +165,22 @@ class UserResource extends Resource
 
     public static function ensureWebsiteUserRole(User $user): void
     {
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        if ($user->type === User::TYPE_CONTENT_CREATOR || $user->hasRole(User::ROLE_CONTENT_CREATOR)) {
+            foreach (ContentCreatorPermissions::all() as $name) {
+                Permission::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
+            }
+
+            $role = Role::firstOrCreate(['name' => User::ROLE_CONTENT_CREATOR, 'guard_name' => 'web']);
+            $role->syncPermissions(ContentCreatorPermissions::all());
+            $user->syncRoles([User::ROLE_CONTENT_CREATOR]);
+
+            return;
+        }
+
         foreach (WebsiteUserPermissions::all() as $name) {
             Permission::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
         }

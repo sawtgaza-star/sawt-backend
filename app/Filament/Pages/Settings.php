@@ -298,6 +298,118 @@ class Settings extends Page implements HasForms
             'team_view_all_label_ar' => ['team', 'string', 'عرض الكل'],
             'team_view_all_label_en' => ['team', 'string', 'View all'],
 
+            // صفحة صناع المحتوى
+            'creators_header_bg' => ['creators', 'string', ''],
+            'creators_hero_title_ar' => ['creators', 'string', 'صناع المحتوى في صوت'],
+            'creators_hero_title_en' => ['creators', 'string', 'Content Creators in Sawt'],
+            'creators_hero_desc_ar' => ['creators', 'text', 'تعرّف على صناع المحتوى في صوت، حيث كل فكرة لها صوت، وكل صانع محتوى له قصة.'],
+            'creators_hero_desc_en' => ['creators', 'text', 'Get to know the content creators in Sawt, where every idea has a voice, and every creator has a story.'],
+            'creators_grid_title_ar' => ['creators', 'string', '+47 صانع محتوى ناجح في صوت'],
+            'creators_grid_title_en' => ['creators', 'string', '+47 successful content creators in Sawt'],
+            'creators_grid_subtitle_ar' => ['creators', 'text', ''],
+            'creators_grid_subtitle_en' => ['creators', 'text', ''],
+            'creators_card_browse_label_ar' => ['creators', 'string', 'تصفح'],
+            'creators_card_browse_label_en' => ['creators', 'string', 'Browse'],
+            'creators_grid_limit' => ['creators', 'number', 10],
+            'creators_all_per_page' => ['creators', 'number', 10],
+            'creators_all_followers_suffix_ar' => ['creators', 'string', 'متابع'],
+            'creators_all_followers_suffix_en' => ['creators', 'string', 'followers'],
+            'creators_stats_title_ar' => ['creators', 'string', 'إنجازات صناع محتوى صوت'],
+            'creators_stats_title_en' => ['creators', 'string', 'Achievements of Sawt Content Creators'],
+            'creators_stats_subtitle_ar' => ['creators', 'text', 'أرقام حقيقية تعكس قوة مجتمعنا'],
+            'creators_stats_subtitle_en' => ['creators', 'text', 'Real numbers reflecting the strength of our community'],
+            'creators_stat_creators_label_ar' => ['creators', 'string', 'صانع محتوى نشط'],
+            'creators_stat_creators_label_en' => ['creators', 'string', 'Active content creator'],
+            'creators_stat_creators_value' => ['creators', 'number', 45],
+            'creators_stat_collabs_label_ar' => ['creators', 'string', 'إعلان تعاوني نُفّذ'],
+            'creators_stat_collabs_label_en' => ['creators', 'string', 'Collaborative ads executed'],
+            'creators_stat_collabs_value' => ['creators', 'number', 500],
+            'creators_stat_support_label_ar' => ['creators', 'string', 'دعم مالي وُزّع'],
+            'creators_stat_support_label_en' => ['creators', 'string', 'Financial support distributed'],
+            'creators_stat_support_value' => ['creators', 'number', 250000],
+            'creators_stat_reach_label_ar' => ['creators', 'string', 'شخص وصلهم المحتوى'],
+            'creators_stat_reach_label_en' => ['creators', 'string', 'People reached by content'],
+            'creators_stat_reach_value' => ['creators', 'number', 4000000],
+            'creators_join_bg' => ['creators', 'string', ''],
+            'creators_join_title_ar' => ['creators', 'string', 'انضم إلينا كصانع محتوى'],
+            'creators_join_title_en' => ['creators', 'string', 'Join us as a content creator'],
+            'creators_join_desc_ar' => ['creators', 'text', 'صوت تجمع صناع المحتوى، كن صوت من لا صوت له'],
+            'creators_join_desc_en' => ['creators', 'text', 'Sawt brings together content creators — be the voice for the voiceless'],
+            'creators_join_button_text_ar' => ['creators', 'string', 'طلب الانضمام'],
+            'creators_join_button_text_en' => ['creators', 'string', 'Request to join'],
+            'creators_join_form_title_ar' => ['creators', 'string', 'انضم إلينا كصانع محتوى'],
+            'creators_join_form_title_en' => ['creators', 'string', 'Join us as a content creator'],
+            'creators_join_form_subtitle_ar' => ['creators', 'text', 'أخبرنا عن نفسك وسنتواصل معك قريباً'],
+            'creators_join_form_subtitle_en' => ['creators', 'text', 'Tell us about yourself and we will contact you soon'],
+            'creators_join_step_1_ar' => ['creators', 'string', 'المعلومات الشخصية'],
+            'creators_join_step_1_en' => ['creators', 'string', 'Personal information'],
+            'creators_join_step_2_ar' => ['creators', 'string', 'تفاصيل المحتوى'],
+            'creators_join_step_2_en' => ['creators', 'string', 'Content details'],
+            'creators_join_step_3_ar' => ['creators', 'string', 'مواقع التواصل'],
+            'creators_join_step_3_en' => ['creators', 'string', 'Social media'],
+            'creators_join_next_ar' => ['creators', 'string', 'التالي'],
+            'creators_join_next_en' => ['creators', 'string', 'Next'],
+            'creators_join_prev_ar' => ['creators', 'string', 'السابق'],
+            'creators_join_prev_en' => ['creators', 'string', 'Previous'],
+            'creators_join_cancel_ar' => ['creators', 'string', 'إلغاء'],
+            'creators_join_cancel_en' => ['creators', 'string', 'Cancel'],
+            'creators_join_submit_ar' => ['creators', 'string', 'تسليم الطلب'],
+            'creators_join_submit_en' => ['creators', 'string', 'Submit request'],
+            'creators_join_content_types' => ['creators', 'json', [
+                ['key' => 'art', 'label_ar' => 'فن وإبداع', 'label_en' => 'Art & creativity'],
+                ['key' => 'comedy', 'label_ar' => 'كوميدي وترفيهي', 'label_en' => 'Comedy & entertainment'],
+                ['key' => 'culture', 'label_ar' => 'ثقافة وفنون', 'label_en' => 'Culture & arts'],
+                ['key' => 'politics', 'label_ar' => 'سياسة', 'label_en' => 'Politics'],
+                ['key' => 'tech', 'label_ar' => 'تقنية وتكنولوجيا', 'label_en' => 'Tech'],
+                ['key' => 'social', 'label_ar' => 'اجتماعية', 'label_en' => 'Social'],
+                ['key' => 'news', 'label_ar' => 'إخبارية وتوعوية', 'label_en' => 'News & awareness'],
+                ['key' => 'health', 'label_ar' => 'صحة ولياقة', 'label_en' => 'Health & fitness'],
+                ['key' => 'sports', 'label_ar' => 'رياضة وترفيه', 'label_en' => 'Sports & leisure'],
+                ['key' => 'other', 'label_ar' => 'أخرى', 'label_en' => 'Other'],
+            ]],
+            'creators_partners_title_ar' => ['creators', 'string', 'شركات إعلانية تعاونت مع صناع محتوى صوت'],
+            'creators_partners_title_en' => ['creators', 'string', 'Advertising companies that collaborated with Sawt creators'],
+            'creators_partners_desc_ar' => ['creators', 'text', 'شكراً للشركات التي حملت صوت أهل غزة إلى العالم'],
+            'creators_partners_desc_en' => ['creators', 'text', 'Thank you to the companies that carried the voice of Gaza to the world'],
+            'creators_collab_title_ar' => ['creators', 'string', 'كيف يبدأ التعاون مع صناع محتوى صوت؟'],
+            'creators_collab_title_en' => ['creators', 'string', 'How does collaboration with Sawt content creators begin?'],
+            'creators_collab_desc_ar' => ['creators', 'text', 'ميديا صوت هي الجسر الذي يربط الشركات بصناع المحتوى في غزة'],
+            'creators_collab_desc_en' => ['creators', 'text', 'Sawt Media is the bridge connecting companies with content creators in Gaza'],
+            'creators_collab_brands_label_ar' => ['creators', 'string', 'الشركات والعلامات'],
+            'creators_collab_brands_label_en' => ['creators', 'string', 'Companies and Brands'],
+            'creators_collab_brands_subtitle_ar' => ['creators', 'string', 'التجارية حول العالم'],
+            'creators_collab_brands_subtitle_en' => ['creators', 'string', 'Commercial brands worldwide'],
+            'creators_collab_media_image' => ['creators', 'string', ''],
+            'creators_collab_media_label_ar' => ['creators', 'string', 'ميديا صوت'],
+            'creators_collab_media_label_en' => ['creators', 'string', 'Sawt Media'],
+            'creators_collab_media_subtitle_ar' => ['creators', 'string', 'الوسيط الرسمي الموثوق'],
+            'creators_collab_media_subtitle_en' => ['creators', 'string', 'The trusted official intermediary'],
+            'creators_collab_creators_label_ar' => ['creators', 'string', 'صناع المحتوى'],
+            'creators_collab_creators_label_en' => ['creators', 'string', 'Content Creators'],
+            'creators_collab_creators_subtitle_ar' => ['creators', 'string', 'مبدعو غزة وفلسطين'],
+            'creators_collab_creators_subtitle_en' => ['creators', 'string', 'Creators from Gaza and Palestine'],
+            'creators_collab_steps_title_ar' => ['creators', 'string', 'خطوات التعاون'],
+            'creators_collab_steps_title_en' => ['creators', 'string', 'Collaboration steps'],
+            'creators_collab_step_1_ar' => ['creators', 'text', 'استعرض ملفات صناعنا وفلتر حسب التخصص والميزانية والوصول الجماهيري'],
+            'creators_collab_step_1_en' => ['creators', 'text', 'Browse our creators\' profiles and filter by specialty, budget, and audience reach'],
+            'creators_collab_step_2_ar' => ['creators', 'text', 'فريق صوت ميديا يتولى التنسيق الكامل بينك وبين صانع المحتوى - من التفاصيل حتى العقد'],
+            'creators_collab_step_2_en' => ['creators', 'text', 'The Sawt Media team handles full coordination between you and the creator — from details to contract'],
+            'creators_collab_step_3_ar' => ['creators', 'text', 'المحتوى يُنتج ويُنشر، وتحصل على تقرير تفصيلي بالنتائج والتفاعل'],
+            'creators_collab_step_3_en' => ['creators', 'text', 'Content is produced and published, and you get a detailed report on results and engagement'],
+            'creators_collab_cta_label_ar' => ['creators', 'string', 'تواصل مع فريق صوت للانضمام'],
+            'creators_collab_cta_label_en' => ['creators', 'string', 'Contact the Sawt team to join'],
+            'creators_faq_title_ar' => ['creators', 'string', 'الأسئلة التي تدور ببالك؟ إليك ردودها'],
+            'creators_faq_title_en' => ['creators', 'string', 'Questions on your mind? Here are the answers'],
+            'creators_faq_subtitle_ar' => ['creators', 'text', 'كل ما تحتاج معرفته قبل أن تبدأ رحلتك مع صوت'],
+            'creators_faq_subtitle_en' => ['creators', 'text', 'Everything you need to know before starting your journey with Sawt'],
+            'creators_faq_image' => ['creators', 'string', ''],
+            'creators_bio_label_ar' => ['creators', 'string', 'نبذة عنه'],
+            'creators_bio_label_en' => ['creators', 'string', 'About'],
+            'creators_followers_label_ar' => ['creators', 'string', 'عدد المتابعين'],
+            'creators_followers_label_en' => ['creators', 'string', 'Followers'],
+            'creators_socials_label_ar' => ['creators', 'string', 'تابعنا على:'],
+            'creators_socials_label_en' => ['creators', 'string', 'Follow us on:'],
+
             // stats (تظهر بصفحة صنّاع المحتوى بالموقع العام)
             'reach_count' => ['stats', 'number', 4000000],
             'supporters_count' => ['stats', 'number', 250000],
@@ -582,6 +694,230 @@ class Settings extends Page implements HasForms
                         Forms\Components\Placeholder::make('team_members_hint')
                             ->content('روابط التواصل لكل عضو تُعدّل من **الفريق → أعضاء الفريق → تاب صفحة التفاصيل**.')
                             ->columnSpanFull(),
+                    ])->columns(2),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('صناع المحتوى')->icon('heroicon-o-microphone')->schema([
+                    Forms\Components\Section::make('1) الهيرو')->schema([
+                        Forms\Components\FileUpload::make('creators_header_bg')
+                            ->label('صورة خلفية الهيرو')
+                            ->image()->disk('public')->directory('creators')->imageEditor()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('creators_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('creators_hero_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('creators_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('creators_hero_desc_en')->label('Description (English)')->rows(3),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('2) شبكة صناع المحتوى')->schema([
+                        Forms\Components\TextInput::make('creators_grid_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('creators_grid_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('creators_grid_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_grid_subtitle_en')->label('Subtitle (English)')->rows(2),
+                        Forms\Components\TextInput::make('creators_card_browse_label_ar')->label('نص «تصفح» (عربي)'),
+                        Forms\Components\TextInput::make('creators_card_browse_label_en')->label('Browse label (English)'),
+                        Forms\Components\TextInput::make('creators_grid_limit')->label('عدد البطاقات في الصفحة الرئيسية')->numeric()->minValue(1)->default(10),
+                        Forms\Components\Placeholder::make('creators_grid_hint')
+                            ->content('إدارة صناع المحتوى من **صنّاع المحتوى → Content Creators** في الشريط الجانبي.')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('صفحة عرض الكل')->schema([
+                        Forms\Components\TextInput::make('creators_all_per_page')
+                            ->label('عدد البطاقات في كل صفحة')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(50)
+                            ->default(10)
+                            ->helperText('صفحة /creators/all — الترقيم أسفل الشبكة'),
+                        Forms\Components\TextInput::make('creators_all_followers_suffix_ar')->label('لاحقة المتابعين (عربي)')->placeholder('متابع'),
+                        Forms\Components\TextInput::make('creators_all_followers_suffix_en')->label('Followers suffix (English)')->placeholder('followers'),
+                        Forms\Components\Placeholder::make('creators_all_hint')
+                            ->content('البطاقات نفسها تُدار من **صنّاع المحتوى → Content Creators** (الصورة، الاسم، التخصص، عدد المتابعين، الترتيب، الحالة).')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('3) الإحصائيات')->schema([
+                        Forms\Components\TextInput::make('creators_stats_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('creators_stats_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('creators_stats_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_stats_subtitle_en')->label('Subtitle (English)')->rows(2),
+
+                        Forms\Components\Section::make('① صانع محتوى نشط')->schema([
+                            Forms\Components\TextInput::make('creators_stat_creators_value')
+                                ->label('الرقم')
+                                ->numeric()
+                                ->helperText('مثال: 45 يظهر كـ 45+'),
+                            Forms\Components\TextInput::make('creators_stat_creators_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_creators_label_en')->label('Label (English)'),
+                        ])->columns(3)->compact(),
+
+                        Forms\Components\Section::make('② إعلان تعاوني نُفّذ')->schema([
+                            Forms\Components\TextInput::make('creators_stat_collabs_value')
+                                ->label('الرقم')
+                                ->numeric()
+                                ->helperText('مثال: 500 يظهر كـ 500+'),
+                            Forms\Components\TextInput::make('creators_stat_collabs_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_collabs_label_en')->label('Label (English)'),
+                        ])->columns(3)->compact(),
+
+                        Forms\Components\Section::make('③ دعم مالي وُزّع')->schema([
+                            Forms\Components\TextInput::make('creators_stat_support_value')
+                                ->label('الرقم')
+                                ->numeric()
+                                ->helperText('مثال: 250000 يظهر كـ +$250K'),
+                            Forms\Components\TextInput::make('creators_stat_support_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_support_label_en')->label('Label (English)'),
+                        ])->columns(3)->compact(),
+
+                        Forms\Components\Section::make('④ شخص وصلهم المحتوى')->schema([
+                            Forms\Components\TextInput::make('creators_stat_reach_value')
+                                ->label('الرقم')
+                                ->numeric()
+                                ->helperText('مثال: 4000000 يظهر كـ 4M+'),
+                            Forms\Components\TextInput::make('creators_stat_reach_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_reach_label_en')->label('Label (English)'),
+                        ])->columns(3)->compact(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('4) دعوة الانضمام (CTA)')->schema([
+                        Forms\Components\FileUpload::make('creators_join_bg')
+                            ->label('صورة الزر / الخلفية')
+                            ->image()->disk('public')->directory('creators')->imageEditor()
+                            ->helperText('هذه الصورة هي زر «انضم إلينا كصانع محتوى»')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('creators_join_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('creators_join_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('creators_join_desc_en')->label('Description (English)')->rows(3),
+                        Forms\Components\TextInput::make('creators_join_button_text_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_button_text_en')->label('Button text (English)'),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('نموذج الانضمام (3 خطوات)')->schema([
+                        Forms\Components\TextInput::make('creators_join_form_title_ar')->label('عنوان النموذج (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_form_title_en')->label('Form title (English)'),
+                        Forms\Components\Textarea::make('creators_join_form_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_join_form_subtitle_en')->label('Subtitle (English)')->rows(2),
+                        Forms\Components\TextInput::make('creators_join_step_1_ar')->label('الخطوة 1 (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_step_1_en')->label('Step 1 (English)'),
+                        Forms\Components\TextInput::make('creators_join_step_2_ar')->label('الخطوة 2 (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_step_2_en')->label('Step 2 (English)'),
+                        Forms\Components\TextInput::make('creators_join_step_3_ar')->label('الخطوة 3 (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_step_3_en')->label('Step 3 (English)'),
+                        Forms\Components\TextInput::make('creators_join_next_ar')->label('نص «التالي» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_next_en')->label('Next (English)'),
+                        Forms\Components\TextInput::make('creators_join_prev_ar')->label('نص «السابق» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_prev_en')->label('Previous (English)'),
+                        Forms\Components\TextInput::make('creators_join_cancel_ar')->label('نص «إلغاء» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_cancel_en')->label('Cancel (English)'),
+                        Forms\Components\TextInput::make('creators_join_submit_ar')->label('نص «تسليم الطلب» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_submit_en')->label('Submit (English)'),
+                        Forms\Components\Repeater::make('creators_join_content_types')
+                            ->label('أنواع المحتوى (الخطوة 2)')
+                            ->schema([
+                                Forms\Components\TextInput::make('key')->label('المفتاح')->required()->maxLength(80),
+                                Forms\Components\TextInput::make('label_ar')->label('التسمية (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_en')->label('Label (English)'),
+                            ])
+                            ->columns(3)
+                            ->reorderable()
+                            ->collapsible()
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('5) الشركات الشريكة')->schema([
+                        Forms\Components\TextInput::make('creators_partners_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('creators_partners_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('creators_partners_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_partners_desc_en')->label('Description (English)')->rows(2),
+                        Forms\Components\Placeholder::make('creators_partners_hint')
+                            ->content('إدارة الشركات من **صنّاع المحتوى → الشركات الشريكة** في الشريط الجانبي.')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('6) خطوات التعاون')->schema([
+                        Forms\Components\TextInput::make('creators_collab_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('creators_collab_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('creators_collab_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_collab_desc_en')->label('Description (English)')->rows(2),
+
+                        Forms\Components\Section::make('مخطط التعاون — اليمين: صناع المحتوى (نص)')->schema([
+                            Forms\Components\TextInput::make('creators_collab_creators_label_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_creators_label_en')->label('Title (English)'),
+                            Forms\Components\TextInput::make('creators_collab_creators_subtitle_ar')->label('الوصف الفرعي (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_creators_subtitle_en')->label('Subtitle (English)'),
+                        ])->columns(2)->compact(),
+
+                        Forms\Components\Section::make('مخطط التعاون — الوسط: ميديا صوت (صورة)')->schema([
+                            Forms\Components\FileUpload::make('creators_collab_media_image')
+                                ->label('صورة / شعار الوسط')
+                                ->image()
+                                ->disk('public')
+                                ->directory('creators/collab')
+                                ->imageEditor()
+                                ->helperText('الصورة في الدائرة الوسطى (ميديا صوت)')
+                                ->columnSpanFull(),
+                            Forms\Components\TextInput::make('creators_collab_media_label_ar')->label('العنوان تحت الصورة (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_media_label_en')->label('Title under image (English)'),
+                            Forms\Components\TextInput::make('creators_collab_media_subtitle_ar')->label('شارة الوسط (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_media_subtitle_en')->label('Badge text (English)'),
+                        ])->columns(2)->compact(),
+
+                        Forms\Components\Section::make('مخطط التعاون — اليسار: الشركات (نص)')->schema([
+                            Forms\Components\TextInput::make('creators_collab_brands_label_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_brands_label_en')->label('Title (English)'),
+                            Forms\Components\TextInput::make('creators_collab_brands_subtitle_ar')->label('الوصف الفرعي (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_brands_subtitle_en')->label('Subtitle (English)'),
+                        ])->columns(2)->compact(),
+
+                        Forms\Components\Section::make('عنوان خطوات التعاون')->schema([
+                            Forms\Components\TextInput::make('creators_collab_steps_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_steps_title_en')->label('Title (English)'),
+                        ])->columns(2)->compact(),
+
+                        Forms\Components\Section::make('الخطوة 01')->schema([
+                            Forms\Components\Textarea::make('creators_collab_step_1_ar')->label('النص (عربي)')->rows(3),
+                            Forms\Components\Textarea::make('creators_collab_step_1_en')->label('Text (English)')->rows(3),
+                        ])->columns(2)->compact(),
+
+                        Forms\Components\Section::make('الخطوة 02')->schema([
+                            Forms\Components\Textarea::make('creators_collab_step_2_ar')->label('النص (عربي)')->rows(3),
+                            Forms\Components\Textarea::make('creators_collab_step_2_en')->label('Text (English)')->rows(3),
+                        ])->columns(2)->compact(),
+
+                        Forms\Components\Section::make('الخطوة 03')->schema([
+                            Forms\Components\Textarea::make('creators_collab_step_3_ar')->label('النص (عربي)')->rows(3),
+                            Forms\Components\Textarea::make('creators_collab_step_3_en')->label('Text (English)')->rows(3),
+                        ])->columns(2)->compact(),
+
+                        Forms\Components\Section::make('زر التواصل')->schema([
+                            Forms\Components\TextInput::make('creators_collab_cta_label_ar')->label('نص الزر (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_cta_label_en')->label('Button text (English)'),
+                        ])->columns(2)->compact(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('7) الأسئلة الشائعة')->schema([
+                        Forms\Components\TextInput::make('creators_faq_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('creators_faq_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('creators_faq_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_faq_subtitle_en')->label('Subtitle (English)')->rows(2),
+                        Forms\Components\FileUpload::make('creators_faq_image')
+                            ->label('صورة جانبية')
+                            ->image()->disk('public')->directory('creators')->imageEditor()
+                            ->columnSpanFull(),
+                        Forms\Components\Placeholder::make('creators_faq_hint')
+                            ->content('إدارة الأسئلة من **صنّاع المحتوى → الأسئلة الشائعة** في الشريط الجانبي.')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('8) صفحة تفاصيل صانع المحتوى')->schema([
+                        Forms\Components\TextInput::make('creators_bio_label_ar')->label('عنوان النبذة (عربي)'),
+                        Forms\Components\TextInput::make('creators_bio_label_en')->label('Bio heading (English)'),
+                        Forms\Components\TextInput::make('creators_followers_label_ar')->label('عنوان المتابعين (عربي)'),
+                        Forms\Components\TextInput::make('creators_followers_label_en')->label('Followers label (English)'),
+                        Forms\Components\TextInput::make('creators_socials_label_ar')->label('عنوان التواصل (عربي)'),
+                        Forms\Components\TextInput::make('creators_socials_label_en')->label('Socials label (English)'),
                     ])->columns(2),
                 ]),
 

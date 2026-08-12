@@ -28,6 +28,11 @@ class AdminResource extends Resource
         return __('Administration');
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('Admins');
@@ -54,7 +59,10 @@ class AdminResource extends Resource
     {
         // Filament staff only
         return parent::getEloquentQuery()
-            ->whereHas('roles', fn (Builder $q) => $q->whereIn('name', User::FILAMENT_ROLES));
+            ->where(function (Builder $query) {
+                $query->where('type', User::TYPE_ADMIN)
+                    ->orWhereHas('roles', fn (Builder $q) => $q->whereIn('name', User::FILAMENT_ROLES));
+            });
     }
 
     public static function form(Form $form): Form
@@ -84,6 +92,18 @@ class AdminResource extends Resource
                     ->default('active')
                     ->required(),
 
+                Forms\Components\Select::make('type')
+                    ->label('النوع')
+                    ->options([
+                        User::TYPE_ADMIN => 'مدير',
+                        User::TYPE_USER => 'مستخدم',
+                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                    ])
+                    ->default(User::TYPE_ADMIN)
+                    ->disabled()
+                    ->dehydrated()
+                    ->helperText('حسابات لوحة التحكم نوعها admin دائماً.'),
+
                 Forms\Components\Select::make('roles')
                     ->label('أدوار Filament')
                     ->relationship(
@@ -111,6 +131,13 @@ class AdminResource extends Resource
                 Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('البريد')->searchable(),
                 Tables\Columns\TextColumn::make('roles.name')->label('الأدوار')->badge(),
+                Tables\Columns\BadgeColumn::make('type')->label('النوع')
+                    ->colors(['danger' => User::TYPE_ADMIN])
+                    ->formatStateUsing(fn (?string $state) => match ($state) {
+                        User::TYPE_ADMIN => 'مدير',
+                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                        default => 'مستخدم',
+                    }),
                 Tables\Columns\BadgeColumn::make('status')->label('الحالة')
                     ->colors(['success' => 'active', 'gray' => 'inactive', 'danger' => 'banned'])
                     ->formatStateUsing(fn (string $state) => ['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور'][$state] ?? $state),

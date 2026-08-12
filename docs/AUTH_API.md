@@ -30,12 +30,17 @@ Content-Type: application/json
 
 ## Roles separation
 
-| Role | Permissions | Login |
-|------|-------------|--------|
-| `user` | Full **website/API** set (`WebsiteUserPermissions`) | API + website only — **blocked from Filament** |
-| `super_admin` / `admin` / `moderator` | Filament Shield resource permissions | `/admin` only — blocked from API auth |
+| `users.type` | Spatie role | Permissions | Login |
+|--------------|-------------|-------------|--------|
+| `user` | `user` | Full **website/API** set (`WebsiteUserPermissions`) | API + website only — **blocked from Filament** |
+| `content_creator` | `content_creator` | Same as user + creator profile extras (`ContentCreatorPermissions`) | API + website only — **blocked from Filament** |
+| `admin` | `super_admin` / `admin` / `moderator` | Filament Shield resource permissions | `/admin` only — blocked from API auth |
+
+`type` is the account kind (`admin`, `user`, `content_creator`). Roles add the permission set on top of that. Staff always have `type = admin`; their Filament role is still `super_admin`, `admin`, or `moderator`.
 
 Website user permissions include browse (pages, content, team, creators, videos, courses…), engage (like, comment, join course), profile, donations, and payments.view.own.
+
+A join-as-creator CTA (`POST /api/v1/pages/creators/join`) does **not** create a user immediately. When an admin **approves** the request, the existing user with that email is reused (or a new user is created), `type` is set to `content_creator`, the `content_creator` role is assigned, and a `creators` profile is filled from the request.
 
 ---
 
@@ -104,8 +109,10 @@ Binding in `AppServiceProvider`: `UserRepositoryInterface` → `UserRepository`
       "country_code": null,
       "avatar": null,
       "status": "active",
+      "type": "user",
       "roles": ["user"],
       "permissions": ["api.access", "api.profile.view", "api.profile.update"],
+      "is_content_creator": false,
       "created_at": "2026-08-04T12:00:00+00:00"
     },
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -139,7 +146,7 @@ Binding in `AppServiceProvider`: `UserRepositoryInterface` → `UserRepository`
 | Wrong email/password | Validation error: `بيانات الدخول غير صحيحة.` |
 | Status `banned` | Validation error: account banned message |
 | Filament staff (admin roles) | Same as wrong credentials: `بيانات الدخول غير صحيحة.` |
-| Missing `user` role | Same as wrong credentials: `بيانات الدخول غير صحيحة.` |
+| Missing website role (`user` / `content_creator`) | Same as wrong credentials: `بيانات الدخول غير صحيحة.` |
 | Status `inactive` | Validation error: account inactive message |
 
 ---

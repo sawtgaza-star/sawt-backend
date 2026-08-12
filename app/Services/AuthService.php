@@ -28,6 +28,7 @@ class AuthService
             'phone' => $data['phone'] ?? null,
             'password' => $data['password'],
             'status' => 'active',
+            'type' => User::TYPE_USER,
         ]);
 
         $user->assignRole($this->ensureUserRole());
@@ -106,7 +107,7 @@ class AuthService
      */
     protected function assertApiUser(User $user): void
     {
-        if ($user->isFilamentAdmin() || ! $user->hasAnyRole(User::WEBSITE_ROLES)) {
+        if ($user->isAdmin() || ! $user->hasAnyRole(User::WEBSITE_ROLES)) {
             throw ValidationException::withMessages([
                 'email' => ['بيانات الدخول غير صحيحة.'],
             ]);

@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Filament\Resources\CreatorJoinRequestResource\Pages;
+
+use App\Filament\Resources\CreatorJoinRequestResource;
+use App\Models\CreatorJoinRequest;
+use App\Services\CreatorJoinRequestService;
+use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
+
+class ListCreatorJoinRequests extends ListRecords
+{
+    protected static string $resource = CreatorJoinRequestResource::class;
+
+    public function mount(): void
+    {
+        parent::mount();
+
+        app(CreatorJoinRequestService::class)->backfillApproved();
+    }
+
+    public function getTabs(): array
+    {
+        $counts = CreatorJoinRequest::query()
+            ->selectRaw('status, COUNT(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
+
+        return [
+            'all' => Tab::make('الكل')->badge(CreatorJoinRequest::query()->count()),
+            'pending' => Tab::make('بانتظار المراجعة')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'pending'))
+                ->badge($counts['pending'] ?? 0),
+            'approved' => Tab::make('مقبول')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'approved'))
+                ->badge($counts['approved'] ?? 0),
+            'rejected' => Tab::make('مرفوض')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'rejected'))
+                ->badge($counts['rejected'] ?? 0),
+        ];
+    }
+
+    public function getDefaultActiveTab(): string
+    {
+        return 'pending';
+    }
+}

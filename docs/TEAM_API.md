@@ -1,6 +1,6 @@
 # Team Page API & Filament
 
-Team pages follow the **About** pattern: shared page texts in **Settings**, members/majors in Filament resources, public APIs without header/footer.
+Team pages follow the **About** pattern: shared page texts in **Settings**, members/majors in Filament resources. Header/footer: [LAYOUT_API.md](./LAYOUT_API.md).
 
 Related: [ABOUT_API.md](./ABOUT_API.md)
 

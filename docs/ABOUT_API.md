@@ -2,7 +2,7 @@
 
 About page content is stored in the **`settings`** table (`group = about`) and edited in Filament **Settings → من نحن**.
 
-Header and footer are separate Settings tabs and are **not** returned by this API.
+Header and footer are a separate endpoint: [LAYOUT_API.md](./LAYOUT_API.md) (`GET /api/v1/layout`).
 
 ## Filament
 

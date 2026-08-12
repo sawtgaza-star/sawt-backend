@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\CreatorPageRepository;
 use App\Repositories\AboutRepository;
+use App\Repositories\Contracts\CreatorPageRepositoryInterface;
 use App\Repositories\Contracts\AboutRepositoryInterface;
 use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Repositories\Contracts\TeamRepositoryInterface;
@@ -21,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(CreatorPageRepositoryInterface::class, CreatorPageRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TeamRepositoryInterface::class, TeamRepository::class);
         $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);

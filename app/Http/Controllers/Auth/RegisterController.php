@@ -39,6 +39,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => $data['password'], // hashed cast on User model
             'status' => 'active',
+            'type' => User::TYPE_USER,
         ]);
 
         $user->assignRole(

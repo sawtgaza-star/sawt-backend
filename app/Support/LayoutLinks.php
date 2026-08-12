@@ -9,6 +9,27 @@ class LayoutLinks
      *
      * @var array<string, string>
      */
+    public const PAGE_PATHS = [
+        'home' => '/',
+        'about' => '/about',
+        'content' => '/content',
+        'courses' => '/courses',
+        'team' => '/team',
+        'creators' => '/creators',
+        'support' => '/support',
+        'incubator' => '/incubator',
+        'media' => '/media',
+        'backstage' => '/backstage',
+        'media_kit' => '/media-kit',
+        'blog' => '/blog',
+        'faq' => '/faq',
+    ];
+
+    /**
+     * Blade / Laravel route targets for the same keys.
+     *
+     * @var array<string, string>
+     */
     public const PAGE_URLS = [
         'home' => '/',
         'about' => 'about',
@@ -69,6 +90,28 @@ class LayoutLinks
         }
 
         return self::hrefForKey($item['key'] ?? null);
+    }
+
+    public static function pathForKey(?string $key): string
+    {
+        $key = trim((string) $key);
+
+        return self::PAGE_PATHS[$key] ?? '#';
+    }
+
+    public static function pathForItem(array $item): string
+    {
+        $url = trim((string) ($item['url'] ?? ''));
+
+        if ($url !== '' && $url !== '#') {
+            if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, 'mailto:') || str_starts_with($url, 'tel:') || str_starts_with($url, '/')) {
+                return $url;
+            }
+
+            return '/'.ltrim($url, '/');
+        }
+
+        return self::pathForKey($item['key'] ?? null);
     }
 
     /**

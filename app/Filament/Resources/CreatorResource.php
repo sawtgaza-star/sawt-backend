@@ -77,6 +77,11 @@ class CreatorResource extends Resource
                     ->required()
                     ->maxLength(255),
 
+                Forms\Components\TextInput::make('role')
+                    ->label('المسمى / التخصص')
+                    ->placeholder('ممثل مسرحي')
+                    ->maxLength(255),
+
                 Forms\Components\Textarea::make('bio')
                     ->label('نبذة تعريفية')
                     ->rows(4)
@@ -97,6 +102,15 @@ class CreatorResource extends Resource
                     ->default(0)
                     ->minValue(0),
 
+                Forms\Components\TextInput::make('sort_order')
+                    ->label('ترتيب العرض')
+                    ->numeric()
+                    ->default(0),
+
+                Forms\Components\Toggle::make('is_verified')
+                    ->label('موثّق (شارة)')
+                    ->default(false),
+
                 Forms\Components\Select::make('status')
                     ->label('الحالة')
                     ->options(['active' => 'نشط', 'inactive' => 'غير نشط'])
@@ -116,14 +130,17 @@ class CreatorResource extends Resource
                     ->circular()
                     ->height(40),
                 Tables\Columns\TextColumn::make('username')->label('اسم المستخدم')->searchable(),
+                Tables\Columns\TextColumn::make('role')->label('التخصص')->limit(30),
                 Tables\Columns\TextColumn::make('user.name')->label('المستخدم')->searchable(),
                 Tables\Columns\TextColumn::make('followers_count')->label('المتابعون')->numeric()->sortable(),
+                Tables\Columns\IconColumn::make('is_verified')->label('موثّق')->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
                 Tables\Columns\BadgeColumn::make('status')->label('الحالة')
                     ->colors(['success' => 'active', 'danger' => 'inactive'])
                     ->formatStateUsing(fn (string $state) => $state === 'active' ? 'نشط' : 'غير نشط'),
                 Tables\Columns\TextColumn::make('updated_at')->label('آخر تحديث')->dateTime('Y-m-d')->sortable(),
             ])
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('sort_order')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('الحالة')

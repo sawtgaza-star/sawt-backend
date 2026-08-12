@@ -12,15 +12,18 @@ class Creator extends Model
 {
     use SoftDeletes, HasTranslations, HasUuid;
 
-    public array $translatable = ['bio'];
+    public array $translatable = ['bio', 'role'];
 
     protected $fillable = [
         'user_id',
         'username',
         'bio',
+        'role',
         'avatar',
         'followers_count',
         'status',
+        'sort_order',
+        'is_verified',
     ];
 
     protected $appends = ['avatar_url'];
@@ -29,6 +32,8 @@ class Creator extends Model
     {
         return [
             'followers_count' => 'integer',
+            'sort_order' => 'integer',
+            'is_verified' => 'boolean',
         ];
     }
 
@@ -50,6 +55,13 @@ class Creator extends Model
     public function courses()
     {
         return $this->hasMany(Course::class, 'instructor_id');
+    }
+
+    public function partnerCompanies()
+    {
+        return $this->belongsToMany(CreatorPartnerCompany::class, 'creator_partner_company_creator')
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order');
     }
 
     public function getAvatarUrlAttribute(): ?string

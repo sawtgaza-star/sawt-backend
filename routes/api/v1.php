@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\CreatorsPageController;
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\LayoutController;
 use App\Http\Controllers\Api\PayPalController;
 use App\Http\Controllers\Api\ReelController;
 use App\Http\Controllers\Api\SupportController;
@@ -13,12 +15,24 @@ use Illuminate\Support\Facades\Route;
 // Public: Instagram reels from the platform's own account
 Route::get('/reels', [ReelController::class, 'index'])->name('reels');
 
-// ===== Pages (about, team, …) — no header/footer =====
+// ===== Layout (header / footer) =====
+Route::prefix('layout')->name('layout.')->group(function () {
+    Route::get('/', [LayoutController::class, 'show'])->name('index');
+    Route::get('/header', [LayoutController::class, 'header'])->name('header');
+    Route::get('/footer', [LayoutController::class, 'footer'])->name('footer');
+});
+
+// ===== Pages (about, team, creators, …) =====
 Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/about', [AboutController::class, 'show'])->name('about');
 
     Route::get('/team', [TeamController::class, 'index'])->name('team');
     Route::get('/team/{uuid}', [TeamController::class, 'show'])->name('team.show');
+
+    Route::get('/creators', [CreatorsPageController::class, 'index'])->name('creators');
+    Route::get('/creators/all', [CreatorsPageController::class, 'all'])->name('creators.all');
+    Route::post('/creators/join', [CreatorsPageController::class, 'join'])->name('creators.join');
+    Route::get('/creators/{uuid}', [CreatorsPageController::class, 'show'])->name('creators.show');
 });
 
 // ===== Auth (JWT) =====
