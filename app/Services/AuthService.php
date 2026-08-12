@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Support\WebsiteUserPermissions;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AuthService
 {
@@ -27,6 +30,9 @@ class AuthService
             'status' => 'active',
         ]);
 
+        $user->assignRole($this->ensureUserRole());
+
+        $user = $user->fresh()->load(['roles', 'creator.socials']);
         $token = JWTAuth::fromUser($user);
 
         return $this->tokenResponse($user, $token);
@@ -57,6 +63,9 @@ class AuthService
             ]);
         }
 
+        $this->assertApiUser($user);
+
+        $user->load(['roles', 'creator.socials']);
         $token = JWTAuth::fromUser($user);
 
         return $this->tokenResponse($user, $token);
@@ -78,12 +87,44 @@ class AuthService
         $token = JWTAuth::refresh(JWTAuth::getToken());
         $user = JWTAuth::setToken($token)->toUser();
 
-        return $this->tokenResponse($user, $token);
+        $this->assertApiUser($user);
+
+        return $this->tokenResponse($user->load(['roles', 'creator.socials']), $token);
     }
 
     public function me(): User
     {
-        return JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $this->assertApiUser($user);
+
+        return $user->load(['roles', 'creator.socials']);
+    }
+
+    /**
+     * API auth for website roles (user / content_creator), not Filament staff.
+     */
+    protected function assertApiUser(User $user): void
+    {
+        if ($user->isFilamentAdmin() || ! $user->hasAnyRole(User::WEBSITE_ROLES)) {
+            throw ValidationException::withMessages([
+                'email' => ['بيانات الدخول غير صحيحة.'],
+            ]);
+        }
+    }
+
+    protected function ensureUserRole(): Role
+    {
+        $permissions = WebsiteUserPermissions::all();
+
+        foreach ($permissions as $name) {
+            Permission::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
+        }
+
+        $role = Role::firstOrCreate(['name' => User::ROLE_USER, 'guard_name' => 'web']);
+        $role->syncPermissions($permissions);
+
+        return $role;
     }
 
     /**

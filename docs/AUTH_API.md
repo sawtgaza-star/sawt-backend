@@ -28,6 +28,17 @@ Content-Type: application/json
 
 ---
 
+## Roles separation
+
+| Role | Permissions | Login |
+|------|-------------|--------|
+| `user` | Full **website/API** set (`WebsiteUserPermissions`) | API + website only — **blocked from Filament** |
+| `super_admin` / `admin` / `moderator` | Filament Shield resource permissions | `/admin` only — blocked from API auth |
+
+Website user permissions include browse (pages, content, team, creators, videos, courses…), engage (like, comment, join course), profile, donations, and payments.view.own.
+
+---
+
 ## Architecture
 
 ```
@@ -93,6 +104,8 @@ Binding in `AppServiceProvider`: `UserRepositoryInterface` → `UserRepository`
       "country_code": null,
       "avatar": null,
       "status": "active",
+      "roles": ["user"],
+      "permissions": ["api.access", "api.profile.view", "api.profile.update"],
       "created_at": "2026-08-04T12:00:00+00:00"
     },
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -102,7 +115,7 @@ Binding in `AppServiceProvider`: `UserRepositoryInterface` → `UserRepository`
 }
 ```
 
-`name` is built as `first_name + last_name`. User status is set to `active`.
+`name` is built as `first_name + last_name`. Status is `active`. Role **`user`** is assigned automatically.
 
 ---
 
@@ -125,6 +138,8 @@ Binding in `AppServiceProvider`: `UserRepositoryInterface` → `UserRepository`
 |------|--------|
 | Wrong email/password | Validation error: `بيانات الدخول غير صحيحة.` |
 | Status `banned` | Validation error: account banned message |
+| Filament staff (admin roles) | Same as wrong credentials: `بيانات الدخول غير صحيحة.` |
+| Missing `user` role | Same as wrong credentials: `بيانات الدخول غير صحيحة.` |
 | Status `inactive` | Validation error: account inactive message |
 
 ---

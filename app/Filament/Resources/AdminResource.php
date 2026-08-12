@@ -2,27 +2,26 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\AdminResource\Pages;
 use App\Models\User;
-use App\Support\WebsiteUserPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class UserResource extends Resource
+class AdminResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $slug = 'admins';
+
+    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
 
     protected static ?string $recordRouteKeyName = 'uuid';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationGroup(): ?string
     {
@@ -31,41 +30,40 @@ class UserResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Website Users');
+        return __('Admins');
     }
 
     public static function getModelLabel(): string
     {
-        return __('Website User');
+        return __('Admin');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Website Users');
+        return __('Admins');
     }
 
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'email', 'phone', 'uuid'];
+        return ['name', 'email', 'uuid'];
     }
 
     public static function getEloquentQuery(): Builder
     {
-        // Website / API users only — never Filament staff
+        // Filament staff only
         return parent::getEloquentQuery()
-            ->whereDoesntHave('roles', fn (Builder $q) => $q->whereIn('name', User::FILAMENT_ROLES));
+            ->whereHas('roles', fn (Builder $q) => $q->whereIn('name', User::FILAMENT_ROLES));
     }
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('مستخدم الموقع / API')->schema([
+            Forms\Components\Section::make('مدير لوحة التحكم')->schema([
                 Forms\Components\TextInput::make('name')->label('الاسم')->required(),
                 Forms\Components\TextInput::make('email')->label('البريد الإلكتروني')->email()->required()->unique(ignoreRecord: true),
                 Forms\Components\TextInput::make('phone')->label('الهاتف'),
-                Forms\Components\TextInput::make('country_code')->label('مفتاح الدولة')->default('+970'),
 
                 Forms\Components\TextInput::make('password')
                     ->label('كلمة المرور')
@@ -86,10 +84,17 @@ class UserResource extends Resource
                     ->default('active')
                     ->required(),
 
-                Forms\Components\Placeholder::make('role_hint')
-                    ->label('الدور')
-                    ->content('يُعيَّن تلقائياً دور user (صلاحيات الموقع/API فقط — بدون دخول Filament).')
-                    ->columnSpanFull(),
+                Forms\Components\Select::make('roles')
+                    ->label('أدوار Filament')
+                    ->relationship(
+                        name: 'roles',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereIn('name', User::FILAMENT_ROLES),
+                    )
+                    ->multiple()
+                    ->preload()
+                    ->required()
+                    ->helperText('super_admin / admin / moderator فقط — لا يُمنح دور user'),
             ])->columns(2),
         ]);
     }
@@ -105,8 +110,7 @@ class UserResource extends Resource
                     ->height(40),
                 Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('البريد')->searchable(),
-                Tables\Columns\TextColumn::make('phone')->label('الهاتف'),
-                Tables\Columns\TextColumn::make('roles.name')->label('الأدوار')->badge()->default(User::ROLE_USER),
+                Tables\Columns\TextColumn::make('roles.name')->label('الأدوار')->badge(),
                 Tables\Columns\BadgeColumn::make('status')->label('الحالة')
                     ->colors(['success' => 'active', 'gray' => 'inactive', 'danger' => 'banned'])
                     ->formatStateUsing(fn (string $state) => ['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور'][$state] ?? $state),
@@ -117,6 +121,13 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     ->label('الحالة')
                     ->options(['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور']),
+                Tables\Filters\SelectFilter::make('roles')
+                    ->label('الدور')
+                    ->relationship(
+                        name: 'roles',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereIn('name', User::FILAMENT_ROLES),
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -132,21 +143,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListAdmins::route('/'),
+            'create' => Pages\CreateAdmin::route('/create'),
+            'edit' => Pages\EditAdmin::route('/{record}/edit'),
         ];
-    }
-
-    public static function ensureWebsiteUserRole(User $user): void
-    {
-        foreach (WebsiteUserPermissions::all() as $name) {
-            Permission::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
-        }
-
-        $role = Role::firstOrCreate(['name' => User::ROLE_USER, 'guard_name' => 'web']);
-        $role->syncPermissions(WebsiteUserPermissions::all());
-
-        $user->syncRoles([User::ROLE_USER]);
     }
 }

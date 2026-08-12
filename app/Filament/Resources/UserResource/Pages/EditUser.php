@@ -14,4 +14,9 @@ class EditUser extends EditRecord
     {
         return [Actions\DeleteAction::make()];
     }
+
+    protected function afterSave(): void
+    {
+        UserResource::ensureWebsiteUserRole($this->record);
+    }
 }

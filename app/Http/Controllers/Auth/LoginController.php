@@ -56,6 +56,14 @@ class LoginController extends Controller
             ]);
         }
 
+        if ($user->isFilamentAdmin() || ! $user->hasAnyRole(\App\Models\User::WEBSITE_ROLES)) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'بيانات الدخول غير صحيحة.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey($request));
         $request->session()->regenerate();
 

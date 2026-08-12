@@ -11,7 +11,6 @@ return new class extends Migration
     protected array $tables = [
         'users',
         'donations',
-        'creator_applications',
     ];
 
     public function up(): void

@@ -41,6 +41,12 @@ class RegisterController extends Controller
             'status' => 'active',
         ]);
 
+        $user->assignRole(
+            \Spatie\Permission\Models\Role::firstOrCreate(
+                ['name' => User::ROLE_USER, 'guard_name' => 'web']
+            )
+        );
+
         event(new Registered($user));
 
         Auth::login($user);
