@@ -53,6 +53,39 @@ Route::get('/donate/{campaign?}', function (?App\Models\Campaign $campaign = nul
     return view('checkout.donate', ['campaign' => $campaign]);
 })->name('donate');
 
+// خريطة الموقع + robots — لتحسين الأرشفة في محركات البحث
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        ['loc' => url('/'), 'freq' => 'daily', 'priority' => '1.0'],
+        ['loc' => route('donate'), 'freq' => 'weekly', 'priority' => '0.8'],
+        ['loc' => route('login'), 'freq' => 'monthly', 'priority' => '0.5'],
+        ['loc' => route('register'), 'freq' => 'monthly', 'priority' => '0.5'],
+    ];
+
+    return response()->view('sitemap', ['urls' => $urls])
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
+
+Route::get('/robots.txt', function () {
+    $lines = [
+        'User-agent: *',
+        'Allow: /',
+        'Disallow: /admin',
+        'Disallow: /login',
+        'Disallow: /register',
+        '',
+        'Sitemap: '.url('/sitemap.xml'),
+    ];
+
+    return response(implode("\n", $lines), 200)
+        ->header('Content-Type', 'text/plain');
+});
+
+// تنزيل إثبات التحويل — للوحة التحكم فقط (الملفات على قرص خاص)
+Route::get('/admin/support/proofs/{uuid}', [\App\Http\Controllers\SupportProofController::class, 'download'])
+    ->middleware('auth')
+    ->name('support.proofs.download');
+
 Route::get('/lang/{locale}', function (string $locale) {
     if (in_array($locale, ['ar', 'en'], true)) {
         session(['locale' => $locale]);

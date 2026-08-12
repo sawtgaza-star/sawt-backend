@@ -64,6 +64,90 @@ class Settings extends Page implements HasForms
             'bank_iban' => ['payment', 'string', ''],
             'paypal_mode' => ['payment', 'string', 'sandbox'],
 
+            // صفحة «ادعم صوت» — النصوص الثابتة (الوسائل والباقات لها جداولها الخاصة)
+            'support_header_bg' => ['support', 'string', ''],
+            'support_hero_title_ar' => ['support', 'string', 'ادعم صوت'],
+            'support_hero_title_en' => ['support', 'string', 'Support Sawt'],
+            'support_hero_desc_ar' => ['support', 'text', 'اختر الطريقة الأنسب لك لإتمام تبرعك، وكل مساهمة تتحول إلى قصة تُروى من قلب غزة'],
+            'support_hero_desc_en' => ['support', 'text', 'Choose the way that suits you best — every contribution becomes a story told from the heart of Gaza'],
+            'support_methods_title_ar' => ['support', 'string', 'اختر طريقة الدعم التي تناسبك'],
+            'support_methods_title_en' => ['support', 'string', 'Choose the support method that suits you'],
+            'support_methods_desc_ar' => ['support', 'text', ''],
+            'support_methods_desc_en' => ['support', 'text', ''],
+
+            // بطاقات الأقسام الثلاثة
+            'support_cat_electronic_enabled' => ['support', 'boolean', true],
+            'support_cat_electronic_title_ar' => ['support', 'string', 'دفع إلكتروني'],
+            'support_cat_electronic_title_en' => ['support', 'string', 'Electronic Payment'],
+            'support_cat_electronic_desc_ar' => ['support', 'text', 'يتم التبرع باستخدام بوابة دفع آمنة وسهلة الاستخدام، بحيث يقدر المتبرع إتمام العملية بسرعة وبطريقة موثوقة.'],
+            'support_cat_electronic_desc_en' => ['support', 'text', 'Donate through a secure, easy-to-use payment gateway and complete the process quickly and reliably.'],
+            'support_cat_electronic_accent' => ['support', 'string', '#F97316'],
+
+            'support_cat_transfer_enabled' => ['support', 'boolean', true],
+            'support_cat_transfer_title_ar' => ['support', 'string', 'تحويل مباشر'],
+            'support_cat_transfer_title_en' => ['support', 'string', 'Direct Transfer'],
+            'support_cat_transfer_desc_ar' => ['support', 'text', 'يتم التبرع من خلال بيانات حساب بنكي أو محفظة إلكترونية، ثم يقوم المتبرع بإرفاق إثبات التحويل ليتم توثيق التبرع.'],
+            'support_cat_transfer_desc_en' => ['support', 'text', 'Donate via a bank account or e-wallet, then attach the transfer proof so we can verify your donation.'],
+            'support_cat_transfer_accent' => ['support', 'string', '#4D6B2F'],
+
+            'support_cat_crypto_enabled' => ['support', 'boolean', true],
+            'support_cat_crypto_title_ar' => ['support', 'string', 'عملات رقمية'],
+            'support_cat_crypto_title_en' => ['support', 'string', 'Digital Currencies'],
+            'support_cat_crypto_desc_ar' => ['support', 'text', 'يتم التبرع باستخدام عملات رقمية مدعومة، مع إمكانية إرسال إثبات العملية بعد التحويل لتأكيد المساهمة.'],
+            'support_cat_crypto_desc_en' => ['support', 'text', 'Donate using supported digital currencies and send the transaction proof afterwards to confirm your contribution.'],
+            'support_cat_crypto_accent' => ['support', 'string', '#4B5563'],
+
+            // خطوات الويزارد
+            'support_step_method_label_ar' => ['support', 'string', 'اختيار المنصة'],
+            'support_step_method_label_en' => ['support', 'string', 'Choose platform'],
+            'support_step_method_icon' => ['support', 'string', 'wallet'],
+            'support_step_proof_label_ar' => ['support', 'string', 'إثبات التبرع'],
+            'support_step_proof_label_en' => ['support', 'string', 'Donation proof'],
+            'support_step_proof_icon' => ['support', 'string', 'badge-check'],
+            'support_step_team_label_ar' => ['support', 'string', 'دعم الفريق'],
+            'support_step_team_label_en' => ['support', 'string', 'Support the team'],
+            'support_step_team_icon' => ['support', 'string', 'coins'],
+            'support_step_contact_label_ar' => ['support', 'string', 'وسيلة التواصل'],
+            'support_step_contact_label_en' => ['support', 'string', 'Contact method'],
+            'support_step_contact_icon' => ['support', 'string', 'at-sign'],
+            'support_step_progress_label_ar' => ['support', 'string', 'الخطوة :current من :total'],
+            'support_step_progress_label_en' => ['support', 'string', 'Step :current of :total'],
+            'support_step_completion_label_ar' => ['support', 'string', 'مكتمل بنسبة :percent%'],
+            'support_step_completion_label_en' => ['support', 'string', ':percent% complete'],
+
+            // الباقات والمبالغ
+            'support_plans_title_ar' => ['support', 'string', 'كيف تريد أن تدعم؟'],
+            'support_plans_title_en' => ['support', 'string', 'How would you like to support?'],
+            'support_plans_desc_ar' => ['support', 'text', ''],
+            'support_plans_desc_en' => ['support', 'text', ''],
+            'support_default_interval' => ['support', 'string', 'monthly'],
+            'support_default_currency' => ['support', 'string', 'USD'],
+            'support_min_amount' => ['support', 'number', 5],
+            'support_max_amount' => ['support', 'number', 100000],
+            'support_custom_amount_enabled' => ['support', 'boolean', true],
+            'support_custom_amount_label_ar' => ['support', 'string', 'أو أدخل مبلغاً'],
+            'support_custom_amount_label_en' => ['support', 'string', 'Or enter an amount'],
+
+            // نصوص الأزرار والرسائل
+            'support_continue_label_ar' => ['support', 'string', 'المتابعة'],
+            'support_continue_label_en' => ['support', 'string', 'Continue'],
+            'support_back_label_ar' => ['support', 'string', 'رجوع'],
+            'support_back_label_en' => ['support', 'string', 'Back'],
+            'support_submit_label_ar' => ['support', 'string', 'إرسال'],
+            'support_submit_label_en' => ['support', 'string', 'Submit'],
+            'support_copy_label_ar' => ['support', 'string', 'نسخ'],
+            'support_copy_label_en' => ['support', 'string', 'Copy'],
+            'support_copied_label_ar' => ['support', 'string', 'تم النسخ'],
+            'support_copied_label_en' => ['support', 'string', 'Copied'],
+            'support_choose_method_label_ar' => ['support', 'string', 'اختر وسيلة التحويل:'],
+            'support_choose_method_label_en' => ['support', 'string', 'Choose a transfer method:'],
+            'support_proof_hint_ar' => ['support', 'text', 'ارفع لقطة شاشة واضحة لعملية التحويل ليتم توثيق تبرعك'],
+            'support_proof_hint_en' => ['support', 'text', 'Upload a clear screenshot of the transfer so we can verify your donation'],
+            'support_success_title_ar' => ['support', 'string', 'شكراً لدعمك!'],
+            'support_success_title_en' => ['support', 'string', 'Thank you for your support!'],
+            'support_success_message_ar' => ['support', 'text', 'استلمنا طلبك وسيقوم الفريق بمراجعة الإثبات والتواصل معك قريباً.'],
+            'support_success_message_en' => ['support', 'text', 'We received your request. Our team will review the proof and reach out to you soon.'],
+
             // finance (fund split)
             'fund_split_creators_pct' => ['finance', 'number', 40],
             'fund_split_media_pct' => ['finance', 'number', 35],
@@ -273,17 +357,46 @@ class Settings extends Page implements HasForms
         return $form->schema([
             Forms\Components\Tabs::make('Settings')->columnSpanFull()->tabs([
 
-                Forms\Components\Tabs\Tab::make('الصفحة الرئيسية')->icon('heroicon-o-home')->schema([
-                    Forms\Components\Section::make('الشعار والصور')->schema([
+                Forms\Components\Tabs\Tab::make('الهوية و SEO')->icon('heroicon-o-identification')->schema([
+                    Forms\Components\Section::make('الهوية البصرية')->schema([
                         Forms\Components\FileUpload::make('home_logo')
-                            ->label('شعار المنصة (الهيدر)')
-                            ->image()->disk('public')->directory('home')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الشعار الافتراضي'),
-                        Forms\Components\FileUpload::make('home_hero_image')
-                            ->label('صورة القسم الرئيسي (Hero)')
-                            ->image()->disk('public')->directory('home')->imageEditor()
-                            ->helperText('الصورة الكبيرة بجانب "من نحن"'),
+                            ->label('شعار الهيدر')
+                            ->image()->disk('public')->directory('branding')->imageEditor()
+                            ->helperText('يظهر أعلى الموقع — اتركه فارغاً للشعار الافتراضي'),
+                        Forms\Components\FileUpload::make('site_favicon')
+                            ->label('أيقونة الموقع (Favicon)')
+                            ->image()->disk('public')->directory('branding')
+                            ->helperText('تظهر بتبويب المتصفح — يُفضّل صورة مربعة 512×512'),
                     ])->columns(2),
+
+                    Forms\Components\Section::make('تحسين محركات البحث (SEO)')->schema([
+                        Forms\Components\TextInput::make('meta_title')
+                            ->label('عنوان الصفحة (Title)')
+                            ->helperText('يظهر بتبويب المتصفح ونتائج جوجل — يُفضّل أقل من 60 حرفاً')
+                            ->maxLength(70)->columnSpanFull(),
+                        Forms\Components\Textarea::make('meta_description')
+                            ->label('وصف الميتا (Description)')
+                            ->helperText('يظهر تحت العنوان بنتائج البحث — 150–160 حرفاً مثالي')
+                            ->rows(3)->maxLength(200)->columnSpanFull(),
+                        Forms\Components\TextInput::make('meta_keywords')
+                            ->label('الكلمات المفتاحية')
+                            ->helperText('مفصولة بفاصلة')
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('og_image')
+                            ->label('صورة المشاركة (Open Graph)')
+                            ->image()->disk('public')->directory('branding')->imageEditor()
+                            ->helperText('تظهر عند مشاركة الرابط على فيسبوك/تويتر/واتساب — 1200×630')
+                            ->columnSpanFull(),
+                    ]),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('الصفحة الرئيسية')->icon('heroicon-o-home')->schema([
+                    Forms\Components\Section::make('صورة قسم "من نحن"')->schema([
+                        Forms\Components\FileUpload::make('home_hero_image')
+                            ->label('الصورة الكبيرة بجانب "من نحن"')
+                            ->image()->disk('public')->directory('home')->imageEditor()
+                            ->helperText('شعار الهيدر يُعدّل من تبويب «الهوية و SEO»'),
+                    ]),
 
                     Forms\Components\Section::make('شرائح الكاروسيل الرئيسي (Hero) — أضف/احذف/رتّب')->schema([
                         Forms\Components\Repeater::make('home_hero_slides')
@@ -607,6 +720,113 @@ class Settings extends Page implements HasForms
                         ->label('Webhook ID (اختياري)')
                         ->helperText('من لوحة PayPal → Webhooks — للتحقق من صحة الإشعارات')
                         ->columnSpanFull(),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('صفحة الدعم')->icon('heroicon-o-heart')->schema([
+                    Forms\Components\Placeholder::make('support_hint')
+                        ->label('')
+                        ->content('وسائل الدعم (البنوك، فودافون كاش، العملات الرقمية…) والباقات تُدار من «وسائل الدعم» و«باقات الدعم» بقائمة المالية. هنا نصوص الصفحة فقط.')
+                        ->columnSpanFull(),
+
+                    Forms\Components\Section::make('الهيدر')->schema([
+                        Forms\Components\FileUpload::make('support_header_bg')
+                            ->label('خلفية الهيدر')
+                            ->image()->disk('public')->directory('support')->visibility('public')
+                            ->imageEditor()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('support_hero_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('support_hero_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_hero_desc_en')->label('Description (English)')->rows(2),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('عنوان قسم الطرق')->schema([
+                        Forms\Components\TextInput::make('support_methods_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('support_methods_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('support_methods_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_methods_desc_en')->label('Description (English)')->rows(2),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('بطاقة «دفع إلكتروني»')->schema([
+                        Forms\Components\Toggle::make('support_cat_electronic_enabled')->label('مفعّلة')->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_electronic_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('support_cat_electronic_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('support_cat_electronic_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('support_cat_electronic_desc_en')->label('Description (English)')->rows(3),
+                        Forms\Components\ColorPicker::make('support_cat_electronic_accent')->label('اللون المميّز'),
+                    ])->columns(2)->collapsible(),
+
+                    Forms\Components\Section::make('بطاقة «تحويل مباشر»')->schema([
+                        Forms\Components\Toggle::make('support_cat_transfer_enabled')->label('مفعّلة')->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_transfer_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('support_cat_transfer_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('support_cat_transfer_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('support_cat_transfer_desc_en')->label('Description (English)')->rows(3),
+                        Forms\Components\ColorPicker::make('support_cat_transfer_accent')->label('اللون المميّز'),
+                    ])->columns(2)->collapsible(),
+
+                    Forms\Components\Section::make('بطاقة «عملات رقمية»')->schema([
+                        Forms\Components\Toggle::make('support_cat_crypto_enabled')->label('مفعّلة')->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_crypto_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('support_cat_crypto_title_en')->label('Title (English)'),
+                        Forms\Components\Textarea::make('support_cat_crypto_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('support_cat_crypto_desc_en')->label('Description (English)')->rows(3),
+                        Forms\Components\ColorPicker::make('support_cat_crypto_accent')->label('اللون المميّز'),
+                    ])->columns(2)->collapsible(),
+
+                    Forms\Components\Section::make('خطوات الويزارد')->schema([
+                        Forms\Components\TextInput::make('support_step_method_label_ar')->label('الخطوة 1 (عربي)'),
+                        Forms\Components\TextInput::make('support_step_method_label_en')->label('Step 1 (English)'),
+                        Forms\Components\TextInput::make('support_step_proof_label_ar')->label('الخطوة 2 (عربي)'),
+                        Forms\Components\TextInput::make('support_step_proof_label_en')->label('Step 2 (English)'),
+                        Forms\Components\TextInput::make('support_step_team_label_ar')->label('الخطوة 3 (عربي)'),
+                        Forms\Components\TextInput::make('support_step_team_label_en')->label('Step 3 (English)'),
+                        Forms\Components\TextInput::make('support_step_contact_label_ar')->label('الخطوة 4 (عربي)'),
+                        Forms\Components\TextInput::make('support_step_contact_label_en')->label('Step 4 (English)'),
+                        Forms\Components\TextInput::make('support_step_progress_label_ar')
+                            ->label('نص التقدّم (عربي)')->helperText('استخدم :current و :total'),
+                        Forms\Components\TextInput::make('support_step_progress_label_en')
+                            ->label('Progress text (English)')->helperText('Use :current and :total'),
+                        Forms\Components\TextInput::make('support_step_completion_label_ar')
+                            ->label('نسبة الإكمال (عربي)')->helperText('استخدم :percent'),
+                        Forms\Components\TextInput::make('support_step_completion_label_en')
+                            ->label('Completion text (English)')->helperText('Use :percent'),
+                    ])->columns(2)->collapsible(),
+
+                    Forms\Components\Section::make('المبالغ والباقات')->schema([
+                        Forms\Components\TextInput::make('support_plans_title_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('support_plans_title_en')->label('Section title (English)'),
+                        Forms\Components\Select::make('support_default_interval')
+                            ->label('الدورية الافتراضية')
+                            ->options(\App\Support\SupportOptions::intervals()),
+                        Forms\Components\TextInput::make('support_default_currency')->label('العملة الافتراضية')->maxLength(3),
+                        Forms\Components\TextInput::make('support_min_amount')->label('أقل مبلغ')->numeric()->prefix('$'),
+                        Forms\Components\TextInput::make('support_max_amount')->label('أعلى مبلغ')->numeric()->prefix('$'),
+                        Forms\Components\Toggle::make('support_custom_amount_enabled')->label('السماح بمبلغ مخصص'),
+                        Forms\Components\TextInput::make('support_custom_amount_label_ar')->label('نص حقل المبلغ (عربي)'),
+                        Forms\Components\TextInput::make('support_custom_amount_label_en')->label('Amount field text (English)'),
+                    ])->columns(2)->collapsible(),
+
+                    Forms\Components\Section::make('نصوص الأزرار والرسائل')->schema([
+                        Forms\Components\TextInput::make('support_continue_label_ar')->label('المتابعة (عربي)'),
+                        Forms\Components\TextInput::make('support_continue_label_en')->label('Continue (English)'),
+                        Forms\Components\TextInput::make('support_back_label_ar')->label('رجوع (عربي)'),
+                        Forms\Components\TextInput::make('support_back_label_en')->label('Back (English)'),
+                        Forms\Components\TextInput::make('support_submit_label_ar')->label('إرسال (عربي)'),
+                        Forms\Components\TextInput::make('support_submit_label_en')->label('Submit (English)'),
+                        Forms\Components\TextInput::make('support_copy_label_ar')->label('نسخ (عربي)'),
+                        Forms\Components\TextInput::make('support_copy_label_en')->label('Copy (English)'),
+                        Forms\Components\TextInput::make('support_copied_label_ar')->label('تم النسخ (عربي)'),
+                        Forms\Components\TextInput::make('support_copied_label_en')->label('Copied (English)'),
+                        Forms\Components\TextInput::make('support_choose_method_label_ar')->label('اختر وسيلة التحويل (عربي)'),
+                        Forms\Components\TextInput::make('support_choose_method_label_en')->label('Choose method (English)'),
+                        Forms\Components\Textarea::make('support_proof_hint_ar')->label('تنبيه رفع الإثبات (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_proof_hint_en')->label('Proof hint (English)')->rows(2),
+                        Forms\Components\TextInput::make('support_success_title_ar')->label('عنوان النجاح (عربي)'),
+                        Forms\Components\TextInput::make('support_success_title_en')->label('Success title (English)'),
+                        Forms\Components\Textarea::make('support_success_message_ar')->label('رسالة النجاح (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_success_message_en')->label('Success message (English)')->rows(2),
+                    ])->columns(2)->collapsible(),
                 ]),
 
                 Forms\Components\Tabs\Tab::make('توزيع الأموال')->icon('heroicon-o-chart-pie')->schema([

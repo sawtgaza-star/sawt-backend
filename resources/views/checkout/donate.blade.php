@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>تبرّع — {{ config('app.name', 'Sawt') }}</title>
+    @include('partials.seo', ['seoTitle' => 'تبرّع — '.\App\Models\Setting::get('site_name', 'منصة صوت')])
     <style>
         :root { --violet: #7c3aed; }
         * { box-sizing: border-box; }

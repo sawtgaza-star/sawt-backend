@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Donation;
 use App\Models\Payment;
+use App\Models\SupportRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -34,6 +35,16 @@ class CheckoutService
         ]);
 
         return $this->startOrder($donation, $user?->id, $amount, $currency, "donation:{$donation->id}", 'Donation');
+    }
+
+    /**
+     * إنشاء أمر PayPal لأي كيان قابل للدفع (تبرع، طلب دعم…) — نسخة عامة من startOrder.
+     *
+     * @return array{order_id: string, payment: Payment}
+     */
+    public function startOrderFor(object $payable, ?int $userId, float $amount, string $currency, string $reference, string $description): array
+    {
+        return $this->startOrder($payable, $userId, $amount, $currency, $reference, $description);
     }
 
     /**
@@ -122,6 +133,27 @@ class CheckoutService
             if ($payable->campaign_id) {
                 $payable->campaign()->increment('current_amount', $payable->amount);
             }
+
+            $this->approveLinkedSupportRequest($payable);
         }
+    }
+
+    /**
+     * التبرع الناتج عن ويزارد الدعم بمسار الدفع الإلكتروني يُعتمد آلياً —
+     * لا يحتاج مراجعة يدوية لأن PayPal أكّد التحصيل.
+     */
+    protected function approveLinkedSupportRequest(Donation $donation): void
+    {
+        SupportRequest::where('donation_id', $donation->id)
+            ->whereIn('status', ['draft', 'pending', 'under_review'])
+            ->get()
+            ->each(function (SupportRequest $request): void {
+                $request->update([
+                    'status' => 'approved',
+                    'reviewed_at' => now(),
+                    'submitted_at' => $request->submitted_at ?? now(),
+                    'current_step' => max($request->current_step, 4),
+                ]);
+            });
     }
 }

@@ -8,6 +8,15 @@
     $heroRaw = Setting::get('home_hero_image');
     $heroUrl = $heroRaw ? Storage::disk('public')->url($heroRaw) : '/assets/images/swat.png';
 
+    // الهوية و SEO
+    $favRaw = Setting::get('site_favicon');
+    $faviconUrl = $favRaw ? Storage::disk('public')->url($favRaw) : '/assets/images/icon.png';
+    $ogRaw = Setting::get('og_image');
+    $ogUrl = $ogRaw ? Storage::disk('public')->url($ogRaw) : $logoUrl;
+    $metaTitle = Setting::get('meta_title', 'منصة صوت | نروي قصص غزة ونصنع جيلاً من المبدعين');
+    $metaDesc = Setting::get('meta_description', 'منصة صوت — مساحة فلسطينية للمبدعين في غزة: نروي القصص بكرامة، ندعم صنّاع المحتوى، ونبني مجتمعاً إبداعياً مؤثراً.');
+    $metaKeywords = Setting::get('meta_keywords', 'صوت, منصة صوت, غزة, فلسطين, صناع المحتوى, قصص غزة, ريلز');
+
     // النصوص القابلة للتعديل ثنائية اللغة — تُحقن فوق قاموس translate.js
     $i18nKeys = ['who_we_are', 'welcome_lead', 'welcome_title', 'welcome_desc'];
     $i18nOverrides = ['ar' => [], 'en' => []];
@@ -1830,7 +1839,7 @@
               انضم إلينا كصانع محتوى
             </h2>
             <p class="join-us-desc" data-i18n="join_creator_desc">
-صوت تجمع صناع المحتوى , كن صوت من لاصوت له  
+صوت تجمع صناع المحتوى , كن صوت من لاصوت له
             </p>
             <a href="#" class="btn btn-dark-green join-us-btn">
               <span data-i18n="join_creator_btn">طلب الانضمام</span>
