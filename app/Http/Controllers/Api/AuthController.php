@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
+use App\Http\Requests\Api\Auth\ResetPasswordRequest;
+use App\Http\Requests\Api\Auth\VerifyResetCodeRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AuthService;
+use App\Services\PasswordResetService;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 
@@ -14,6 +18,7 @@ class AuthController extends Controller
 {
     public function __construct(
         protected AuthService $auth,
+        protected PasswordResetService $passwordReset,
     ) {}
 
     public function register(RegisterRequest $request): JsonResponse
@@ -90,6 +95,53 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'تم تسجيل الخروج بنجاح.',
+        ]);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
+        $result = $this->passwordReset->sendCode($request->validated('email'));
+
+        return response()->json([
+            'message' => 'تم إرسال رمز التحقق إلى بريدك الإلكتروني.',
+            'data' => $result,
+        ]);
+    }
+
+    public function resendResetCode(ForgotPasswordRequest $request): JsonResponse
+    {
+        $result = $this->passwordReset->sendCode($request->validated('email'));
+
+        return response()->json([
+            'message' => 'تم إعادة إرسال رمز التحقق.',
+            'data' => $result,
+        ]);
+    }
+
+    public function verifyResetCode(VerifyResetCodeRequest $request): JsonResponse
+    {
+        $result = $this->passwordReset->verifyCode(
+            $request->validated('email'),
+            $request->validated('code'),
+        );
+
+        return response()->json([
+            'message' => 'تم التحقق من الرمز بنجاح.',
+            'data' => $result,
+        ]);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $this->passwordReset->resetPassword(
+            $data['reset_token'],
+            $data['password'],
+        );
+
+        return response()->json([
+            'message' => 'تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن.',
         ]);
     }
 }

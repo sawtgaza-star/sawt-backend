@@ -40,6 +40,11 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('auth.forgot-password');
+    Route::post('/resend-code', [AuthController::class, 'resendResetCode'])->name('auth.resend-code');
+    Route::post('/verify-code', [AuthController::class, 'verifyResetCode'])->name('auth.verify-code');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('auth.reset-password');
+
     Route::middleware('auth:api')->group(function () {
         Route::get('/me', [AuthController::class, 'me'])->name('auth.me');
         Route::post('/refresh', [AuthController::class, 'refresh'])->name('auth.refresh');

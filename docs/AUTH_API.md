@@ -1,6 +1,6 @@
 # Auth API (JWT)
 
-Documentation for API authentication: register, login, me, refresh, logout.
+Documentation for API authentication: register, login, me, refresh, logout, and forgot-password.
 
 Base URL: `/api/v1/auth`  
 Package: `php-open-source-saver/jwt-auth`  
@@ -17,6 +17,10 @@ Guard: `api` (`driver: jwt` in `config/auth.php`)
 | `GET` | `/api/v1/auth/me` | Bearer | Current user |
 | `POST` | `/api/v1/auth/refresh` | Bearer | New access token |
 | `POST` | `/api/v1/auth/logout` | Bearer | Invalidate current token |
+| `POST` | `/api/v1/auth/forgot-password` | Public | Send 6-digit reset code (expires in 60s) |
+| `POST` | `/api/v1/auth/resend-code` | Public | Resend reset code |
+| `POST` | `/api/v1/auth/verify-code` | Public | Verify email + code → `reset_token` |
+| `POST` | `/api/v1/auth/reset-password` | Public | Set new password, then login |
 
 Protected routes require header:
 
@@ -207,14 +211,109 @@ Requires Bearer token. Invalidates the current JWT.
 
 ---
 
+### `POST /api/v1/auth/forgot-password`
+
+Checks that the email exists, is valid, and belongs to a website user (`user` / `content_creator`). Sends a **6-digit** code that expires after **60 seconds**. The code is stored on **that email** only.
+
+You can send/resend the code **5 times**. After the 5th send, wait **3 minutes**, then you get 5 new attempts. Forgot-password and resend share this limit.
+
+```json
+{ "email": "ahmed@example.com" }
+```
+
+**Success `200`**
+
+```json
+{
+  "message": "تم إرسال رمز التحقق إلى بريدك الإلكتروني.",
+  "data": {
+    "expires_in": 60,
+    "attempts_left": 4
+  }
+}
+```
+
+**Errors `422`:** invalid email format, email not found, inactive/admin account, mail send failure.
+
+**Too many sends `429`:** after 5 attempts, wait 3 minutes.
+
+```json
+{
+  "message": "لقد استنفدت المحاولات الخمس. يمكنك إعادة الإرسال بعد 3 دقيقة.",
+  "errors": {
+    "email": ["لقد استنفدت المحاولات الخمس. يمكنك إعادة الإرسال بعد 3 دقيقة."],
+    "retry_after": ["180"]
+  }
+}
+```
+
+`retry_after` is seconds left until they can send again.
+
+### `POST /api/v1/auth/resend-code`
+
+Same body, response, and attempt limit as forgot-password. The **previous code expires immediately**; only the new code is valid. Restarts the 60-second timer.
+
+### `POST /api/v1/auth/verify-code`
+
+Checks the code against **that email only**. No `request_id`.
+
+```json
+{
+  "email": "ahmed@example.com",
+  "code": "123456"
+}
+```
+
+**Success `200`** — store `reset_token` for the next page.
+
+```json
+{
+  "message": "تم التحقق من الرمز بنجاح.",
+  "data": {
+    "reset_token": "…",
+    "expires_in": 600
+  }
+}
+```
+
+**Errors `422`:** wrong code, expired code (after 1 minute).
+
+### `POST /api/v1/auth/reset-password`
+
+```json
+{
+  "reset_token": "…",
+  "password": "newpassword123",
+  "password_confirmation": "newpassword123"
+}
+```
+
+**Success `200`**
+
+```json
+{ "message": "تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن." }
+```
+
+Then call `POST /api/v1/auth/login` with the new password. No JWT is issued here.
+
+Frontend mapping:
+
+| Page | Endpoint |
+|------|----------|
+| `/forgot-password` | `POST /auth/forgot-password` |
+| `/code-verification` | `POST /auth/verify-code` + `POST /auth/resend-code` |
+| `/set-new-password` | `POST /auth/reset-password` → redirect to login |
+
+---
+
 ## Postman tips
 
 | Tab | What to set |
 |-----|-------------|
 | Params | Empty for auth endpoints |
-| Authorization | Login/Register: No Auth. Me/Refresh/Logout: Bearer Token |
+| Authorization | Login/Register/Forgot-password: No Auth. Me/Refresh/Logout: Bearer Token |
 | Headers | `Accept: application/json` |
-| Body | raw → JSON (login / register only) |
+| Body | raw → JSON |
 
 Example URL (XAMPP):
 
