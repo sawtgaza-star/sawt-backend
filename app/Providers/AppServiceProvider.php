@@ -14,6 +14,7 @@ use App\Repositories\SettingRepository;
 use App\Repositories\SupportRepository;
 use App\Repositories\TeamRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Filament Shield: super_admin sees the full sidebar (same as local).
+        Gate::before(function ($user, string $ability) {
+            if (method_exists($user, 'hasRole') && $user->hasRole('super_admin')) {
+                return true;
+            }
+
+            return null;
+        });
     }
 }
