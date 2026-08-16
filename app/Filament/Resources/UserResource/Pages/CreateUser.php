@@ -21,9 +21,4 @@ class CreateUser extends CreateRecord
     {
         UserResource::ensureWebsiteUserRole($this->record);
     }
-
-    protected function getRedirectUrl(): string
-    {
-        return UserResource::getUrl('index', ['activeTab' => 'website']);
-    }
 }

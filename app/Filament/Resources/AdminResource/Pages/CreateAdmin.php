@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\AdminResource\Pages;
 
 use App\Filament\Resources\AdminResource;
-use App\Filament\Resources\UserResource;
 use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -23,10 +22,5 @@ class CreateAdmin extends CreateRecord
         $this->record->forceFill(['type' => User::TYPE_ADMIN])->save();
         $this->record->removeRole(User::ROLE_USER);
         $this->record->removeRole(User::ROLE_CONTENT_CREATOR);
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return UserResource::getUrl('index', ['activeTab' => 'admins']);
     }
 }

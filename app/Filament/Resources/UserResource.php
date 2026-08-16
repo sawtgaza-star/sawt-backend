@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -31,17 +32,17 @@ class UserResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Users');
+        return __('Website Users');
     }
 
     public static function getModelLabel(): string
     {
-        return __('User');
+        return __('Website User');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Users');
+        return __('Website Users');
     }
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -49,6 +50,13 @@ class UserResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return ['name', 'email', 'phone', 'uuid'];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereIn('type', [User::TYPE_USER, User::TYPE_CONTENT_CREATOR])
+            ->whereDoesntHave('roles', fn (Builder $q) => $q->whereIn('name', User::FILAMENT_ROLES));
     }
 
     public static function form(Form $form): Form
@@ -115,10 +123,8 @@ class UserResource extends Resource
                     ->colors([
                         'gray' => User::TYPE_USER,
                         'success' => User::TYPE_CONTENT_CREATOR,
-                        'danger' => User::TYPE_ADMIN,
                     ])
                     ->formatStateUsing(fn (?string $state) => match ($state) {
-                        User::TYPE_ADMIN => 'مدير',
                         User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
                         default => 'مستخدم',
                     }),
@@ -137,14 +143,10 @@ class UserResource extends Resource
                     ->options([
                         User::TYPE_USER => 'مستخدم',
                         User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
-                        User::TYPE_ADMIN => 'مدير',
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->url(fn (User $record): string => $record->isAdmin()
-                        ? AdminResource::getUrl('edit', ['record' => $record])
-                        : static::getUrl('edit', ['record' => $record])),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

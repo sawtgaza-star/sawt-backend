@@ -28,11 +28,6 @@ class AdminResource extends Resource
         return __('Administration');
     }
 
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
-    }
-
     public static function getNavigationLabel(): string
     {
         return __('Admins');
