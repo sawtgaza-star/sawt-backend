@@ -38,6 +38,7 @@ class RegisterController extends Controller
             'name' => trim($data['first_name'].' '.$data['last_name']),
             'email' => $data['email'],
             'password' => $data['password'], // hashed cast on User model
+            'country_code' => '+970',
             'status' => 'active',
             'type' => User::TYPE_USER,
         ]);

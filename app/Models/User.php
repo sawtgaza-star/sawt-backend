@@ -39,6 +39,8 @@ class User extends Authenticatable implements FilamentUser, JWTSubject
 
     protected $attributes = [
         'type' => self::TYPE_USER,
+        'status' => 'active',
+        'country_code' => '+970',
     ];
 
     protected $hidden = [
@@ -51,6 +53,11 @@ class User extends Authenticatable implements FilamentUser, JWTSubject
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isActive(): bool
+    {
+        return ($this->status ?: 'active') === 'active';
     }
 
     public function getJWTIdentifier(): mixed
@@ -123,7 +130,7 @@ class User extends Authenticatable implements FilamentUser, JWTSubject
     public function canAccessPanel(Panel $panel): bool
     {
         // Website roles never enter Filament.
-        return $this->status === 'active'
+        return $this->isActive()
             && $this->isAdmin()
             && ! $this->hasAnyRole(self::WEBSITE_ROLES);
     }

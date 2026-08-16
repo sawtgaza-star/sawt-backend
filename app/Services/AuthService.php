@@ -26,6 +26,7 @@ class AuthService
             'name' => trim(($data['first_name'] ?? '').' '.($data['last_name'] ?? '')),
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
+            'country_code' => $data['country_code'] ?? '+970',
             'password' => $data['password'],
             'status' => 'active',
             'type' => User::TYPE_USER,
@@ -52,7 +53,7 @@ class AuthService
             ]);
         }
 
-        if ($user->status !== 'active') {
+        if (! $user->isActive()) {
             $message = match ($user->status) {
                 'banned' => 'تم حظر هذا الحساب. تواصل مع الإدارة.',
                 'inactive' => 'هذا الحساب غير مفعّل حالياً.',

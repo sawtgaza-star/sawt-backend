@@ -151,7 +151,7 @@ class PasswordResetService
             ]);
         }
 
-        if ($user->status !== 'active') {
+        if (! $user->isActive()) {
             throw ValidationException::withMessages([
                 'email' => ['هذا الحساب غير مفعّل حالياً.'],
             ]);

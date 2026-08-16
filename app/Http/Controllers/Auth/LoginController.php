@@ -42,7 +42,7 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-        if ($user->status !== 'active') {
+        if (! $user->isActive()) {
             Auth::logout();
 
             $message = match ($user->status) {
