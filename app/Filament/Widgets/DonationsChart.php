@@ -4,6 +4,8 @@ namespace App\Filament\Widgets;
 
 use App\Models\Donation;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 class DonationsChart extends ChartWidget
 {
@@ -11,16 +13,34 @@ class DonationsChart extends ChartWidget
 
     protected static ?int $sort = 2;
 
+    protected int|string|array $columnSpan = [
+        'md' => 2,
+        'xl' => 2,
+    ];
+
+    public static function canView(): bool
+    {
+        return true;
+    }
+
     protected function getData(): array
     {
         $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i));
 
-        $totals = $months->map(function ($month) {
-            return Donation::succeeded()
-                ->whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
-                ->sum('amount');
-        });
+        try {
+            $totals = $months->map(function ($month) {
+                if (! Schema::hasTable('donations')) {
+                    return 0;
+                }
+
+                return (float) Donation::succeeded()
+                    ->whereMonth('created_at', $month->month)
+                    ->whereYear('created_at', $month->year)
+                    ->sum('amount');
+            });
+        } catch (Throwable) {
+            $totals = $months->map(fn () => 0);
+        }
 
         return [
             'datasets' => [
