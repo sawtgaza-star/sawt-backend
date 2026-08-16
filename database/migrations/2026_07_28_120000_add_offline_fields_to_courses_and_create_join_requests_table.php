@@ -1,9 +1,7 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 /**
  * Offline course fields + join requests.
  * Base courses table already includes these on fresh installs;
@@ -13,6 +11,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('courses')) {
+            return;
+        }
+
         Schema::table('courses', function (Blueprint $table) {
             if (! Schema::hasColumn('courses', 'delivery_mode')) {
                 $table->enum('delivery_mode', ['offline', 'online'])->default('offline')->after('status');
@@ -36,7 +38,6 @@ return new class extends Migration
                 $table->json('requirements')->nullable()->after('max_seats');
             }
         });
-
         if (! Schema::hasTable('course_join_requests')) {
             Schema::create('course_join_requests', function (Blueprint $table) {
                 $table->id();
@@ -52,12 +53,10 @@ return new class extends Migration
                 $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();
                 $table->timestamp('reviewed_at')->nullable();
                 $table->timestamps();
-
                 $table->unique(['course_id', 'user_id']);
             });
         }
     }
-
     public function down(): void
     {
         Schema::dropIfExists('course_join_requests');
