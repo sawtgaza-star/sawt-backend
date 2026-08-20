@@ -422,11 +422,7 @@ class Settings extends Page implements HasForms
             'content_hero_title_en' => ['content', 'string', 'Every idea has a voice… and Sawt brings them together'],
             'content_hero_desc_ar' => ['content', 'text', 'نؤمن أن لكل إنسان قصة تستحق أن تُروى، لذلك جاءت صوت لتكون مساحة حرة للتعبير، حيث يلتقي الأفراد لمشاركة تجاربهم وأفكارهم بصدق.'],
             'content_hero_desc_en' => ['content', 'text', 'We believe every person has a story worth telling. Sawt is a free space for expression where people share experiences with sincerity.'],
-            'content_hero_items' => ['content', 'json', [
-                ['image' => ''],
-                ['image' => ''],
-                ['image' => ''],
-            ]],
+            'content_hero_items' => ['content', 'json', []],
             'content_most_viewed_title_ar' => ['content', 'string', 'الأكثر مشاهدة'],
             'content_most_viewed_title_en' => ['content', 'string', 'Most viewed'],
             'content_most_viewed_more_ar' => ['content', 'string', 'رؤية المزيد'],
@@ -997,8 +993,9 @@ class Settings extends Page implements HasForms
                                 Forms\Components\FileUpload::make('image')
                                     ->label('الصورة')
                                     ->image()->disk('public')->directory('content/hero')->imageEditor()
-                                    ->required(),
+                                    ->helperText('اختياري — إن لم ترفع صورة تُتجاهل هذه الشريحة في الـ API'),
                             ])
+                            ->default([])
                             ->reorderable()
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => filled($state['image'] ?? null) ? 'صورة' : 'شريحة جديدة')

@@ -206,11 +206,7 @@ class SettingSeeder extends Seeder
             ['group' => 'content', 'key' => 'content_hero_title_en', 'value' => 'Every idea has a voice… and Sawt brings them together', 'type' => 'string'],
             ['group' => 'content', 'key' => 'content_hero_desc_ar', 'value' => 'نؤمن أن لكل إنسان قصة تستحق أن تُروى، لذلك جاءت صوت لتكون مساحة حرة للتعبير.', 'type' => 'text'],
             ['group' => 'content', 'key' => 'content_hero_desc_en', 'value' => 'We believe every person has a story worth telling.', 'type' => 'text'],
-            ['group' => 'content', 'key' => 'content_hero_items', 'value' => json_encode([
-                ['image' => ''],
-                ['image' => ''],
-                ['image' => ''],
-            ], JSON_UNESCAPED_UNICODE), 'type' => 'json'],
+            ['group' => 'content', 'key' => 'content_hero_items', 'value' => json_encode([], JSON_UNESCAPED_UNICODE), 'type' => 'json'],
             ['group' => 'content', 'key' => 'content_most_viewed_title_ar', 'value' => 'الأكثر مشاهدة', 'type' => 'string'],
             ['group' => 'content', 'key' => 'content_most_viewed_title_en', 'value' => 'Most viewed', 'type' => 'string'],
             ['group' => 'content', 'key' => 'content_most_viewed_more_ar', 'value' => 'رؤية المزيد', 'type' => 'string'],
