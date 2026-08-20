@@ -17,23 +17,44 @@ class InstagramService
      */
     public function reels(int $limit = 12, bool $bypassCache = false): array
     {
-        if (! $this->userId() || ! $this->token()) {
+        if (! $this->isConfigured()) {
             return [];
         }
 
         $ttl = (int) $this->config('cache_ttl', config('services.instagram.cache_ttl', 300));
+        $cacheKey = "instagram.reels.v3.{$limit}";
 
         $fetch = fn () => $this->request($limit);
 
-        // "Live" when ttl = 0 (or a manual refresh), otherwise a short cache to protect
-        // against Instagram rate limits (~200 calls/hour).
         if ($ttl <= 0 || $bypassCache) {
-            Cache::forget("instagram.reels.{$limit}");
+            Cache::forget($cacheKey);
 
             return $fetch();
         }
 
-        return Cache::remember("instagram.reels.{$limit}", $ttl, $fetch);
+        if (Cache::has($cacheKey)) {
+            $cached = Cache::get($cacheKey);
+
+            // Never keep an empty failure stuck in cache.
+            if (is_array($cached) && $cached !== []) {
+                return $cached;
+            }
+
+            Cache::forget($cacheKey);
+        }
+
+        $reels = $fetch();
+
+        if ($reels !== []) {
+            Cache::put($cacheKey, $reels, $ttl);
+        }
+
+        return $reels;
+    }
+
+    public function isConfigured(): bool
+    {
+        return filled($this->userId()) && filled($this->token());
     }
 
     protected function userId(): ?string
@@ -71,48 +92,223 @@ class InstagramService
         $version = config('services.instagram.version', 'v21.0');
         $userId = $this->userId();
         $token = $this->token();
+        $limit = max(1, $limit);
 
         try {
-            $response = Http::timeout(10)
-                ->get("https://graph.facebook.com/{$version}/{$userId}/media", [
-                    'fields' => 'id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count,comments.limit(30){text,username,timestamp,like_count}',
-                    'limit' => max($limit * 2, 25), // over-fetch, then filter to reels only
-                    'access_token' => $token,
-                ]);
+            $raw = [];
+            $url = "https://graph.facebook.com/{$version}/{$userId}/media";
+            $params = [
+                'fields' => 'id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(30){text,username,timestamp,like_count}',
+                'limit' => 50,
+                'access_token' => $token,
+            ];
 
-            if ($response->failed()) {
-                Log::warning('Instagram API error', ['body' => $response->json()]);
+            // Paginate until we have enough REELS (or pages run out).
+            for ($page = 0; $page < 5; $page++) {
+                $response = Http::timeout(15)->get($url, $params);
 
-                return [];
+                if ($response->failed()) {
+                    Log::warning('Instagram API error', [
+                        'status' => $response->status(),
+                        'body' => $response->json(),
+                        'user_id' => $userId,
+                    ]);
+
+                    break;
+                }
+
+                $batch = $response->json('data', []);
+                if ($batch === []) {
+                    break;
+                }
+
+                $raw = array_merge($raw, $batch);
+
+                $reelCount = collect($raw)->filter(fn ($item) => $this->isReel($item))->count();
+                if ($reelCount >= $limit) {
+                    break;
+                }
+
+                $next = $response->json('paging.next');
+                if (! $next) {
+                    break;
+                }
+
+                // Next page is a full URL — don't re-append params.
+                $url = $next;
+                $params = [];
             }
 
-            return collect($response->json('data', []))
-                ->filter(fn ($item) => ($item['media_product_type'] ?? null) === 'REELS')
+            $reels = collect($raw)
+                ->filter(fn ($item) => $this->isReel($item))
+                ->sortByDesc(fn ($item) => $item['timestamp'] ?? '')
                 ->take($limit)
-                ->map(fn ($item) => [
-                    'id' => $item['id'] ?? null,
-                    'caption' => $item['caption'] ?? '',
-                    'thumbnail' => $item['thumbnail_url'] ?? ($item['media_url'] ?? null),
-                    'video_url' => $item['media_url'] ?? null,
-                    'permalink' => $item['permalink'] ?? null,
-                    'likes' => $item['like_count'] ?? 0,
-                    'comments' => $item['comments_count'] ?? 0,
-                    'comment_items' => collect($item['comments']['data'] ?? [])
-                        ->map(fn ($c) => [
-                            'name' => $c['username'] ?? 'مستخدم',
-                            'text' => $c['text'] ?? '',
-                            'likes' => $c['like_count'] ?? 0,
-                            'time' => $c['timestamp'] ?? null,
-                        ])
-                        ->all(),
-                    'posted_at' => $item['timestamp'] ?? null,
-                ])
                 ->values()
+                ->map(function (array $item) use ($version, $token) {
+                    $id = $item['id'] ?? null;
+                    $insights = $id
+                        ? $this->insights((string) $id, (string) $version, (string) $token)
+                        : ['views' => null, 'reach' => null];
+
+                    return [
+                        'id' => $id,
+                        'caption' => $item['caption'] ?? '',
+                        'thumbnail' => $item['thumbnail_url'] ?? ($item['media_url'] ?? null),
+                        'video_url' => $item['media_url'] ?? null,
+                        'permalink' => $item['permalink'] ?? null,
+                        'username' => $item['username'] ?? null,
+                        'likes' => $item['like_count'] ?? 0,
+                        'comments' => $item['comments_count'] ?? 0,
+                        'views' => $insights['views'],
+                        'reach' => $insights['reach'],
+                        'comment_items' => collect($item['comments']['data'] ?? [])
+                            ->map(fn ($c) => [
+                                'name' => $c['username'] ?? 'مستخدم',
+                                'text' => $c['text'] ?? '',
+                                'likes' => $c['like_count'] ?? 0,
+                                'time' => $c['timestamp'] ?? null,
+                            ])
+                            ->all(),
+                        'collaborators' => $id
+                            ? $this->collaborators((string) $id, (string) $version, (string) $token)
+                            : [],
+                        'posted_at' => $item['timestamp'] ?? null,
+                    ];
+                })
                 ->all();
+
+            if ($reels === [] && $raw !== []) {
+                Log::info('Instagram media returned but no reels matched filter', [
+                    'sample' => collect($raw)->take(3)->map(fn ($i) => [
+                        'id' => $i['id'] ?? null,
+                        'media_type' => $i['media_type'] ?? null,
+                        'media_product_type' => $i['media_product_type'] ?? null,
+                        'permalink' => $i['permalink'] ?? null,
+                    ])->all(),
+                ]);
+            }
+
+            return $reels;
         } catch (\Throwable $e) {
             Log::error('Instagram fetch failed', ['message' => $e->getMessage()]);
 
             return [];
         }
+    }
+
+    /**
+     * Media insights (views / reach) for a reel.
+     *
+     * @return array{views: int|null, reach: int|null}
+     */
+    protected function insights(string $mediaId, string $version, string $token): array
+    {
+        $result = ['views' => null, 'reach' => null];
+
+        try {
+            $response = Http::timeout(10)
+                ->get("https://graph.facebook.com/{$version}/{$mediaId}/insights", [
+                    'metric' => 'views,reach',
+                    'access_token' => $token,
+                ]);
+
+            if ($response->failed()) {
+                Log::info('Instagram insights unavailable', [
+                    'media_id' => $mediaId,
+                    'status' => $response->status(),
+                    'body' => $response->json(),
+                ]);
+
+                return $result;
+            }
+
+            foreach ($response->json('data', []) as $row) {
+                $name = $row['name'] ?? null;
+                $value = $row['values'][0]['value']
+                    ?? $row['total_value']['value']
+                    ?? null;
+
+                if ($name === 'views' && is_numeric($value)) {
+                    $result['views'] = (int) $value;
+                }
+
+                if ($name === 'reach' && is_numeric($value)) {
+                    $result['reach'] = (int) $value;
+                }
+            }
+
+            return $result;
+        } catch (\Throwable $e) {
+            Log::info('Instagram insights fetch failed', [
+                'media_id' => $mediaId,
+                'message' => $e->getMessage(),
+            ]);
+
+            return $result;
+        }
+    }
+
+    /**
+     * Collaborators invited on an IG Media object (Accepted / Pending).
+     *
+     * @return array<int, array{id: mixed, username: string, invite_status: string}>
+     */
+    protected function collaborators(string $mediaId, string $version, string $token): array
+    {
+        try {
+            $response = Http::timeout(10)
+                ->get("https://graph.facebook.com/{$version}/{$mediaId}/collaborators", [
+                    'fields' => 'id,username,invite_status',
+                    'access_token' => $token,
+                ]);
+
+            if ($response->failed()) {
+                Log::info('Instagram collaborators unavailable', [
+                    'media_id' => $mediaId,
+                    'status' => $response->status(),
+                    'body' => $response->json(),
+                ]);
+
+                return [];
+            }
+
+            return collect($response->json('data', []))
+                ->map(fn ($c) => [
+                    'id' => $c['id'] ?? null,
+                    'username' => (string) ($c['username'] ?? ''),
+                    'invite_status' => (string) ($c['invite_status'] ?? ''),
+                ])
+                ->filter(fn (array $c) => $c['username'] !== '' || $c['id'] !== null)
+                ->values()
+                ->all();
+        } catch (\Throwable $e) {
+            Log::info('Instagram collaborators fetch failed', [
+                'media_id' => $mediaId,
+                'message' => $e->getMessage(),
+            ]);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $item
+     */
+    protected function isReel(array $item): bool
+    {
+        $product = $item['media_product_type'] ?? null;
+        $type = $item['media_type'] ?? null;
+        $permalink = (string) ($item['permalink'] ?? '');
+
+        if ($product === 'REELS') {
+            return true;
+        }
+
+        // Fallback: Instagram reel URLs, or VIDEO posts that Graph omits product type for.
+        if ($type === 'VIDEO' && (str_contains($permalink, '/reel/') || str_contains($permalink, '/reels/'))) {
+            return true;
+        }
+
+        return false;
     }
 }

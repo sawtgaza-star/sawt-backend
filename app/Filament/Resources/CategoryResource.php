@@ -32,17 +32,17 @@ class CategoryResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Categories');
+        return 'فئات المحتوى';
     }
 
     public static function getModelLabel(): string
     {
-        return __('Category');
+        return 'فئة';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Categories');
+        return 'فئات المحتوى';
     }
 
     protected static ?string $recordTitleAttribute = 'name';

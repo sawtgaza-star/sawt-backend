@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\CreatorsPageController;
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContentPageController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\LayoutController;
 use App\Http\Controllers\Api\PayPalController;
 use App\Http\Controllers\Api\ReelController;
@@ -22,8 +24,12 @@ Route::prefix('layout')->name('layout.')->group(function () {
     Route::get('/footer', [LayoutController::class, 'footer'])->name('footer');
 });
 
-// ===== Pages (about, team, creators, …) =====
+// ===== Pages (home, about, team, creators, …) =====
 Route::prefix('pages')->name('pages.')->group(function () {
+    Route::get('/home', [HomeController::class, 'show'])->name('home');
+
+    Route::get('/content', [ContentPageController::class, 'show'])->name('content');
+
     Route::get('/about', [AboutController::class, 'show'])->name('about');
 
     Route::get('/team', [TeamController::class, 'index'])->name('team');

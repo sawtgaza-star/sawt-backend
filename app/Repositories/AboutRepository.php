@@ -90,7 +90,6 @@ class AboutRepository implements AboutRepositoryInterface
                 'title' => $this->settings->i18n('about_join_title', 'لأن بعض الأصوات لا يجب أن تُنسى', 'Because some voices should not be forgotten'),
                 'description' => $this->settings->i18n('about_join_desc'),
                 'button_text' => $this->settings->i18n('about_join_button_text', 'مساهمة بإيصال صوت', 'Help amplify a voice'),
-                'button_url' => (string) ($this->settings->get('about_join_button_url') ?: '/donate'),
             ],
         ];
     }

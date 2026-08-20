@@ -34,17 +34,17 @@ class VideoResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Videos');
+        return 'الريلز / الفيديوهات';
     }
 
     public static function getModelLabel(): string
     {
-        return __('Video');
+        return 'ريل / فيديو';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Videos');
+        return 'الريلز / الفيديوهات';
     }
 
     protected static ?string $recordTitleAttribute = 'title';

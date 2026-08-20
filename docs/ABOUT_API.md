@@ -15,7 +15,7 @@ Header and footer are a separate endpoint: [LAYOUT_API.md](./LAYOUT_API.md) (`GE
 | Values | `about_core_values_title_*`, `about_core_values_subtitle_*`, repeater `about_core_values` (icon, titles, descriptions) |
 | Platform | `about_platform_image`, `about_platform_question_*`, `about_platform_desc_*` |
 | Story | `about_story_title_*`, `about_story_subtitle_*`, repeater `about_story_cards` |
-| Join CTA | `about_join_bg`, `about_join_title_*`, `about_join_desc_*`, `about_join_button_text_*`, `about_join_button_url` |
+| Join CTA | `about_join_bg`, `about_join_title_*`, `about_join_desc_*`, `about_join_button_text_*` |
 
 Save the Settings page once to persist any new keys (values title, join button, etc.).
 
@@ -64,8 +64,7 @@ Public. No auth.
       "image_url": "…",
       "title": {},
       "description": {},
-      "button_text": {},
-      "button_url": "/donate"
+      "button_text": {}
     }
   }
 }
