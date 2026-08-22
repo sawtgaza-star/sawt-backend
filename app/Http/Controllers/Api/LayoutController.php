@@ -13,7 +13,7 @@ class LayoutController extends Controller
     ) {}
 
     /**
-     * Shared header + footer (Settings → الهيدر / الفوتر).
+     * Shared navbar + footer (Settings → الهيدر / الفوتر).
      */
     public function show(): JsonResponse
     {
@@ -23,12 +23,12 @@ class LayoutController extends Controller
     }
 
     /**
-     * Header only (Settings → الهيدر).
+     * Navbar only (Settings → الهيدر).
      */
-    public function header(): JsonResponse
+    public function navbar(): JsonResponse
     {
         return response()->json([
-            'data' => $this->layout->header(),
+            'data' => $this->layout->navbar(),
         ]);
     }
 

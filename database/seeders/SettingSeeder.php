@@ -126,11 +126,9 @@ class SettingSeeder extends Seeder
             ['group' => 'home', 'key' => 'home_news_subtitle_en', 'value' => 'Watch the latest stories and videos from Sawt', 'type' => 'string'],
             ['group' => 'home', 'key' => 'home_news_view_all_ar', 'value' => 'عرض جميع الأخبار', 'type' => 'string'],
             ['group' => 'home', 'key' => 'home_news_view_all_en', 'value' => 'View all news', 'type' => 'string'],
-            ['group' => 'home', 'key' => 'home_news_items', 'value' => json_encode([
-                ['image' => '', 'title_ar' => 'صانع المحتوى في غزة', 'title_en' => 'Content creator in Gaza', 'excerpt_ar' => '', 'excerpt_en' => '', 'date' => null],
-                ['image' => '', 'title_ar' => 'صانع المحتوى في غزة', 'title_en' => 'Content creator in Gaza', 'excerpt_ar' => '', 'excerpt_en' => '', 'date' => null],
-                ['image' => '', 'title_ar' => 'صانع المحتوى في غزة', 'title_en' => 'Content creator in Gaza', 'excerpt_ar' => '', 'excerpt_en' => '', 'date' => null],
-            ], JSON_UNESCAPED_UNICODE), 'type' => 'json'],
+            ['group' => 'home', 'key' => 'home_news_read_more_ar', 'value' => 'اقرأ المزيد', 'type' => 'string'],
+            ['group' => 'home', 'key' => 'home_news_read_more_en', 'value' => 'Read more', 'type' => 'string'],
+            ['group' => 'home', 'key' => 'home_news_limit', 'value' => '3', 'type' => 'number'],
             ['group' => 'home', 'key' => 'home_creators_title_ar', 'value' => 'صناع المحتوى في صوت', 'type' => 'string'],
             ['group' => 'home', 'key' => 'home_creators_title_en', 'value' => 'Content Creators in Sawt', 'type' => 'string'],
             ['group' => 'home', 'key' => 'home_creators_desc_ar', 'value' => 'مجموعة من صناع المحتوى المبدعين الذين يوظفون مهاراتهم لإنتاج محتوى هادف ومؤثر.', 'type' => 'text'],
@@ -212,6 +210,14 @@ class SettingSeeder extends Seeder
             ['group' => 'content', 'key' => 'content_most_viewed_more_ar', 'value' => 'رؤية المزيد', 'type' => 'string'],
             ['group' => 'content', 'key' => 'content_most_viewed_more_en', 'value' => 'See more', 'type' => 'string'],
             ['group' => 'content', 'key' => 'content_most_viewed_limit', 'value' => '6', 'type' => 'number'],
+            ['group' => 'blogs', 'key' => 'blog_hero_title_ar', 'value' => 'آخر الأخبار', 'type' => 'string'],
+            ['group' => 'blogs', 'key' => 'blog_hero_title_en', 'value' => 'Latest News', 'type' => 'string'],
+            ['group' => 'blogs', 'key' => 'blog_hero_desc_ar', 'value' => 'تابع أحدث قصص وتحديثات منصة صوت', 'type' => 'text'],
+            ['group' => 'blogs', 'key' => 'blog_hero_desc_en', 'value' => 'Follow the latest stories and updates from Sawt', 'type' => 'text'],
+            ['group' => 'blogs', 'key' => 'blog_breadcrumb_home_ar', 'value' => 'الرئيسية', 'type' => 'string'],
+            ['group' => 'blogs', 'key' => 'blog_breadcrumb_home_en', 'value' => 'Home', 'type' => 'string'],
+            ['group' => 'blogs', 'key' => 'blog_breadcrumb_news_ar', 'value' => 'آخر الأخبار', 'type' => 'string'],
+            ['group' => 'blogs', 'key' => 'blog_breadcrumb_news_en', 'value' => 'Latest News', 'type' => 'string'],
         ];
 
         foreach ($settings as $setting) {

@@ -41,7 +41,8 @@ Public. No auth. No query filters.
     "reels": {
       "title": { "ar": "…", "en": "…" },
       "view_more": { "ar": "…", "en": "…" },
-      "status": "ok",
+            'status': "ok",
+      "message": null,
       "items": [
         {
           "id": "…",
@@ -71,8 +72,11 @@ Public. No auth. No query filters.
 | `ok` | Instagram reels returned |
 | `empty` | Credentials OK but no reels matched |
 | `missing_credentials` | Instagram user id / token not set in Settings |
+| `token_expired` | Access token expired — paste a new long-lived token in **Settings → ريلز إنستغرام** |
+| `api_error` | Graph API error (see `reels.message`) |
 
 ### Notes
 
 - Count limited by Settings `content_most_viewed_limit` (default 6).
 - Standalone list: `GET /api/v1/reels?limit=12`.
+- If `status` is `token_expired` on local **and** production, both environments need a fresh Instagram access token saved in Settings (or `.env`).

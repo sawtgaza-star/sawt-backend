@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MajorResource;
+use App\Http\Resources\TeamListingCardResource;
 use App\Http\Resources\TeamMemberResource;
 use App\Services\TeamService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -39,7 +40,7 @@ class TeamController extends Controller
                 'hero' => $payload['hero'],
                 'filters' => $payload['filters'],
                 'majors' => MajorResource::collection($payload['majors']),
-                'members' => TeamMemberResource::collection($payload['members']),
+                'members' => TeamListingCardResource::collection($payload['members']),
             ],
         ]);
     }
@@ -68,7 +69,7 @@ class TeamController extends Controller
                 'related' => [
                     'title' => $payload['related']['title'],
                     'view_all' => $payload['related']['view_all'],
-                    'members' => TeamMemberResource::collection($payload['related']['members']),
+                    'members' => TeamListingCardResource::collection($payload['related']['members']),
                 ],
             ],
         ]);

@@ -254,11 +254,9 @@ class Settings extends Page implements HasForms
             'home_news_subtitle_en' => ['home', 'string', 'Watch the latest stories and videos from Sawt'],
             'home_news_view_all_ar' => ['home', 'string', 'عرض جميع الأخبار'],
             'home_news_view_all_en' => ['home', 'string', 'View all news'],
-            'home_news_items' => ['home', 'json', [
-                ['image' => '', 'title_ar' => 'صانع المحتوى في غزة', 'title_en' => 'Content creator in Gaza', 'excerpt_ar' => '', 'excerpt_en' => '', 'date' => null],
-                ['image' => '', 'title_ar' => 'صانع المحتوى في غزة', 'title_en' => 'Content creator in Gaza', 'excerpt_ar' => '', 'excerpt_en' => '', 'date' => null],
-                ['image' => '', 'title_ar' => 'صانع المحتوى في غزة', 'title_en' => 'Content creator in Gaza', 'excerpt_ar' => '', 'excerpt_en' => '', 'date' => null],
-            ]],
+            'home_news_read_more_ar' => ['home', 'string', 'اقرأ المزيد'],
+            'home_news_read_more_en' => ['home', 'string', 'Read more'],
+            'home_news_limit' => ['home', 'number', 3],
 
             'home_creators_title_ar' => ['home', 'string', 'صناع المحتوى في صوت'],
             'home_creators_title_en' => ['home', 'string', 'Content Creators in Sawt'],
@@ -428,6 +426,17 @@ class Settings extends Page implements HasForms
             'content_most_viewed_more_ar' => ['content', 'string', 'رؤية المزيد'],
             'content_most_viewed_more_en' => ['content', 'string', 'See more'],
             'content_most_viewed_limit' => ['content', 'number', 6],
+
+            // صفحة الأخبار / المدونة
+            'blog_header_bg' => ['blogs', 'string', ''],
+            'blog_hero_title_ar' => ['blogs', 'string', 'آخر الأخبار'],
+            'blog_hero_title_en' => ['blogs', 'string', 'Latest News'],
+            'blog_hero_desc_ar' => ['blogs', 'text', 'تابع أحدث قصص وتحديثات منصة صوت'],
+            'blog_hero_desc_en' => ['blogs', 'text', 'Follow the latest stories and updates from Sawt'],
+            'blog_breadcrumb_home_ar' => ['blogs', 'string', 'الرئيسية'],
+            'blog_breadcrumb_home_en' => ['blogs', 'string', 'Home'],
+            'blog_breadcrumb_news_ar' => ['blogs', 'string', 'آخر الأخبار'],
+            'blog_breadcrumb_news_en' => ['blogs', 'string', 'Latest News'],
 
             // صفحة الفريق
             'team_header_bg' => ['team', 'string', ''],
@@ -728,25 +737,17 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('home_news_title_en')->label('Title (EN)'),
                         Forms\Components\TextInput::make('home_news_subtitle_ar')->label('الوصف (عربي)'),
                         Forms\Components\TextInput::make('home_news_subtitle_en')->label('Subtitle (EN)'),
+                        Forms\Components\TextInput::make('home_news_read_more_ar')->label('«اقرأ المزيد» (عربي)'),
+                        Forms\Components\TextInput::make('home_news_read_more_en')->label('Read more (EN)'),
                         Forms\Components\TextInput::make('home_news_view_all_ar')->label('زر عرض الكل (عربي)'),
                         Forms\Components\TextInput::make('home_news_view_all_en')->label('View all (EN)'),
-                        Forms\Components\Repeater::make('home_news_items')
-                            ->label('بطاقات الأخبار')
-                            ->schema([
-                                Forms\Components\FileUpload::make('image')->label('الصورة')->image()->disk('public')->directory('home/news')->imageEditor()->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)'),
-                                Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
-                                Forms\Components\Textarea::make('excerpt_ar')->label('المقتطف (عربي)')->rows(2),
-                                Forms\Components\Textarea::make('excerpt_en')->label('Excerpt (EN)')->rows(2),
-                                Forms\Components\DatePicker::make('date')->label('التاريخ'),
-                            ])
-                            ->columns(2)
-                            ->reorderable()
-                            ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'خبر')
-                            ->addActionLabel('➕ إضافة خبر')
-                            ->columnSpanFull(),
-                    ])->columns(2),
+                        Forms\Components\TextInput::make('home_news_limit')
+                            ->label('عدد البطاقات في الرئيسية')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(12),
+                    ])->columns(2)
+                        ->description('البطاقات تُجلب من **المحتوى → الأخبار / المدونة**. فعّل «إبراز في الرئيسية» أو انشر أحدث الأخبار.'),
 
                     Forms\Components\Section::make('5) صناع المحتوى (على الرئيسية)')->schema([
                         Forms\Components\TextInput::make('home_creators_title_ar')->label('العنوان (عربي)'),
@@ -1009,6 +1010,27 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('content_most_viewed_more_ar')->label('نص «رؤية المزيد» (عربي)'),
                         Forms\Components\TextInput::make('content_most_viewed_more_en')->label('See more (EN)'),
                         Forms\Components\TextInput::make('content_most_viewed_limit')->label('عدد الريلز')->numeric()->minValue(1)->maxValue(30),
+                    ])->columns(2),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('الأخبار')->icon('heroicon-o-newspaper')->schema([
+                    Forms\Components\Section::make('1) هيرو صفحة قائمة الأخبار')->schema([
+                        Forms\Components\FileUpload::make('blog_header_bg')
+                            ->label('صورة خلفية الهيرو')
+                            ->image()->disk('public')->directory('blogs')->imageEditor()
+                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('blog_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('blog_hero_title_en')->label('Title (EN)'),
+                        Forms\Components\Textarea::make('blog_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('blog_hero_desc_en')->label('Description (EN)')->rows(3),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('2) صفحة تفاصيل الخبر')->schema([
+                        Forms\Components\TextInput::make('blog_breadcrumb_home_ar')->label('فتات «الرئيسية» (عربي)'),
+                        Forms\Components\TextInput::make('blog_breadcrumb_home_en')->label('Home breadcrumb (EN)'),
+                        Forms\Components\TextInput::make('blog_breadcrumb_news_ar')->label('فتات «آخر الأخبار» (عربي)'),
+                        Forms\Components\TextInput::make('blog_breadcrumb_news_en')->label('News breadcrumb (EN)'),
                     ])->columns(2),
                 ]),
 
@@ -1560,7 +1582,7 @@ class Settings extends Page implements HasForms
                     Forms\Components\Textarea::make('instagram_access_token')
                         ->label('رمز الوصول (Access Token)')
                         ->rows(3)
-                        ->helperText('Long-lived token من تطبيق Meta — يُخزَّن بأمان بجدول الإعدادات')
+                        ->helperText('Long-lived token من Meta. إذا انتهت صلاحيته تظهر الريلز فارغة في /pages/content و /reels — جدّد التوكن من Graph API Explorer واحفظه هنا.')
                         ->columnSpanFull(),
                 ])->columns(2),
 

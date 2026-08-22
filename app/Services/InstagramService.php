@@ -9,6 +9,20 @@ use Illuminate\Support\Facades\Log;
 
 class InstagramService
 {
+    public const STATUS_OK = 'ok';
+
+    public const STATUS_EMPTY = 'empty';
+
+    public const STATUS_MISSING_CREDENTIALS = 'missing_credentials';
+
+    public const STATUS_TOKEN_EXPIRED = 'token_expired';
+
+    public const STATUS_API_ERROR = 'api_error';
+
+    protected string $lastStatus = self::STATUS_MISSING_CREDENTIALS;
+
+    protected ?string $lastMessage = null;
+
     /**
      * Fetch the latest Reels from the configured Instagram Business/Creator account.
      * Credentials come from the dashboard Settings first, then fall back to .env config.
@@ -17,7 +31,12 @@ class InstagramService
      */
     public function reels(int $limit = 12, bool $bypassCache = false): array
     {
+        $this->lastStatus = self::STATUS_MISSING_CREDENTIALS;
+        $this->lastMessage = null;
+
         if (! $this->isConfigured()) {
+            $this->lastMessage = 'Instagram user id or access token is missing.';
+
             return [];
         }
 
@@ -37,6 +56,9 @@ class InstagramService
 
             // Never keep an empty failure stuck in cache.
             if (is_array($cached) && $cached !== []) {
+                $this->lastStatus = self::STATUS_OK;
+                $this->lastMessage = null;
+
                 return $cached;
             }
 
@@ -50,6 +72,16 @@ class InstagramService
         }
 
         return $reels;
+    }
+
+    public function lastStatus(): string
+    {
+        return $this->lastStatus;
+    }
+
+    public function lastMessage(): ?string
+    {
+        return $this->lastMessage;
     }
 
     public function isConfigured(): bool
@@ -108,11 +140,7 @@ class InstagramService
                 $response = Http::timeout(15)->get($url, $params);
 
                 if ($response->failed()) {
-                    Log::warning('Instagram API error', [
-                        'status' => $response->status(),
-                        'body' => $response->json(),
-                        'user_id' => $userId,
-                    ]);
+                    $this->recordApiFailure($response->status(), $response->json(), $userId);
 
                     break;
                 }
@@ -137,6 +165,11 @@ class InstagramService
                 // Next page is a full URL — don't re-append params.
                 $url = $next;
                 $params = [];
+            }
+
+            // API already failed — don't overwrite status with "empty".
+            if (in_array($this->lastStatus, [self::STATUS_TOKEN_EXPIRED, self::STATUS_API_ERROR], true)) {
+                return [];
             }
 
             $reels = collect($raw)
@@ -177,23 +210,63 @@ class InstagramService
                 })
                 ->all();
 
-            if ($reels === [] && $raw !== []) {
-                Log::info('Instagram media returned but no reels matched filter', [
-                    'sample' => collect($raw)->take(3)->map(fn ($i) => [
-                        'id' => $i['id'] ?? null,
-                        'media_type' => $i['media_type'] ?? null,
-                        'media_product_type' => $i['media_product_type'] ?? null,
-                        'permalink' => $i['permalink'] ?? null,
-                    ])->all(),
-                ]);
+            if ($reels === []) {
+                $this->lastStatus = self::STATUS_EMPTY;
+                $this->lastMessage = $raw === []
+                    ? 'Instagram returned no media for this account.'
+                    : 'Instagram media returned but none matched the reels filter.';
+
+                if ($raw !== []) {
+                    Log::info('Instagram media returned but no reels matched filter', [
+                        'sample' => collect($raw)->take(3)->map(fn ($i) => [
+                            'id' => $i['id'] ?? null,
+                            'media_type' => $i['media_type'] ?? null,
+                            'media_product_type' => $i['media_product_type'] ?? null,
+                            'permalink' => $i['permalink'] ?? null,
+                        ])->all(),
+                    ]);
+                }
+
+                return [];
             }
+
+            $this->lastStatus = self::STATUS_OK;
+            $this->lastMessage = null;
 
             return $reels;
         } catch (\Throwable $e) {
             Log::error('Instagram fetch failed', ['message' => $e->getMessage()]);
+            $this->lastStatus = self::STATUS_API_ERROR;
+            $this->lastMessage = $e->getMessage();
 
             return [];
         }
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $body
+     */
+    protected function recordApiFailure(int $status, ?array $body, ?string $userId): void
+    {
+        $error = is_array($body) ? ($body['error'] ?? null) : null;
+        $message = is_array($error) ? (string) ($error['message'] ?? 'Instagram API error') : 'Instagram API error';
+        $code = is_array($error) ? (int) ($error['code'] ?? 0) : 0;
+        $subcode = is_array($error) ? (int) ($error['error_subcode'] ?? 0) : 0;
+
+        $expired = $code === 190
+            || $subcode === 463
+            || str_contains(strtolower($message), 'session has expired')
+            || str_contains(strtolower($message), 'access token');
+
+        $this->lastStatus = $expired ? self::STATUS_TOKEN_EXPIRED : self::STATUS_API_ERROR;
+        $this->lastMessage = $message;
+
+        Log::warning('Instagram API error', [
+            'status' => $status,
+            'body' => $body,
+            'user_id' => $userId,
+            'mapped_status' => $this->lastStatus,
+        ]);
     }
 
     /**

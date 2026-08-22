@@ -58,11 +58,12 @@ class ContentPageService
         $limit = (int) ($this->settings->get('content_most_viewed_limit', 6) ?: 6);
         $limit = max(1, min(30, $limit));
 
-        $status = 'missing_credentials';
+        $status = InstagramService::STATUS_MISSING_CREDENTIALS;
+        $message = null;
         $items = [];
 
         if ($this->instagram->isConfigured()) {
-            $fetched = $this->instagram->reels($limit);
+            $fetched = $this->instagram->reels($limit, bypassCache: true);
 
             $items = collect($fetched)
                 ->map(fn (array $reel, int $index) => [
@@ -83,13 +84,17 @@ class ContentPageService
                 ->values()
                 ->all();
 
-            $status = $items === [] ? 'empty' : 'ok';
+            $status = $this->instagram->lastStatus();
+            $message = $this->instagram->lastMessage();
+        } else {
+            $message = 'Instagram user id or access token is missing.';
         }
 
         return [
             'title' => $this->settings->i18n('content_most_viewed_title', 'الأكثر مشاهدة', 'Most viewed'),
             'view_more' => $this->settings->i18n('content_most_viewed_more', 'رؤية المزيد', 'See more'),
             'status' => $status,
+            'message' => $message,
             'items' => $items,
         ];
     }

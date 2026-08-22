@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CreatorsPageController;
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\AuthController;
@@ -17,10 +18,10 @@ use Illuminate\Support\Facades\Route;
 // Public: Instagram reels from the platform's own account
 Route::get('/reels', [ReelController::class, 'index'])->name('reels');
 
-// ===== Layout (header / footer) =====
+// ===== Layout (navbar / footer) =====
 Route::prefix('layout')->name('layout.')->group(function () {
     Route::get('/', [LayoutController::class, 'show'])->name('index');
-    Route::get('/header', [LayoutController::class, 'header'])->name('header');
+    Route::get('/navbar', [LayoutController::class, 'navbar'])->name('navbar');
     Route::get('/footer', [LayoutController::class, 'footer'])->name('footer');
 });
 
@@ -29,6 +30,9 @@ Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/home', [HomeController::class, 'show'])->name('home');
 
     Route::get('/content', [ContentPageController::class, 'show'])->name('content');
+
+    Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
+    Route::get('/blogs/{uuid}', [BlogController::class, 'show'])->name('blogs.show');
 
     Route::get('/about', [AboutController::class, 'show'])->name('about');
 

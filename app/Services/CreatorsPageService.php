@@ -30,6 +30,12 @@ class CreatorsPageService
                 'title' => $this->settings->i18n('creators_grid_title', '+47 صانع محتوى ناجح في صوت', '+47 successful content creators in Sawt'),
                 'subtitle' => $this->settings->i18n('creators_grid_subtitle'),
                 'browse_label' => $this->settings->i18n('creators_card_browse_label', 'تصفح', 'Browse'),
+                'experience_title' => $this->settings->i18n(
+                    'home_creators_experience_title',
+                    'تجربتي مع صوت',
+                    'My experience with Sawt'
+                ),
+                'followers_suffix' => $this->settings->i18n('creators_all_followers_suffix', 'متابع', 'followers'),
                 'creators' => $this->creators->activeCreators($gridLimit),
             ],
             'stats' => $this->stats(),
@@ -62,6 +68,11 @@ class CreatorsPageService
         return [
             'hero' => $this->hero(),
             'labels' => [
+                'experience_title' => $this->settings->i18n(
+                    'home_creators_experience_title',
+                    'تجربتي مع صوت',
+                    'My experience with Sawt'
+                ),
                 'followers_suffix' => $this->settings->i18n('creators_all_followers_suffix', 'متابع', 'followers'),
             ],
             'creators' => $this->creators->paginateActiveCreators($perPage, $search),

@@ -1,6 +1,6 @@
 # Creators Page API & Filament
 
-The creators landing page follows the **Team** pattern: page copy in **Settings**, lists in Filament resources, public API without header/footer.
+The creators landing page follows the **Team** pattern: page copy in **Settings**, lists in Filament resources, public API without navbar/footer.
 
 Related: [TEAM_API.md](./TEAM_API.md)
 

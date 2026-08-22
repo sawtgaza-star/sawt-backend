@@ -1,4 +1,4 @@
-# Layout API (Header & Footer)
+# Layout API (Navbar & Footer)
 
 Shared site chrome from Filament **Settings → الهيدر** and **Settings → الفوتر**. Other page APIs (about, team, creators) do not include this; fetch it once for the whole app.
 
@@ -19,14 +19,14 @@ Public. No auth.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/v1/layout` | Header + footer together |
-| `GET` | `/api/v1/layout/header` | Header only |
+| `GET` | `/api/v1/layout` | Navbar + footer together |
+| `GET` | `/api/v1/layout/navbar` | Navbar only |
 | `GET` | `/api/v1/layout/footer` | Footer only |
 
-### Header
+### Navbar
 
 ```
-GET /api/v1/layout/header
+GET /api/v1/layout/navbar
 ```
 
 ```json
@@ -74,7 +74,7 @@ GET /api/v1/layout
 ```json
 {
   "data": {
-    "header": {
+    "navbar": {
       "site_name": "Sawt",
       "logo_url": "http://127.0.0.1:8000/storage/home/logo.png",
       "search_placeholder": { "ar": "ابحث هنا...", "en": "Search here..." },

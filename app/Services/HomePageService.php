@@ -14,6 +14,7 @@ class HomePageService
         protected CreatorPageRepositoryInterface $creators,
         protected TeamRepositoryInterface $team,
         protected InstagramService $instagram,
+        protected BlogService $blogs,
     ) {}
 
     /**
@@ -157,35 +158,7 @@ class HomePageService
      */
     protected function news(): array
     {
-        $items = $this->settings->get('home_news_items', []);
-        if (! is_array($items)) {
-            $items = [];
-        }
-
-        return [
-            'title' => $this->settings->i18n('home_news_title', 'أخر أخبارنا', 'Our Latest News'),
-            'subtitle' => $this->settings->i18n(
-                'home_news_subtitle',
-                'شاهد أحدث القصص والفيديوهات من منصة صوت',
-                'Watch the latest stories and videos from Sawt'
-            ),
-            'view_all' => [
-                'label' => $this->settings->i18n('home_news_view_all', 'عرض جميع الأخبار', 'View all news'),
-            ],
-            'items' => collect(array_values($items))->map(fn (array $item, int $index) => [
-                'image_url' => MediaUrl::make($item['image'] ?? null),
-                'title' => [
-                    'ar' => (string) ($item['title_ar'] ?? ''),
-                    'en' => (string) ($item['title_en'] ?? ''),
-                ],
-                'excerpt' => [
-                    'ar' => (string) ($item['excerpt_ar'] ?? ''),
-                    'en' => (string) ($item['excerpt_en'] ?? ''),
-                ],
-                'date' => $item['date'] ?? null,
-                'sort_order' => $index,
-            ])->all(),
-        ];
+        return $this->blogs->homepageNews();
     }
 
     /**
@@ -205,6 +178,12 @@ class HomePageService
             'view_all' => [
                 'label' => $this->settings->i18n('home_creators_view_all', 'عرض الكل', 'View all'),
             ],
+            'experience_title' => $this->settings->i18n(
+                'home_creators_experience_title',
+                'تجربتي مع صوت',
+                'My experience with Sawt'
+            ),
+            'followers_suffix' => $this->settings->i18n('creators_all_followers_suffix', 'متابع', 'followers'),
             'items' => $this->creators->activeCreators(max(1, min(30, $limit))),
         ];
     }
@@ -421,7 +400,7 @@ class HomePageService
                     $commentsCount = (int) ($first['comments'] ?? count($comments));
                 }
 
-                $status = $reels === [] ? 'empty' : 'ok';
+                $status = $this->instagram->lastStatus();
             }
         }
 
@@ -434,6 +413,7 @@ class HomePageService
             ),
             'reels_enabled' => $useInstagram,
             'reels_status' => $status,
+            'reels_message' => $useInstagram ? $this->instagram->lastMessage() : null,
             'reels' => $reels,
             'comments' => [
                 'count' => $commentsCount,

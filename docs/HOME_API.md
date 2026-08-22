@@ -2,7 +2,7 @@
 
 Homepage content is stored in the **`settings`** table (`group = home`) and edited in Filament **Settings → الصفحة الرئيسية**.
 
-Creators and team **cards** are loaded from the Creators / Team Members resources (active records). Header and footer are separate: [LAYOUT_API.md](./LAYOUT_API.md).
+Creators and team **cards** are loaded from the Creators / Team Members resources (active records). Navbar and footer are separate: [LAYOUT_API.md](./LAYOUT_API.md).
 
 ## Filament
 

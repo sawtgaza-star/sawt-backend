@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Creators\StoreCreatorJoinRequest;
-use App\Http\Resources\CreatorCardResource;
 use App\Http\Resources\CreatorFaqResource;
 use App\Http\Resources\CreatorJoinRequestResource;
 use App\Http\Resources\CreatorPartnerCompanyResource;
+use App\Http\Resources\CreatorCardResource;
+use App\Http\Resources\HomeCreatorCardResource;
 use App\Services\CreatorsPageService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -30,7 +31,9 @@ class CreatorsPageController extends Controller
                     'title' => $payload['grid']['title'],
                     'subtitle' => $payload['grid']['subtitle'],
                     'browse_label' => $payload['grid']['browse_label'],
-                    'creators' => CreatorCardResource::collection($payload['grid']['creators']),
+                    'experience_title' => $payload['grid']['experience_title'],
+                    'followers_suffix' => $payload['grid']['followers_suffix'],
+                    'creators' => HomeCreatorCardResource::collection($payload['grid']['creators']),
                 ],
                 'stats' => $payload['stats'],
                 'join' => $payload['join'],
@@ -67,7 +70,7 @@ class CreatorsPageController extends Controller
             'data' => [
                 'hero' => $payload['hero'],
                 'labels' => $payload['labels'],
-                'creators' => CreatorCardResource::collection($paginator->items()),
+                'creators' => HomeCreatorCardResource::collection($paginator->items()),
             ],
             'meta' => [
                 'current_page' => $paginator->currentPage(),

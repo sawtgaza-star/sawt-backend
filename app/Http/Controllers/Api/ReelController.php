@@ -16,6 +16,10 @@ class ReelController extends Controller
 
         return response()->json([
             'data' => $instagram->reels($limit),
+            'meta' => [
+                'status' => $instagram->lastStatus(),
+                'message' => $instagram->lastMessage(),
+            ],
         ]);
     }
 }

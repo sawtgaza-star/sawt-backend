@@ -13,14 +13,14 @@ class LayoutService
     ) {}
 
     /**
-     * Shared header + footer for the public site.
+     * Shared navbar + footer for the public site.
      *
-     * @return array{header: array<string, mixed>, footer: array<string, mixed>}
+     * @return array{navbar: array<string, mixed>, footer: array<string, mixed>}
      */
     public function page(): array
     {
         return [
-            'header' => $this->header(),
+            'navbar' => $this->navbar(),
             'footer' => $this->footer(),
         ];
     }
@@ -28,7 +28,7 @@ class LayoutService
     /**
      * @return array<string, mixed>
      */
-    public function header(): array
+    public function navbar(): array
     {
         $nav = $this->settings->get('header_nav_links', []);
         if (! is_array($nav)) {
