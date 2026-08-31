@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\ReelController;
 use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\SupportRequestController;
 use App\Http\Controllers\Api\SupportSubscriptionController;
+use App\Http\Controllers\Api\CollaborationController;
+use App\Http\Controllers\Api\StoryController;
 use App\Http\Controllers\Api\TeamController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +35,15 @@ Route::prefix('pages')->name('pages.')->group(function () {
 
     Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
     Route::get('/blogs/{uuid}', [BlogController::class, 'show'])->name('blogs.show');
+
+    Route::get('/stories', [StoryController::class, 'index'])->name('stories');
+    Route::get('/stories/{uuid}', [StoryController::class, 'show'])->name('stories.show');
+
+    Route::get('/collaborate', [CollaborationController::class, 'show'])->name('collaborate');
+    Route::post('/collaborate/creator', [CollaborationController::class, 'submitCreator'])->name('collaborate.creator.submit');
+    Route::post('/collaborate/sponsorship', [CollaborationController::class, 'submitSponsorship'])->name('collaborate.sponsorship.submit');
+    Route::post('/collaborate/partnership', [CollaborationController::class, 'submitPartnership'])->name('collaborate.partnership.submit');
+    Route::post('/collaborate/other', [CollaborationController::class, 'submitOther'])->name('collaborate.other.submit');
 
     Route::get('/about', [AboutController::class, 'show'])->name('about');
 

@@ -328,26 +328,7 @@ class Settings extends Page implements HasForms
             'home_stories_desc_en' => ['home', 'text', 'Share your story or cause — it may be the next one we highlight so its voice reaches the world'],
             'home_stories_badge_ar' => ['home', 'string', '+100 قصة واقعية نقلتها صوت إلى العالم'],
             'home_stories_badge_en' => ['home', 'string', '+100 real stories Sawt has brought to the world'],
-            'home_stories_items' => ['home', 'json', [
-                [
-                    'image' => '',
-                    'badge_ar' => 'قصة نجاح',
-                    'badge_en' => 'Success story',
-                    'title_ar' => 'سمير',
-                    'title_en' => 'Samir',
-                    'desc_ar' => '',
-                    'desc_en' => '',
-                ],
-                [
-                    'image' => '',
-                    'badge_ar' => 'قصة نجاح',
-                    'badge_en' => 'Success story',
-                    'title_ar' => 'أغلى كاسة شاي في العالم',
-                    'title_en' => 'The most expensive cup of tea in the world',
-                    'desc_ar' => '',
-                    'desc_en' => '',
-                ],
-            ]],
+            'home_stories_limit' => ['home', 'number', 4],
 
             'home_team_title_ar' => ['home', 'string', 'أعضاء فريقنا'],
             'home_team_title_en' => ['home', 'string', 'Our Team Members'],
@@ -433,10 +414,26 @@ class Settings extends Page implements HasForms
             'blog_hero_title_en' => ['blogs', 'string', 'Latest News'],
             'blog_hero_desc_ar' => ['blogs', 'text', 'تابع أحدث قصص وتحديثات منصة صوت'],
             'blog_hero_desc_en' => ['blogs', 'text', 'Follow the latest stories and updates from Sawt'],
-            'blog_breadcrumb_home_ar' => ['blogs', 'string', 'الرئيسية'],
-            'blog_breadcrumb_home_en' => ['blogs', 'string', 'Home'],
-            'blog_breadcrumb_news_ar' => ['blogs', 'string', 'آخر الأخبار'],
-            'blog_breadcrumb_news_en' => ['blogs', 'string', 'Latest News'],
+
+            // صفحة القصص
+            'story_header_bg' => ['stories', 'string', ''],
+            'story_hero_title_ar' => ['stories', 'string', 'قصص النجاح'],
+            'story_hero_title_en' => ['stories', 'string', 'Success Stories'],
+            'story_hero_desc_ar' => ['stories', 'text', 'قصص حقيقية من غزة نقلتها منصة صوت إلى العالم'],
+            'story_hero_desc_en' => ['stories', 'text', 'Real stories from Gaza carried by Sawt to the world'],
+            'story_related_title_ar' => ['stories', 'string', 'قصص ذات صلة'],
+            'story_related_title_en' => ['stories', 'string', 'Related stories'],
+            'story_related_subtitle_ar' => ['stories', 'text', 'قصص حقيقية من غزة نقلتها منصة صوت إلى العالم'],
+            'story_related_subtitle_en' => ['stories', 'text', 'Real stories from Gaza carried by Sawt to the world'],
+            'story_view_all_ar' => ['stories', 'string', 'عرض جميع القصص'],
+            'story_view_all_en' => ['stories', 'string', 'View all stories'],
+
+            // صفحة التعاون
+            'collaborate_header_bg' => ['collaborate', 'string', ''],
+            'collaborate_hero_title_ar' => ['collaborate', 'string', 'تعاون معنا'],
+            'collaborate_hero_title_en' => ['collaborate', 'string', 'Collaborate with us'],
+            'collaborate_hero_desc_ar' => ['collaborate', 'text', 'تعرّف على صناع المحتوى في صوت، حيث كل فكرة لها صوت، وكل صانع محتوى له قصة.'],
+            'collaborate_hero_desc_en' => ['collaborate', 'text', 'Get to know the content creators in Sawt, where every idea has a voice, and every creator has a story.'],
 
             // صفحة الفريق
             'team_header_bg' => ['team', 'string', ''],
@@ -813,29 +810,14 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('home_stories_badge_ar')->label('شارة الإحصائية (عربي)')
                             ->helperText('مثال: +100 قصة واقعية نقلتها صوت إلى العالم'),
                         Forms\Components\TextInput::make('home_stories_badge_en')->label('Stat badge (EN)'),
-                        Forms\Components\Repeater::make('home_stories_items')
-                            ->label('بطاقات القصص (صور + نصوص)')
-                            ->schema([
-                                Forms\Components\FileUpload::make('image')
-                                    ->label('الصورة')
-                                    ->image()->disk('public')->directory('home/stories')->imageEditor()
-                                    ->columnSpanFull(),
-                                Forms\Components\TextInput::make('badge_ar')->label('شارة التصنيف (عربي)')->placeholder('قصة نجاح'),
-                                Forms\Components\TextInput::make('badge_en')->label('Category badge (EN)'),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان على الصورة (عربي)'),
-                                Forms\Components\TextInput::make('title_en')->label('Title on image (EN)'),
-                                Forms\Components\Textarea::make('desc_ar')->label('الوصف أسفل البطاقة (عربي)')->rows(3),
-                                Forms\Components\Textarea::make('desc_en')->label('Card description (EN)')->rows(3),
-                            ])
-                            ->columns(2)
-                            ->maxItems(10)
-                            ->reorderable()
-                            ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'قصة')
-                            ->addActionLabel('➕ إضافة قصة')
-                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('home_stories_limit')
+                            ->label('عدد بطاقات القصص')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(12)
+                            ->helperText('القصص من **المحتوى → القصص** (المميزة أولاً)'),
                     ])->columns(2)
-                        ->description('حقل «شاركنا قصتك» ثابت في الواجهة — لا يُعدَّل من هنا. الجانب الأيسر: صور مع نصوص فوقها.'),
+                        ->description('حقل «شاركنا قصتك» ثابت في الواجهة — لا يُعدَّل من هنا.'),
 
                     Forms\Components\Section::make('9) أعضاء الفريق (على الرئيسية)')->schema([
                         Forms\Components\TextInput::make('home_team_title_ar')->label('العنوان (عربي)'),
@@ -1025,13 +1007,49 @@ class Settings extends Page implements HasForms
                         Forms\Components\Textarea::make('blog_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
                         Forms\Components\Textarea::make('blog_hero_desc_en')->label('Description (EN)')->rows(3),
                     ])->columns(2),
+                ]),
 
-                    Forms\Components\Section::make('2) صفحة تفاصيل الخبر')->schema([
-                        Forms\Components\TextInput::make('blog_breadcrumb_home_ar')->label('فتات «الرئيسية» (عربي)'),
-                        Forms\Components\TextInput::make('blog_breadcrumb_home_en')->label('Home breadcrumb (EN)'),
-                        Forms\Components\TextInput::make('blog_breadcrumb_news_ar')->label('فتات «آخر الأخبار» (عربي)'),
-                        Forms\Components\TextInput::make('blog_breadcrumb_news_en')->label('News breadcrumb (EN)'),
+                Forms\Components\Tabs\Tab::make('القصص')->icon('heroicon-o-book-open')->schema([
+                    Forms\Components\Section::make('1) هيرو صفحة قائمة القصص')->schema([
+                        Forms\Components\FileUpload::make('story_header_bg')
+                            ->label('صورة خلفية الهيرو')
+                            ->image()->disk('public')->directory('stories')->imageEditor()
+                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('story_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('story_hero_title_en')->label('Title (EN)'),
+                        Forms\Components\Textarea::make('story_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('story_hero_desc_en')->label('Description (EN)')->rows(3),
                     ])->columns(2),
+
+                    Forms\Components\Section::make('2) صفحة تفاصيل القصة')->schema([
+                        Forms\Components\TextInput::make('story_related_title_ar')->label('عنوان «قصص ذات صلة» (عربي)'),
+                        Forms\Components\TextInput::make('story_related_title_en')->label('Related stories title (EN)'),
+                        Forms\Components\Textarea::make('story_related_subtitle_ar')->label('وصف «قصص ذات صلة» (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('story_related_subtitle_en')->label('Related stories subtitle (EN)')->rows(2),
+                        Forms\Components\TextInput::make('story_view_all_ar')->label('«عرض جميع القصص» (عربي)'),
+                        Forms\Components\TextInput::make('story_view_all_en')->label('View all stories (EN)'),
+                    ])->columns(2),
+                ]),
+
+                Forms\Components\Tabs\Tab::make('التعاون')->icon('heroicon-o-hand-raised')->schema([
+                    Forms\Components\Section::make('1) هيرو صفحة التعاون')->schema([
+                        Forms\Components\FileUpload::make('collaborate_header_bg')
+                            ->label('صورة خلفية الهيرو')
+                            ->image()->disk('public')->directory('collaborate')->imageEditor()
+                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('collaborate_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('collaborate_hero_title_en')->label('Title (EN)'),
+                        Forms\Components\Textarea::make('collaborate_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('collaborate_hero_desc_en')->label('Description (EN)')->rows(3),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('2) بطاقات أنواع التعاون')->schema([
+                        Forms\Components\Placeholder::make('collaborate_types_hint')
+                            ->content('إدارة البطاقات (صانع محتوى، رعاية، شراكة…) من **التعاون → أنواع التعاون** في الشريط الجانبي.')
+                            ->columnSpanFull(),
+                    ]),
                 ]),
 
                 Forms\Components\Tabs\Tab::make('الفريق')->icon('heroicon-o-users')->schema([
@@ -1570,7 +1588,7 @@ class Settings extends Page implements HasForms
                 Forms\Components\Tabs\Tab::make('ريلز إنستغرام')->icon('heroicon-o-film')->schema([
                     Forms\Components\Toggle::make('reels_enabled')
                         ->label('تفعيل عرض الريلز')
-                        ->helperText('لما يكون مفعّل، بيتم جلب الريلز من حساب إنستغرام وعرضها بالأسفل وعبر /api/v1/reels')
+                        ->helperText('لما يكون مفعّل، بيتم جلب الريلز من حساب إنستغرام وعرضها في هذا التاب وعبر /api/v1/reels')
                         ->columnSpanFull(),
                     Forms\Components\TextInput::make('instagram_user_id')
                         ->label('معرّف حساب إنستغرام (Business ID)')
@@ -1583,6 +1601,15 @@ class Settings extends Page implements HasForms
                         ->label('رمز الوصول (Access Token)')
                         ->rows(3)
                         ->helperText('Long-lived token من Meta. إذا انتهت صلاحيته تظهر الريلز فارغة في /pages/content و /reels — جدّد التوكن من Graph API Explorer واحفظه هنا.')
+                        ->columnSpanFull(),
+
+                    Forms\Components\Placeholder::make('instagram_reels_preview')
+                        ->hiddenLabel()
+                        ->content(fn (): \Illuminate\Support\HtmlString => new \Illuminate\Support\HtmlString(
+                            view('filament.pages.partials.instagram-reels-preview', [
+                                'livewire' => $this,
+                            ])->render()
+                        ))
                         ->columnSpanFull(),
                 ])->columns(2),
 

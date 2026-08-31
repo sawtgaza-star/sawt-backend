@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BlogListingCardResource;
 use App\Http\Resources\HomeCreatorCardResource;
+use App\Http\Resources\StoryListingCardResource;
 use App\Http\Resources\TeamListingCardResource;
 use App\Services\HomePageService;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +46,13 @@ class HomeController extends Controller
                 ],
                 'platform_sections' => $payload['platform_sections'],
                 'partners' => $payload['partners'],
-                'stories' => $payload['stories'],
+                'stories' => [
+                    'title' => $payload['stories']['title'],
+                    'description' => $payload['stories']['description'],
+                    'badge' => $payload['stories']['badge'],
+                    'view_all' => $payload['stories']['view_all'],
+                    'items' => StoryListingCardResource::collection($payload['stories']['items']),
+                ],
                 'team' => [
                     'title' => $payload['team']['title'],
                     'subtitle' => $payload['team']['subtitle'],

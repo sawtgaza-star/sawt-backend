@@ -2,44 +2,46 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\Concerns\ManagesCreatorJoinRequestResource;
-use App\Filament\Resources\CreatorJoinRequestResource\Pages;
-use App\Models\CreatorJoinRequest;
+use App\Filament\Resources\CollaborationJoinRequestResource\Pages;
+use App\Filament\Resources\Concerns\ManagesCollaborationJoinRequestResource;
+use App\Models\CollaborationJoinRequest;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 
-class CreatorJoinRequestResource extends Resource
+class CollaborationJoinRequestResource extends Resource
 {
-    use ManagesCreatorJoinRequestResource;
+    use ManagesCollaborationJoinRequestResource;
 
-    protected static ?string $model = CreatorJoinRequest::class;
+    protected static ?string $model = CollaborationJoinRequest::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
 
     protected static ?string $recordRouteKeyName = 'uuid';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?string $slug = 'collaboration-join-requests';
+
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Creators');
+        return __('Collaboration');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('Join Requests');
+        return 'طلبات التعاون';
     }
 
     public static function getModelLabel(): string
     {
-        return __('Join Request');
+        return 'طلب تعاون';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Join Requests');
+        return 'طلبات التعاون';
     }
 
     public static function canCreate(): bool
@@ -49,7 +51,7 @@ class CreatorJoinRequestResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $count = CreatorJoinRequest::query()->pending()->count();
+        $count = CollaborationJoinRequest::query()->pending()->count();
 
         return $count > 0 ? (string) $count : null;
     }
@@ -61,25 +63,25 @@ class CreatorJoinRequestResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return static::joinRequestForm($form);
+        return static::collaborationJoinRequestForm($form);
     }
 
     public static function infolist(Infolist $infolist): Infolist
     {
-        return static::joinRequestInfolist($infolist);
+        return static::collaborationJoinRequestInfolist($infolist);
     }
 
     public static function table(Table $table): Table
     {
-        return static::joinRequestTable($table);
+        return static::collaborationJoinRequestTable($table);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCreatorJoinRequests::route('/'),
-            'view' => Pages\ViewCreatorJoinRequest::route('/{record}'),
-            'edit' => Pages\EditCreatorJoinRequest::route('/{record}/edit'),
+            'index' => Pages\ListCollaborationJoinRequests::route('/'),
+            'view' => Pages\ViewCollaborationJoinRequest::route('/{record}'),
+            'edit' => Pages\EditCollaborationJoinRequest::route('/{record}/edit'),
         ];
     }
 }

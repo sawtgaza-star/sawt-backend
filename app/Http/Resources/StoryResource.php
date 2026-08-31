@@ -6,16 +6,18 @@ use App\Support\MediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BlogResource extends JsonResource
+class StoryResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
             'uuid' => $this->uuid,
+            'id' => $this->id,
             'slug' => $this->slug,
             'title' => $this->getTranslations('title'),
             'excerpt' => $this->getTranslations('excerpt'),
             'cover_url' => MediaUrl::make($this->cover_image),
+            'hero_url' => MediaUrl::make($this->heroImagePath()),
             'breadcrumb' => $this->breadcrumb(),
             'categories' => $this->formattedCategories(),
             'author' => $this->getTranslations('author_name'),
@@ -27,7 +29,7 @@ class BlogResource extends JsonResource
                 'text' => $this->getTranslations('quote_text'),
                 'author' => $this->getTranslations('quote_author'),
             ],
-            'images' => BlogImageResource::collection($this->whenLoaded('images')),
+            'images' => StoryImageResource::collection($this->whenLoaded('images')),
         ];
     }
 
@@ -38,7 +40,7 @@ class BlogResource extends JsonResource
     {
         return [
             'home' => ['ar' => 'الرئيسية', 'en' => 'Home'],
-            'news' => ['ar' => 'آخر الأخبار', 'en' => 'Latest News'],
+            'stories' => ['ar' => 'قصص النجاح', 'en' => 'Success Stories'],
             'current' => $this->getTranslations('title'),
         ];
     }

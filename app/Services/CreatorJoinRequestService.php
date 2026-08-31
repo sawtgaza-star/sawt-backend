@@ -18,6 +18,7 @@ use Spatie\Permission\Models\Role;
 class CreatorJoinRequestService
 {
     public ?string $lastEmailError = null;
+
     /**
      * @param  array<string, mixed>  $data
      */

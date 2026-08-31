@@ -15,6 +15,7 @@ class HomePageService
         protected TeamRepositoryInterface $team,
         protected InstagramService $instagram,
         protected BlogService $blogs,
+        protected StoryService $stories,
     ) {}
 
     /**
@@ -269,44 +270,7 @@ class HomePageService
      */
     protected function stories(): array
     {
-        $items = $this->settings->get('home_stories_items', []);
-        if (! is_array($items)) {
-            $items = [];
-        }
-
-        return [
-            'title' => $this->settings->i18n(
-                'home_stories_title',
-                'هل لديك صوت يستحق أن يُسمع؟',
-                'Do you have a voice that deserves to be heard?'
-            ),
-            'description' => $this->settings->i18n(
-                'home_stories_desc',
-                'شاركنا قصتك أو قضيتك، وقد تكون القصة القادمة التي نسلط الضوء عليها ليصل صوتها إلى العالم',
-                'Share your story or cause — it may be the next one we highlight so its voice reaches the world'
-            ),
-            'badge' => $this->settings->i18n(
-                'home_stories_badge',
-                '+100 قصة واقعية نقلتها صوت إلى العالم',
-                '+100 real stories Sawt has brought to the world'
-            ),
-            'items' => collect(array_values($items))->map(fn (array $item, int $index) => [
-                'image_url' => MediaUrl::make($item['image'] ?? null),
-                'badge' => [
-                    'ar' => (string) ($item['badge_ar'] ?? ''),
-                    'en' => (string) ($item['badge_en'] ?? ''),
-                ],
-                'title' => [
-                    'ar' => (string) ($item['title_ar'] ?? ''),
-                    'en' => (string) ($item['title_en'] ?? ''),
-                ],
-                'description' => [
-                    'ar' => (string) ($item['desc_ar'] ?? ''),
-                    'en' => (string) ($item['desc_en'] ?? ''),
-                ],
-                'sort_order' => $index,
-            ])->all(),
-        ];
+        return $this->stories->homepageStories();
     }
 
     /**
