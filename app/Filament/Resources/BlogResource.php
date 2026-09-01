@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BlogResource\Pages;
 use App\Models\Blog;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -234,7 +235,31 @@ class BlogResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('cover_image')
                     ->label('الصورة')
-                    ->disk('public'),
+                    ->getStateUsing(fn (Blog $record): ?string => MediaUrl::make($record->cover_image))
+                    ->checkFileExistence(false),
+                Tables\Columns\TextColumn::make('api_visibility')
+                    ->label('API')
+                    ->getStateUsing(function (Blog $record): string {
+                        if ($record->status !== 'published') {
+                            return 'مسودة';
+                        }
+
+                        if ($record->published_at === null) {
+                            return 'بدون تاريخ';
+                        }
+
+                        if ($record->published_at->isFuture()) {
+                            return 'مجدول';
+                        }
+
+                        return 'ظاهر';
+                    })
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'ظاهر' => 'success',
+                        'مجدول' => 'warning',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('title')
                     ->label('العنوان')
                     ->searchable()

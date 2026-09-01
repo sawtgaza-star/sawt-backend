@@ -62,6 +62,13 @@ class Blog extends Model
             ->where('published_at', '<=', now());
     }
 
+    public function isVisibleInApi(): bool
+    {
+        return $this->status === 'published'
+            && $this->published_at !== null
+            && $this->published_at->lte(now());
+    }
+
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
