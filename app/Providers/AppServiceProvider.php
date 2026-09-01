@@ -17,9 +17,10 @@ use App\Repositories\SupportRepository;
 use App\Repositories\TeamRepository;
 use App\Repositories\UserRepository;
 use App\Support\MediaUrl;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Filament\Forms\Components\FileUpload;
+use League\Flysystem\UnableToCheckFileExistence;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,9 +44,27 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         FileUpload::configureUsing(function (FileUpload $component): void {
-            $component->getUploadedFileUrlUsing(
-                fn (?string $file): ?string => MediaUrl::make($file)
-            );
+            $component->getUploadedFileUsing(function (FileUpload $component, string $file, string | array | null $storedFileNames): ?array {
+                $storage = $component->getDisk();
+                $shouldFetchFileInformation = $component->shouldFetchFileInformation();
+
+                if ($shouldFetchFileInformation) {
+                    try {
+                        if (! $storage->exists($file)) {
+                            return null;
+                        }
+                    } catch (UnableToCheckFileExistence) {
+                        return null;
+                    }
+                }
+
+                return [
+                    'name' => ($component->isMultiple() ? ($storedFileNames[$file] ?? null) : $storedFileNames) ?? basename($file),
+                    'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
+                    'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
+                    'url' => MediaUrl::make($file),
+                ];
+            });
         });
 
         // Filament Shield: super_admin sees the full sidebar (same as local).
