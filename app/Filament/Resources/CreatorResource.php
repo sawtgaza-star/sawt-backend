@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CreatorResource\Pages;
 use App\Models\Creator;
 use App\Models\User;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -184,11 +185,7 @@ class CreatorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('avatar')
-                    ->label('')
-                    ->disk('public')
-                    ->circular()
-                    ->height(40),
+                MediaUrl::tableImageColumn('avatar', '')->circular()->height(40),
                 Tables\Columns\TextColumn::make('user.name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('username')->label('username')->searchable(),
                 Tables\Columns\TextColumn::make('role')->label('التخصص')->limit(30),

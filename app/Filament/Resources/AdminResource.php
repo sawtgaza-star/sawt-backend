@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AdminResource\Pages;
 use App\Models\User;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -118,11 +119,7 @@ class AdminResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('avatar')
-                    ->label('')
-                    ->disk('public')
-                    ->circular()
-                    ->height(40),
+                MediaUrl::tableImageColumn('avatar', '')->circular()->height(40),
                 Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('البريد')->searchable(),
                 Tables\Columns\TextColumn::make('roles.name')->label('الأدوار')->badge(),

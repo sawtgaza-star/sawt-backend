@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CreatorPartnerCompanyResource\Pages;
 use App\Models\CreatorPartnerCompany;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -91,10 +92,7 @@ class CreatorPartnerCompanyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('logo')
-                    ->label('')
-                    ->disk('public')
-                    ->height(40),
+                MediaUrl::tableImageColumn('logo', '')->height(40),
                 Tables\Columns\TextColumn::make('name')->label('الشركة')->searchable(),
                 Tables\Columns\TextColumn::make('creators_count')
                     ->label('صناع المحتوى')

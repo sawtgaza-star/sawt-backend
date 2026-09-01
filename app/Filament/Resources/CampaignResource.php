@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CampaignResource\Pages;
 use App\Filament\Resources\CampaignResource\RelationManagers;
 use App\Models\Campaign;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -128,11 +129,7 @@ class CampaignResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')
-                    ->label('')
-                    ->disk('public')
-                    ->height(48)
-                    ->square(),
+                MediaUrl::tableImageColumn('image', '')->height(48)->square(),
                 Tables\Columns\TextColumn::make('title')->label('العنوان')->searchable()->limit(35),
                 Tables\Columns\TextColumn::make('target_amount')->label('المستهدف')->money('USD'),
                 Tables\Columns\TextColumn::make('current_amount')->label('المُحصَّل')->money('USD'),

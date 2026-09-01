@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AboutPageResource\RelationManagers;
 
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\Concerns\Translatable;
@@ -37,7 +38,7 @@ class StoryCardsRelationManager extends RelationManager
             ->reorderable('sort_order')
             ->defaultSort('sort_order')
             ->columns([
-                Tables\Columns\ImageColumn::make('icon')->label('أيقونة')->disk('public')->circular(),
+                MediaUrl::tableImageColumn('icon', 'أيقونة')->circular(),
                 Tables\Columns\TextColumn::make('title')->label('العنوان')->searchable(),
                 Tables\Columns\TextColumn::make('description')->label('الوصف')->limit(40),
                 Tables\Columns\IconColumn::make('is_active')->label('مفعّل')->boolean(),

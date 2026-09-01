@@ -1,14 +1,9 @@
 @php
     use App\Models\Setting;
     use App\Support\LayoutLinks;
-    use Illuminate\Support\Facades\Storage;
+    use App\Support\MediaUrl;
 
-    $logoRaw = Setting::get('home_logo');
-    $logoUrl = filled($logoRaw)
-        ? (str_starts_with($logoRaw, '/') || str_starts_with($logoRaw, 'http')
-            ? $logoRaw
-            : Storage::disk('public')->url($logoRaw))
-        : '/assets/images/صوت 1.png';
+    $logoUrl = MediaUrl::make(Setting::get('home_logo'), '/assets/images/صوت 1.png');
 
     $contactPhone = Setting::get('contact_phone', '+972567247177');
     $contactEmail = Setting::get('contact_email', 'info@sawtgaza.com');
@@ -39,12 +34,7 @@
         ->values()
         ->all();
 
-    $footerLogoRaw = Setting::get('footer_logo');
-    $footerLogoUrl = filled($footerLogoRaw)
-        ? (str_starts_with($footerLogoRaw, '/') || str_starts_with($footerLogoRaw, 'http')
-            ? $footerLogoRaw
-            : Storage::disk('public')->url($footerLogoRaw))
-        : '/assets/images/صوت ابيض.png';
+    $footerLogoUrl = MediaUrl::make(Setting::get('footer_logo'), '/assets/images/صوت ابيض.png');
 
     $footerAboutAr = Setting::get('footer_about_ar', 'منصة صوت، تأسست لتكون مساحة للمبدعين، تجمع الحاضنة، صوت ميديا، والصوت نفسه، لتقديم محتوى ملهم وتجارب فريدة لكل من يسعى لصوته أن يُسمع.');
     $footerAboutEn = Setting::get('footer_about_en', '');

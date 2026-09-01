@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use Filament\Tables\Columns\ImageColumn;
+
 class MediaUrl
 {
     public static function make(?string $path, ?string $fallback = null): ?string
@@ -15,5 +17,21 @@ class MediaUrl
         }
 
         return url('media/'.ltrim($path, '/'));
+    }
+
+    /**
+     * Filament table thumbnail — serves via /media/ (Hostinger blocks /storage/).
+     */
+    public static function tableImageColumn(string $name, ?string $label = null): ImageColumn
+    {
+        $column = ImageColumn::make($name)
+            ->getStateUsing(fn ($record): ?string => self::make($record->{$name} ?? null))
+            ->checkFileExistence(false);
+
+        if ($label !== null) {
+            $column->label($label);
+        }
+
+        return $column;
     }
 }

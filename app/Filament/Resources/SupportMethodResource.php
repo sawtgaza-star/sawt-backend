@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SupportMethodResource\Pages;
 use App\Models\SupportMethod;
+use App\Support\MediaUrl;
 use App\Support\SupportOptions;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -164,7 +165,7 @@ class SupportMethodResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('logo')->label('الشعار')->disk('public')->height(40),
+                MediaUrl::tableImageColumn('logo', 'الشعار')->height(40),
                 Tables\Columns\TextColumn::make('name')->label('الوسيلة')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('category')
                     ->label('القسم')

@@ -1,19 +1,12 @@
 @php
     use App\Models\Setting;
-    use Illuminate\Support\Facades\Storage;
+    use App\Support\MediaUrl;
 
-    // مصدر واحد لإعدادات الـ SEO — يُستخدم في كل صفحات الموقع.
-    // يمكن تمرير قيم خاصة بكل صفحة: seoTitle / seoDescription / seoKeywords
     $siteName = Setting::get('site_name', 'منصة صوت');
 
-    $favRaw = Setting::get('site_favicon');
-    $favicon = $favRaw ? Storage::disk('public')->url($favRaw) : '/assets/images/icon.png';
-
-    $logoRaw = Setting::get('home_logo');
-    $logoUrl = $logoRaw ? Storage::disk('public')->url($logoRaw) : '/assets/images/صوت 1.png';
-
-    $ogRaw = Setting::get('og_image');
-    $ogImg = $ogRaw ? Storage::disk('public')->url($ogRaw) : $logoUrl;
+    $favicon = MediaUrl::make(Setting::get('site_favicon'), '/assets/images/icon.png');
+    $logoUrl = MediaUrl::make(Setting::get('home_logo'), '/assets/images/صوت 1.png');
+    $ogImg = MediaUrl::make(Setting::get('og_image'), $logoUrl);
 
     $seoT = $seoTitle ?? Setting::get('meta_title', 'منصة صوت | نروي قصص غزة ونصنع جيلاً من المبدعين');
     $seoD = $seoDescription ?? Setting::get('meta_description', 'منصة صوت — مساحة فلسطينية للمبدعين في غزة: نروي القصص بكرامة، ندعم صنّاع المحتوى، ونبني مجتمعاً إبداعياً مؤثراً.');

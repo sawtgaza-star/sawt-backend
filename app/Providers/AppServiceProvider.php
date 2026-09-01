@@ -16,8 +16,10 @@ use App\Repositories\SettingRepository;
 use App\Repositories\SupportRepository;
 use App\Repositories\TeamRepository;
 use App\Repositories\UserRepository;
+use App\Support\MediaUrl;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Filament\Forms\Components\FileUpload;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +42,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        FileUpload::configureUsing(function (FileUpload $component): void {
+            $component->getUploadedFileUrlUsing(
+                fn (?string $file): ?string => MediaUrl::make($file)
+            );
+        });
+
         // Filament Shield: super_admin sees the full sidebar (same as local).
         Gate::before(function ($user, string $ability) {
             if (method_exists($user, 'hasRole') && $user->hasRole('super_admin')) {

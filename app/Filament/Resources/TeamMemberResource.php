@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeamMemberResource\Pages;
 use App\Models\TeamMember;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -122,10 +123,7 @@ class TeamMemberResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('photo')
-                    ->label('الصورة')
-                    ->disk('public')
-                    ->circular(),
+                MediaUrl::tableImageColumn('photo', 'الصورة')->circular(),
                 Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('role')->label('المسمى')->searchable(),
                 Tables\Columns\TextColumn::make('years_of_experience')->label('الخبرة')->suffix(' سنة')->placeholder('—'),

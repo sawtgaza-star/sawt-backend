@@ -1,23 +1,12 @@
 ﻿@php
 use App\Models\Setting;
-use Illuminate\Support\Facades\Storage;
+use App\Support\MediaUrl;
 
-$mediaUrl = function (?string $path, string $fallback): string {
-    if (! filled($path)) {
-        return $fallback;
-    }
-    if (str_starts_with($path, '/') || str_starts_with($path, 'http')) {
-        return $path;
-    }
-
-    return Storage::disk('public')->url($path);
-};
-
-$logoUrl = $mediaUrl(Setting::get('home_logo'), '/assets/images/صوت 1.png');
-$headerBg = $mediaUrl(Setting::get('about_header_bg'), '/assets/images/WhoUs.jpg');
-$introImage = $mediaUrl(Setting::get('about_intro_image'), '/assets/images/tree.jpg');
-$platformImage = $mediaUrl(Setting::get('about_platform_image'), '/assets/images/backgrounf_sawt.jpg');
-$joinBg = $mediaUrl(Setting::get('about_join_bg'), '/assets/images/Yamal.png');
+$logoUrl = MediaUrl::make(Setting::get('home_logo'), '/assets/images/صوت 1.png');
+$headerBg = MediaUrl::make(Setting::get('about_header_bg'), '/assets/images/WhoUs.jpg');
+$introImage = MediaUrl::make(Setting::get('about_intro_image'), '/assets/images/tree.jpg');
+$platformImage = MediaUrl::make(Setting::get('about_platform_image'), '/assets/images/backgrounf_sawt.jpg');
+$joinBg = MediaUrl::make(Setting::get('about_join_bg'), '/assets/images/Yamal.png');
 
 $i18nOverrides = ['ar' => [], 'en' => []];
 $textKeys = [
@@ -193,7 +182,7 @@ $storyIcons = [
             <div class="value-card">
               <div class="value-card-icon">
                 @if (! empty($value['icon']))
-                  <img src="{{ $mediaUrl($value['icon'], '') }}" alt="" width="28" height="28" />
+                  <img src="{{ MediaUrl::make($value['icon'] ?? null, '') }}" alt="" width="28" height="28" />
                 @else
                   <i>{!! $valueIcons[$i % count($valueIcons)] !!}</i>
                 @endif
@@ -250,7 +239,7 @@ $storyIcons = [
             <div class="sawt-story-card">
               <div class="sawt-story-icon">
                 @if (! empty($card['icon']))
-                  <img src="{{ $mediaUrl($card['icon'], '') }}" alt="" width="24" height="24" />
+                  <img src="{{ MediaUrl::make($card['icon'] ?? null, '') }}" alt="" width="24" height="24" />
                 @else
                   <i>{!! $storyIcons[$i % count($storyIcons)] !!}</i>
                 @endif

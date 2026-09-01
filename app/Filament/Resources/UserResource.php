@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
+use App\Support\MediaUrl;
 use App\Support\ContentCreatorPermissions;
 use App\Support\WebsiteUserPermissions;
 use Filament\Forms;
@@ -110,11 +111,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('avatar')
-                    ->label('')
-                    ->disk('public')
-                    ->circular()
-                    ->height(40),
+                MediaUrl::tableImageColumn('avatar', '')->circular()->height(40),
                 Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('البريد')->searchable(),
                 Tables\Columns\TextColumn::make('phone')->label('الهاتف')->toggleable(),

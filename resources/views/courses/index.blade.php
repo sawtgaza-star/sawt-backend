@@ -20,7 +20,7 @@
                 <div style="height: 200px; background: #edefebe6">
                   @if ($course->image)
                     <img
-                      src="{{ str_starts_with($course->image, 'http') ? $course->image : asset('storage/'.$course->image) }}"
+                      src="{{ \App\Support\MediaUrl::make($course->image) }}"
                       alt="{{ $course->title }}"
                       class="w-100 h-100"
                       style="object-fit: cover"

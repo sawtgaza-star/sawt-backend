@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CollaborationTypeResource\Pages;
 use App\Models\CollaborationType;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -94,9 +95,7 @@ class CollaborationTypeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('icon')
-                    ->label('الأيقونة')
-                    ->disk('public'),
+                MediaUrl::tableImageColumn('icon', 'الأيقونة'),
                 Tables\Columns\TextColumn::make('key')
                     ->label('المفتاح')
                     ->badge()

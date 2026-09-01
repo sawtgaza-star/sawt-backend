@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StoryResource\Pages;
 use App\Models\Story;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -238,9 +239,7 @@ class StoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('cover_image')
-                    ->label('الصورة')
-                    ->disk('public'),
+                MediaUrl::tableImageColumn('cover_image', 'الصورة'),
                 Tables\Columns\TextColumn::make('title')
                     ->label('العنوان')
                     ->searchable()

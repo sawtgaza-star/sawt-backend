@@ -23,7 +23,7 @@
         <div class="rounded-4 overflow-hidden mb-3" style="background: #edefebe6; min-height: 260px">
           @if ($course->image)
             <img
-              src="{{ str_starts_with($course->image, 'http') ? $course->image : asset('storage/'.$course->image) }}"
+              src="{{ \App\Support\MediaUrl::make($course->image) }}"
               alt="{{ $course->title }}"
               class="w-100"
               style="max-height: 360px; object-fit: cover"

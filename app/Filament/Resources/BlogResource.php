@@ -231,10 +231,7 @@ class BlogResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('cover_image')
-                    ->label('الصورة')
-                    ->getStateUsing(fn (Blog $record): ?string => MediaUrl::make($record->cover_image))
-                    ->checkFileExistence(false),
+                MediaUrl::tableImageColumn('cover_image', 'الصورة'),
                 Tables\Columns\TextColumn::make('title')
                     ->label('العنوان')
                     ->searchable()

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CourseResource\Pages;
 use App\Filament\Resources\CourseResource\RelationManagers;
 use App\Models\Course;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -94,7 +95,7 @@ class CourseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')->label('')->circular(),
+                MediaUrl::tableImageColumn('image', '')->circular(),
                 Tables\Columns\TextColumn::make('title')->label('العنوان')->searchable()->limit(40),
                 Tables\Columns\TextColumn::make('location')->label('المكان')->toggleable()->limit(25),
                 Tables\Columns\TextColumn::make('starts_at')->label('البدء')->dateTime('Y-m-d')->toggleable(),

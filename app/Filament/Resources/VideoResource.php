@@ -7,6 +7,7 @@ use App\Filament\Resources\VideoResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Creator;
 use App\Models\Video;
+use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -147,11 +148,7 @@ class VideoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('cover_url')
-                    ->label('')
-                    ->disk('public')
-                    ->height(48)
-                    ->square(),
+                MediaUrl::tableImageColumn('cover_url', '')->height(48)->square(),
                 Tables\Columns\TextColumn::make('title')->label('العنوان')->searchable()->limit(40),
                 Tables\Columns\TextColumn::make('creator.username')->label('صانع المحتوى')->searchable(),
                 Tables\Columns\TextColumn::make('category.name')->label('الفئة'),

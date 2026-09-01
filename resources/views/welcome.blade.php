@@ -1,18 +1,11 @@
 @php
     use App\Models\Setting;
-    use Illuminate\Support\Facades\Storage;
+    use App\Support\MediaUrl;
 
-    $logoRaw = Setting::get('home_logo');
-    $logoUrl = $logoRaw ? Storage::disk('public')->url($logoRaw) : '/assets/images/صوت 1.png';
-
-    $heroRaw = Setting::get('home_hero_image');
-    $heroUrl = $heroRaw ? Storage::disk('public')->url($heroRaw) : '/assets/images/swat.png';
-
-    // الهوية و SEO
-    $favRaw = Setting::get('site_favicon');
-    $faviconUrl = $favRaw ? Storage::disk('public')->url($favRaw) : '/assets/images/icon.png';
-    $ogRaw = Setting::get('og_image');
-    $ogUrl = $ogRaw ? Storage::disk('public')->url($ogRaw) : $logoUrl;
+    $logoUrl = MediaUrl::make(Setting::get('home_logo'), '/assets/images/صوت 1.png');
+    $heroUrl = MediaUrl::make(Setting::get('home_hero_image'), '/assets/images/swat.png');
+    $faviconUrl = MediaUrl::make(Setting::get('site_favicon'), '/assets/images/icon.png');
+    $ogUrl = MediaUrl::make(Setting::get('og_image'), $logoUrl);
     $metaTitle = Setting::get('meta_title', 'منصة صوت | نروي قصص غزة ونصنع جيلاً من المبدعين');
     $metaDesc = Setting::get('meta_description', 'منصة صوت — مساحة فلسطينية للمبدعين في غزة: نروي القصص بكرامة، ندعم صنّاع المحتوى، ونبني مجتمعاً إبداعياً مؤثراً.');
     $metaKeywords = Setting::get('meta_keywords', 'صوت, منصة صوت, غزة, فلسطين, صناع المحتوى, قصص غزة, ريلز');
@@ -44,7 +37,7 @@
         if (! $img) {
             $img = $heroDefaultImgs[$hi] ?? $heroDefaultImgs[0];
         } elseif (! str_starts_with($img, '/') && ! str_starts_with($img, 'http')) {
-            $img = Storage::disk('public')->url($img);
+            $img = MediaUrl::make($img);
         }
         $heroSlides[] = ['image' => $img];
 
