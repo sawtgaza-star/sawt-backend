@@ -35,24 +35,41 @@ class LayoutService
             $nav = [];
         }
 
+        $split = $this->splitNavLinks($nav);
+
         return [
             'site_name' => (string) $this->settings->get('site_name', 'Sawt'),
             'logo_url' => MediaUrl::make($this->settings->get('home_logo'), '/assets/images/صوت 1.png'),
-            'search_placeholder' => [
-                'ar' => 'ابحث هنا...',
-                'en' => 'Search here...',
-            ],
-            'auth' => [
-                'register' => [
-                    'label' => ['ar' => 'أنشئ حساب', 'en' => 'Create account'],
-                    'url' => '/register',
+            'topbar' => [
+                'socials_label' => $this->settings->i18n(
+                    'header_socials_label',
+                    'وسائل التواصل الاجتماعي',
+                    'Social Media'
+                ),
+                'socials' => $this->socials(),
+                'support' => $split['support'],
+                'auth' => [
+                    'register' => [
+                        'label' => $this->settings->i18n('header_auth_register_label', 'أنشئ حساب', 'Create account'),
+                        'url' => '/register',
+                    ],
+                    'login' => [
+                        'label' => $this->settings->i18n('header_auth_login_label', 'تسجيل الدخول', 'Sign in'),
+                        'url' => '/login',
+                    ],
                 ],
-                'login' => [
-                    'label' => ['ar' => 'تسجيل الدخول', 'en' => 'Sign in'],
-                    'url' => '/login',
+                'search_placeholder' => [
+                    'ar' => 'ابحث هنا...',
+                    'en' => 'Search here...',
+                ],
+                'language' => [
+                    'label' => ['ar' => 'En', 'en' => 'Ar'],
                 ],
             ],
-            'nav' => $this->mapLinks($nav),
+            'nav' => [
+                'primary' => $split['primary'],
+                'secondary' => $split['secondary'],
+            ],
         ];
     }
 
@@ -100,6 +117,56 @@ class LayoutService
             'socials' => $this->socials(),
             'copyright' => $this->settings->i18n('footer_copyright', '© جميع الحقوق محفوظة. 2026', '© All rights reserved. 2026'),
             'brand' => (string) $this->settings->get('footer_brand', 'SAWTGAZA'),
+        ];
+    }
+
+    /**
+     * Split header nav items into topbar support, primary row, and secondary row.
+     *
+     * @param  list<array<string, mixed>>  $items
+     * @return array{primary: list<array<string, mixed>>, secondary: list<array<string, mixed>>, support: ?array<string, mixed>}
+     */
+    protected function splitNavLinks(array $items): array
+    {
+        $primary = [];
+        $secondary = [];
+        $support = null;
+
+        foreach (LayoutLinks::visible($items) as $item) {
+            $key = (string) ($item['key'] ?? '');
+
+            if (in_array($key, LayoutLinks::NAV_EXCLUDED_KEYS, true)) {
+                continue;
+            }
+
+            $link = [
+                'key' => $key,
+                'label' => [
+                    'ar' => (string) ($item['label_ar'] ?? ''),
+                    'en' => (string) ($item['label_en'] ?? ''),
+                ],
+                'url' => LayoutLinks::pathForKey($key),
+            ];
+
+            if (in_array($key, LayoutLinks::NAV_TOPBAR_KEYS, true)) {
+                $support = $link;
+
+                continue;
+            }
+
+            if (in_array($key, LayoutLinks::NAV_SECONDARY_KEYS, true)) {
+                $secondary[] = array_merge($link, ['external' => true]);
+
+                continue;
+            }
+
+            $primary[] = $link;
+        }
+
+        return [
+            'primary' => $primary,
+            'secondary' => $secondary,
+            'support' => $support,
         ];
     }
 

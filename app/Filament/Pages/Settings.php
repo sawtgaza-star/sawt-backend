@@ -167,11 +167,16 @@ class Settings extends Page implements HasForms
             'youtube_url' => ['social', 'string', ''],
 
             // الهيدر (تعديل العناوين والترتيب والإظهار فقط — الروابط ثابتة حسب الصفحة)
+            'header_socials_label_ar' => ['header', 'string', 'وسائل التواصل الاجتماعي'],
+            'header_socials_label_en' => ['header', 'string', 'Social Media'],
+            'header_auth_register_label_ar' => ['header', 'string', 'أنشئ حساب'],
+            'header_auth_register_label_en' => ['header', 'string', 'Create account'],
+            'header_auth_login_label_ar' => ['header', 'string', 'تسجيل الدخول'],
+            'header_auth_login_label_en' => ['header', 'string', 'Sign in'],
             'header_nav_links' => ['header', 'json', [
                 ['key' => 'home', 'label_ar' => 'الرئيسية', 'label_en' => 'Home', 'is_visible' => true],
                 ['key' => 'about', 'label_ar' => 'من نحن', 'label_en' => 'About Us', 'is_visible' => true],
                 ['key' => 'content', 'label_ar' => 'محتوانا', 'label_en' => 'Our Content', 'is_visible' => true],
-                ['key' => 'courses', 'label_ar' => 'الكورسات', 'label_en' => 'Courses', 'is_visible' => true],
                 ['key' => 'team', 'label_ar' => 'الفريق', 'label_en' => 'Team', 'is_visible' => true],
                 ['key' => 'creators', 'label_ar' => 'صناع المحتوى', 'label_en' => 'Content Creators', 'is_visible' => true],
                 ['key' => 'support', 'label_ar' => 'ادعم صوت', 'label_en' => 'Support Sawt', 'is_visible' => true],
@@ -618,6 +623,10 @@ class Settings extends Page implements HasForms
 
         foreach ($this->fieldMeta() as $key => [$group, $type, $default]) {
             $values[$key] = Setting::get($key, $default);
+        }
+
+        if (is_array($values['header_nav_links'] ?? null)) {
+            $values['header_nav_links'] = $this->filterHeaderNavLinks($values['header_nav_links']);
         }
 
         $this->form->fill($values);
@@ -1337,25 +1346,47 @@ class Settings extends Page implements HasForms
                             ->helperText('يظهر في شريط التنقل')
                             ->columnSpanFull(),
                     ]),
-                    Forms\Components\Repeater::make('header_nav_links')
-                        ->label('عناصر القائمة — اسحب لإعادة الترتيب')
+
+                    Forms\Components\Section::make('الشريط العلوي')
+                        ->description('الصف العلوي: زر ادعم صوت، تسجيل الدخول، البحث، وتبديل اللغة')
                         ->schema([
-                            Forms\Components\Hidden::make('key'),
-                            Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
-                            Forms\Components\TextInput::make('label_en')->label('Label (English)'),
-                            Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
-                        ])
-                        ->columns(2)
-                        ->reorderable()
-                        ->collapsible()
-                        ->deletable(false)
-                        ->addable(false)
-                        ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
-                        ->columnSpanFull(),
-                    Forms\Components\Placeholder::make('header_social_hint')
-                        ->label('')
-                        ->content('روابط السوشيال ميديا للهيدر/الفوتر تُعدّل من تبويب «التواصل الاجتماعي».')
-                        ->columnSpanFull(),
+                            Forms\Components\TextInput::make('header_socials_label_ar')
+                                ->label('عنوان السوشيال (عربي)'),
+                            Forms\Components\TextInput::make('header_socials_label_en')
+                                ->label('Social label (English)'),
+                            Forms\Components\TextInput::make('header_auth_register_label_ar')
+                                ->label('زر أنشئ حساب (عربي)'),
+                            Forms\Components\TextInput::make('header_auth_register_label_en')
+                                ->label('Register button (English)'),
+                            Forms\Components\TextInput::make('header_auth_login_label_ar')
+                                ->label('زر تسجيل الدخول (عربي)'),
+                            Forms\Components\TextInput::make('header_auth_login_label_en')
+                                ->label('Sign in button (English)'),
+                            Forms\Components\Placeholder::make('header_social_hint')
+                                ->label('')
+                                ->content('روابط السوشيال ميديا تُعدّل من تبويب «التواصل الاجتماعي» وتُرجع في API ضمن topbar.socials.')
+                                ->columnSpanFull(),
+                        ])->columns(2),
+
+                    Forms\Components\Section::make('القائمة')
+                        ->description('«ادعم صوت» يظهر في الشريط العلوي. «حاضنة صوت» و«صوت ميديا» يظهران يسار الشعار. باقي العناصر في القائمة الرئيسية.')
+                        ->schema([
+                            Forms\Components\Repeater::make('header_nav_links')
+                                ->label('عناصر القائمة — اسحب لإعادة الترتيب')
+                                ->schema([
+                                    Forms\Components\Hidden::make('key'),
+                                    Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                    Forms\Components\TextInput::make('label_en')->label('Label (English)'),
+                                    Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
+                                ])
+                                ->columns(2)
+                                ->reorderable()
+                                ->collapsible()
+                                ->deletable(false)
+                                ->addable(false)
+                                ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
+                                ->columnSpanFull(),
+                        ]),
                 ]),
 
                 Forms\Components\Tabs\Tab::make('الفوتر')->icon('heroicon-o-rectangle-group')->schema([
@@ -1413,6 +1444,12 @@ class Settings extends Page implements HasForms
                             ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
                             ->columnSpanFull(),
                     ])->columns(2),
+
+                    Forms\Components\Section::make('معلومات التواصل')
+                        ->schema([
+                            Forms\Components\TextInput::make('contact_phone')->label('هاتف التواصل'),
+                            Forms\Components\TextInput::make('contact_email')->label('بريد التواصل')->email(),
+                        ])->columns(2),
 
                     Forms\Components\Section::make('حقوق النشر')->schema([
                         Forms\Components\TextInput::make('footer_copyright_ar')->label('حقوق النشر (عربي)'),
@@ -1628,12 +1665,30 @@ class Settings extends Page implements HasForms
         $state = $this->form->getState();
 
         foreach ($this->fieldMeta() as $key => [$group, $type, $default]) {
-            Setting::set($key, $state[$key] ?? $default, group: $group, type: $type);
+            $value = $state[$key] ?? $default;
+
+            if ($key === 'header_nav_links' && is_array($value)) {
+                $value = $this->filterHeaderNavLinks($value);
+            }
+
+            Setting::set($key, $value, group: $group, type: $type);
         }
 
         Notification::make()
             ->title('تم حفظ الإعدادات بنجاح')
             ->success()
             ->send();
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $items
+     * @return list<array<string, mixed>>
+     */
+    protected function filterHeaderNavLinks(array $items): array
+    {
+        return collect($items)
+            ->reject(fn (array $item) => ($item['key'] ?? '') === 'courses')
+            ->values()
+            ->all();
     }
 }

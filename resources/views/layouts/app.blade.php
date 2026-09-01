@@ -28,14 +28,16 @@
         ['key' => 'home', 'label_ar' => 'الرئيسية', 'label_en' => 'Home', 'is_visible' => true],
         ['key' => 'about', 'label_ar' => 'من نحن', 'label_en' => 'About Us', 'is_visible' => true],
         ['key' => 'content', 'label_ar' => 'محتوانا', 'label_en' => 'Our Content', 'is_visible' => true],
-        ['key' => 'courses', 'label_ar' => 'الكورسات', 'label_en' => 'Courses', 'is_visible' => true],
         ['key' => 'team', 'label_ar' => 'الفريق', 'label_en' => 'Team', 'is_visible' => true],
         ['key' => 'creators', 'label_ar' => 'صناع المحتوى', 'label_en' => 'Content Creators', 'is_visible' => true],
         ['key' => 'support', 'label_ar' => 'ادعم صوت', 'label_en' => 'Support Sawt', 'is_visible' => true],
         ['key' => 'incubator', 'label_ar' => 'حاضنة صوت', 'label_en' => 'Sawt Incubator', 'is_visible' => true],
         ['key' => 'media', 'label_ar' => 'صوت ميديا', 'label_en' => 'Sawt Media', 'is_visible' => true],
     ];
-    $headerNavLinks = LayoutLinks::visible(Setting::get('header_nav_links', $headerNavDefault) ?: $headerNavDefault);
+    $headerNavLinks = collect(LayoutLinks::visible(Setting::get('header_nav_links', $headerNavDefault) ?: $headerNavDefault))
+        ->reject(fn (array $item) => in_array($item['key'] ?? '', LayoutLinks::NAV_EXCLUDED_KEYS, true))
+        ->values()
+        ->all();
 
     $footerLogoRaw = Setting::get('footer_logo');
     $footerLogoUrl = filled($footerLogoRaw)

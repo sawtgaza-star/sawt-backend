@@ -9,6 +9,15 @@ class LayoutLinks
      *
      * @var array<string, string>
      */
+    /** Keys excluded from the public navbar (legacy / not shown). */
+    public const NAV_EXCLUDED_KEYS = ['courses'];
+
+    /** Keys rendered as the top-bar support CTA (not in the main nav row). */
+    public const NAV_TOPBAR_KEYS = ['support'];
+
+    /** Keys rendered beside the logo / left of the main nav (often external). */
+    public const NAV_SECONDARY_KEYS = ['incubator', 'media'];
+
     public const PAGE_PATHS = [
         'home' => '/',
         'about' => '/about',
