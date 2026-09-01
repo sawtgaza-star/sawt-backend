@@ -13,6 +13,7 @@ class BlogListingCardResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'id' => $this->id,
+            'title' => $this->getTranslations('title'),
             'cover_image' => MediaUrl::make($this->cover_image),
             'excerpt' => $this->getTranslations('excerpt'),
             'publish_date' => optional($this->published_at)?->toIso8601String(),

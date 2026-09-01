@@ -191,7 +191,10 @@ class BlogResource extends Resource
 
                     Forms\Components\DateTimePicker::make('published_at')
                         ->label('تاريخ النشر')
-                        ->seconds(false),
+                        ->seconds(false)
+                        ->minutesStep(60)
+                        ->default(fn () => now()->startOfHour())
+                        ->helperText('يُقارَن بالساعة (مثلاً 14:00). الخبر يظهر في الـ API عندما تصل الساعة المحددة أو بعدها.'),
 
                     Forms\Components\Toggle::make('is_featured')
                         ->label('إبراز في الرئيسية')
@@ -268,7 +271,7 @@ class BlogResource extends Resource
                     ->boolean(),
                 Tables\Columns\TextColumn::make('published_at')
                     ->label('تاريخ النشر')
-                    ->dateTime('Y-m-d')
+                    ->dateTime('Y-m-d H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('views_count')
                     ->label('المشاهدات')

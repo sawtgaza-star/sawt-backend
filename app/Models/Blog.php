@@ -152,6 +152,14 @@ class Blog extends Model
     protected static function booted(): void
     {
         static::saving(function (Blog $blog): void {
+            if ($blog->status === 'published' && $blog->published_at === null) {
+                $blog->published_at = now()->startOfHour();
+            }
+
+            if ($blog->published_at !== null) {
+                $blog->published_at = $blog->published_at->copy()->startOfHour();
+            }
+
             if (! filled($blog->read_time_minutes) || (int) $blog->read_time_minutes <= 0) {
                 $blog->read_time_minutes = $blog->calculateReadTimeMinutes();
             }

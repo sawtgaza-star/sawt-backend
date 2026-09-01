@@ -2,8 +2,6 @@
 
 namespace App\Support;
 
-use Illuminate\Support\Facades\Storage;
-
 class MediaUrl
 {
     public static function make(?string $path, ?string $fallback = null): ?string
@@ -16,6 +14,6 @@ class MediaUrl
             return $path;
         }
 
-        return Storage::disk('public')->url($path);
+        return asset('storage/'.ltrim($path, '/'));
     }
 }
