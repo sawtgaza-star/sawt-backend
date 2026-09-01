@@ -14,7 +14,12 @@ class TeamListingCardResource extends JsonResource
             'id' => $this->id,
             'image' => $this->photo_url,
             'name' => $this->getTranslations('name'),
-            'major' => $this->getTranslations('role'),
+            'role' => $this->getTranslations('role'),
+            'major' => $this->whenLoaded('major', fn () => [
+                'uuid' => $this->major->uuid,
+                'name' => $this->major->getTranslations('name'),
+                'slug' => $this->major->slug,
+            ]),
         ];
     }
 }

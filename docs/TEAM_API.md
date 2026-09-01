@@ -65,6 +65,46 @@ Optional: `?major=design` or `?major_uuid=xxxxx`
 
 Returns: `hero`, `filters`, `majors`, `members`
 
+```json
+{
+  "data": {
+    "hero": {
+      "image_url": "…",
+      "title": { "ar": "صناع الأثر.. الفريق خلف منصة صوت", "en": "…" },
+      "description": { "ar": "", "en": "" }
+    },
+    "filters": {
+      "all_label": { "ar": "الكل", "en": "All" }
+    },
+    "majors": [
+      {
+        "uuid": "…",
+        "name": { "ar": "التصميم", "en": "Design" },
+        "slug": "design",
+        "sort_order": 1,
+        "members_count": 3
+      }
+    ],
+    "members": [
+      {
+        "uuid": "…",
+        "id": 1,
+        "image": "…",
+        "name": { "ar": "سمير البطل", "en": "…" },
+        "role": { "ar": "UI/UX Designer", "en": "…" },
+        "major": {
+          "uuid": "…",
+          "name": { "ar": "التصميم", "en": "Design" },
+          "slug": "design"
+        }
+      }
+    ]
+  }
+}
+```
+
+Use `majors` for filter tabs; filter members with `?major=design` or `?major_uuid=…`.
+
 ### Member detail (this page)
 
 ```
