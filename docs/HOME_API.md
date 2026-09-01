@@ -15,7 +15,7 @@ Creators and team **cards** are loaded from the Creators / Team Members resource
 | 3) Who we are | one section image (`home_hero_image`), titles, description, features with icon images, CTA labels (no URLs) |
 | 4) Latest news | titles + `home_news_items` repeater (no URLs) |
 | 5) Creators teaser | copy + `home_creators_limit` (items from Creators) |
-| 6) Platform sections | titles + `home_platform_sections` repeater (no URLs) |
+| 6) Platform sections | titles + `home_platform_sections` repeater (`image`, `icon`, copy, stats — no URLs) |
 | 7) Partners | titles + `home_partners` logos (no URLs) |
 | 8) Stories | title + description + stat badge above the form; story **image cards** (`home_stories_items`: image, badge, title, description) — no placeholder / no subtitle / no reel URLs |
 | 9) Team teaser | copy + `home_team_limit` (items from Team Members) |
@@ -84,7 +84,7 @@ Public. No auth.
     "platform_sections": {
       "title": {},
       "subtitle": {},
-      "items": [{ "image_url": null, "title": {}, "description": {}, "stats": [{}, {}], "cta": { "label": {} }, "sort_order": 0 }]
+      "items": [{ "image_url": null, "icon_url": null, "title": {}, "description": {}, "stats": [{}, {}], "cta": { "label": {} }, "sort_order": 0 }]
     },
     "partners": {
       "title": {},

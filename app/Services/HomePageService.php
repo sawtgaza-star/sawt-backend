@@ -208,6 +208,7 @@ class HomePageService
             ),
             'items' => collect(array_values($items))->map(fn (array $item, int $index) => [
                 'image_url' => MediaUrl::make($item['image'] ?? null),
+                'icon_url' => MediaUrl::make($item['icon'] ?? null),
                 'title' => [
                     'ar' => (string) ($item['title_ar'] ?? ''),
                     'en' => (string) ($item['title_en'] ?? ''),

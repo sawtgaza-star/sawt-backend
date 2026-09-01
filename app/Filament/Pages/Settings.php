@@ -278,6 +278,7 @@ class Settings extends Page implements HasForms
             'home_platform_sections' => ['home', 'json', [
                 [
                     'image' => '',
+                    'icon' => '',
                     'title_ar' => 'منصة صوت',
                     'title_en' => 'Sawt Platform',
                     'desc_ar' => '',
@@ -291,6 +292,7 @@ class Settings extends Page implements HasForms
                 ],
                 [
                     'image' => '',
+                    'icon' => '',
                     'title_ar' => 'حاضنة صوت',
                     'title_en' => 'Sawt Incubator',
                     'desc_ar' => '',
@@ -304,6 +306,7 @@ class Settings extends Page implements HasForms
                 ],
                 [
                     'image' => '',
+                    'icon' => '',
                     'title_ar' => 'صوت ميديا',
                     'title_en' => 'Sawt Media',
                     'desc_ar' => '',
@@ -774,7 +777,21 @@ class Settings extends Page implements HasForms
                         Forms\Components\Repeater::make('home_platform_sections')
                             ->label('البطاقات الثلاث')
                             ->schema([
-                                Forms\Components\FileUpload::make('image')->label('الصورة')->image()->disk('public')->directory('home/sections')->imageEditor()->columnSpanFull(),
+                                Forms\Components\FileUpload::make('image')
+                                    ->label('صورة البطاقة')
+                                    ->helperText('الصورة الكبيرة أعلى البطاقة')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('home/sections')
+                                    ->imageEditor()
+                                    ->columnSpanFull(),
+                                Forms\Components\FileUpload::make('icon')
+                                    ->label('أيقونة البطاقة')
+                                    ->helperText('الأيقونة الدائرية فوق الصورة')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('home/sections/icons')
+                                    ->imageEditor(),
                                 Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)'),
                                 Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
                                 Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
