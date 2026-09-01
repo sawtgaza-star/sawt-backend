@@ -104,6 +104,18 @@ class Blog extends Model
     /**
      * @return array<int, string>
      */
+    public function categoryLabels(string $locale = 'ar'): array
+    {
+        return collect($this->formattedCategories())
+            ->pluck("name.{$locale}")
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, string>
+     */
     public function categorySlugs(): array
     {
         $categories = $this->categories;

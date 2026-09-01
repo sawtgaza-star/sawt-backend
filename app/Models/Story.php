@@ -62,10 +62,7 @@ class Story extends Model
 
     public function scopePublished($query)
     {
-        return $query
-            ->where('status', 'published')
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', now());
+        return $query->where('status', 'published');
     }
 
     public function scopeFeatured($query)
@@ -106,6 +103,18 @@ class Story extends Model
                 ],
             ])
             ->filter(fn (array $category) => filled($category['slug']) || filled($category['name']['ar']) || filled($category['name']['en']))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function categoryLabels(string $locale = 'ar'): array
+    {
+        return collect($this->formattedCategories())
+            ->pluck("name.{$locale}")
+            ->filter()
             ->values()
             ->all();
     }
@@ -168,6 +177,10 @@ class Story extends Model
     protected static function booted(): void
     {
         static::saving(function (Story $story): void {
+            if ($story->status === 'published' && $story->published_at === null) {
+                $story->published_at = now();
+            }
+
             if (! filled($story->read_time_minutes) || (int) $story->read_time_minutes <= 0) {
                 $story->read_time_minutes = $story->calculateReadTimeMinutes();
             }

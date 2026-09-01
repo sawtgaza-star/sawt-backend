@@ -236,23 +236,11 @@ class BlogResource extends Resource
                     ->label('العنوان')
                     ->searchable()
                     ->limit(50),
-                Tables\Columns\TextColumn::make('categories')
+                Tables\Columns\TextColumn::make('category_labels')
                     ->label('التصنيفات')
-                    ->formatStateUsing(function ($state): string {
-                        if (is_string($state)) {
-                            $state = json_decode($state, true);
-                        }
-
-                        if (! is_array($state)) {
-                            return '';
-                        }
-
-                        return collect($state)
-                            ->pluck('name_ar')
-                            ->filter()
-                            ->implode('، ');
-                    })
-                    ->limit(30),
+                    ->getStateUsing(fn (Blog $record): array => $record->categoryLabels('ar'))
+                    ->badge()
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('images_count')
                     ->label('الصور')
                     ->counts('images'),
