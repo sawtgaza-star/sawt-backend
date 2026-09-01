@@ -56,17 +56,7 @@ class Blog extends Model
 
     public function scopePublished($query)
     {
-        return $query
-            ->where('status', 'published')
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', now());
-    }
-
-    public function isVisibleInApi(): bool
-    {
-        return $this->status === 'published'
-            && $this->published_at !== null
-            && $this->published_at->lte(now());
+        return $query->where('status', 'published');
     }
 
     public function scopeFeatured($query)
@@ -160,11 +150,7 @@ class Blog extends Model
     {
         static::saving(function (Blog $blog): void {
             if ($blog->status === 'published' && $blog->published_at === null) {
-                $blog->published_at = now()->startOfHour();
-            }
-
-            if ($blog->published_at !== null) {
-                $blog->published_at = $blog->published_at->copy()->startOfHour();
+                $blog->published_at = now();
             }
 
             if (! filled($blog->read_time_minutes) || (int) $blog->read_time_minutes <= 0) {

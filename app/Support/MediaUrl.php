@@ -14,6 +14,6 @@ class MediaUrl
             return $path;
         }
 
-        return asset('storage/'.ltrim($path, '/'));
+        return url('storage/'.ltrim($path, '/'));
     }
 }

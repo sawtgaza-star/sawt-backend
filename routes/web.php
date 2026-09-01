@@ -6,7 +6,13 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\StorageFileController;
 use Illuminate\Support\Facades\Route;
+
+/* ===== Public storage files (Hostinger: no symlink; see public/.htaccess) ===== */
+Route::get('/storage/{path}', [StorageFileController::class, 'show'])
+    ->where('path', '.*')
+    ->name('storage.serve');
 
 /* ===== Pages Routes ===== */
 Route::get('/', [PageController::class, 'home'])->name('home');

@@ -193,9 +193,7 @@ class BlogResource extends Resource
                     Forms\Components\DateTimePicker::make('published_at')
                         ->label('تاريخ النشر')
                         ->seconds(false)
-                        ->minutesStep(60)
-                        ->default(fn () => now()->startOfHour())
-                        ->helperText('يُقارَن بالساعة (مثلاً 14:00). الخبر يظهر في الـ API عندما تصل الساعة المحددة أو بعدها.'),
+                        ->default(fn () => now()),
 
                     Forms\Components\Toggle::make('is_featured')
                         ->label('إبراز في الرئيسية')
@@ -237,29 +235,6 @@ class BlogResource extends Resource
                     ->label('الصورة')
                     ->getStateUsing(fn (Blog $record): ?string => MediaUrl::make($record->cover_image))
                     ->checkFileExistence(false),
-                Tables\Columns\TextColumn::make('api_visibility')
-                    ->label('API')
-                    ->getStateUsing(function (Blog $record): string {
-                        if ($record->status !== 'published') {
-                            return 'مسودة';
-                        }
-
-                        if ($record->published_at === null) {
-                            return 'بدون تاريخ';
-                        }
-
-                        if ($record->published_at->isFuture()) {
-                            return 'مجدول';
-                        }
-
-                        return 'ظاهر';
-                    })
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'ظاهر' => 'success',
-                        'مجدول' => 'warning',
-                        default => 'gray',
-                    }),
                 Tables\Columns\TextColumn::make('title')
                     ->label('العنوان')
                     ->searchable()
