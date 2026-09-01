@@ -5,8 +5,8 @@
 
     RewriteEngine On
 
-    # Uploaded files: always route through Laravel (Hostinger returns 403 on public/storage symlinks).
-    RewriteRule ^storage/(.*)$ index.php [L,QSA]
+    # Uploaded files via Laravel (Hostinger blocks /storage/ URLs with 403).
+    RewriteRule ^media/(.*)$ index.php [L,QSA]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

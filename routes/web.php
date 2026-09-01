@@ -9,10 +9,10 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\StorageFileController;
 use Illuminate\Support\Facades\Route;
 
-/* ===== Public storage files (Hostinger: no symlink; see public/.htaccess) ===== */
-Route::get('/storage/{path}', [StorageFileController::class, 'show'])
+/* ===== Public uploaded files (Hostinger blocks /storage/ — use /media/) ===== */
+Route::get('/media/{path}', [StorageFileController::class, 'show'])
     ->where('path', '.*')
-    ->name('storage.serve');
+    ->name('media.serve');
 
 /* ===== Pages Routes ===== */
 Route::get('/', [PageController::class, 'home'])->name('home');
