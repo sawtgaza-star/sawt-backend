@@ -3,13 +3,14 @@
 namespace App\Filament\Resources\CreatorResource\Pages;
 
 use App\Filament\Resources\CreatorResource;
-use App\Services\CreatorJoinRequestService;
+use App\Filament\Resources\CreatorResource\Concerns\ProvisionsCreatorUser;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditCreator extends EditRecord
 {
     use EditRecord\Concerns\Translatable;
+    use ProvisionsCreatorUser;
 
     protected static string $resource = CreatorResource::class;
 
@@ -21,10 +22,18 @@ class EditCreator extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        return $this->fillCreatorVirtualFields($data);
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return $this->mutateCreatorFormData($data);
+    }
+
     protected function afterSave(): void
     {
-        if ($this->record->user) {
-            app(CreatorJoinRequestService::class)->promoteUserToContentCreator($this->record->user);
-        }
+        $this->afterCreatorSaved();
     }
 }

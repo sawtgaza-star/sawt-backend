@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CreatorResource\Pages;
-use App\Filament\Resources\CreatorResource\RelationManagers;
 use App\Models\Creator;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -46,6 +46,21 @@ class CreatorResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'username';
 
+    /** @return array<string, string> */
+    public static function socialPlatformOptions(): array
+    {
+        return [
+            'instagram' => 'Instagram',
+            'facebook' => 'Facebook',
+            'twitter' => 'X / Twitter',
+            'linkedin' => 'LinkedIn',
+            'youtube' => 'YouTube',
+            'tiktok' => 'TikTok',
+            'telegram' => 'Telegram',
+            'other' => 'أخرى',
+        ];
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['username', 'uuid', 'user.name', 'user.email'];
@@ -62,14 +77,29 @@ class CreatorResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('ملف صانع المحتوى')->schema([
-                Forms\Components\Select::make('user_id')
-                    ->label('حساب المستخدم')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
+            Forms\Components\Section::make('حساب المنصة')
+                ->description('يُنشأ تلقائياً بنوع «صانع محتوى» عند الحفظ')
+                ->schema([
+                    Forms\Components\TextInput::make('account_name')
+                        ->label('الاسم')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('account_email')
+                        ->label('البريد الإلكتروني')
+                        ->email()
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('account_phone')
+                        ->label('الهاتف')
+                        ->maxLength(40),
+                    Forms\Components\TextInput::make('account_password')
+                        ->label('كلمة المرور')
+                        ->password()
+                        ->revealable()
+                        ->helperText('اتركها فارغة لتوليد كلمة مرور تلقائياً'),
+                ])->columns(2),
 
+            Forms\Components\Section::make('ملف صانع المحتوى')->schema([
                 Forms\Components\TextInput::make('username')
                     ->label('اسم المستخدم (username)')
                     ->helperText('يُستخدم في رابط الملف الشخصي')
@@ -117,6 +147,36 @@ class CreatorResource extends Resource
                     ->default('active')
                     ->required(),
             ])->columns(2),
+
+            Forms\Components\Section::make('مواقع التواصل')->schema([
+                Forms\Components\Repeater::make('socials')
+                    ->label('')
+                    ->schema([
+                        Forms\Components\Select::make('platform')
+                            ->label('المنصة')
+                            ->options(static::socialPlatformOptions())
+                            ->required(),
+                        Forms\Components\TextInput::make('url')
+                            ->label('الرابط')
+                            ->url()
+                            ->required()
+                            ->maxLength(500),
+                        Forms\Components\TextInput::make('followers_count')
+                            ->label('عدد المتابعين')
+                            ->numeric()
+                            ->default(0),
+                        Forms\Components\TextInput::make('display_order')
+                            ->label('ترتيب العرض')
+                            ->numeric()
+                            ->default(0),
+                    ])
+                    ->columns(2)
+                    ->reorderable()
+                    ->collapsible()
+                    ->defaultItems(0)
+                    ->addActionLabel('إضافة رابط')
+                    ->columnSpanFull(),
+            ]),
         ]);
     }
 
@@ -129,9 +189,15 @@ class CreatorResource extends Resource
                     ->disk('public')
                     ->circular()
                     ->height(40),
-                Tables\Columns\TextColumn::make('username')->label('اسم المستخدم')->searchable(),
+                Tables\Columns\TextColumn::make('user.name')->label('الاسم')->searchable(),
+                Tables\Columns\TextColumn::make('username')->label('username')->searchable(),
                 Tables\Columns\TextColumn::make('role')->label('التخصص')->limit(30),
-                Tables\Columns\TextColumn::make('user.name')->label('المستخدم')->searchable(),
+                Tables\Columns\TextColumn::make('user.email')->label('البريد')->searchable(),
+                Tables\Columns\TextColumn::make('user.type')
+                    ->label('نوع الحساب')
+                    ->formatStateUsing(fn (?string $state): string => $state === User::TYPE_CONTENT_CREATOR ? 'صانع محتوى' : ($state ?? '—'))
+                    ->badge()
+                    ->color('success'),
                 Tables\Columns\TextColumn::make('followers_count')->label('المتابعون')->numeric()->sortable(),
                 Tables\Columns\IconColumn::make('is_verified')->label('موثّق')->boolean(),
                 Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
@@ -159,9 +225,7 @@ class CreatorResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            RelationManagers\SocialsRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array

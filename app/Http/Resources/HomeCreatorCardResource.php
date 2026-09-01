@@ -12,7 +12,7 @@ class HomeCreatorCardResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'id' => $this->id,
-            'name' => $this->user?->name,
+            'name' => $this->user?->name ?? $this->username,
             'role' => $this->getTranslations('role'),
             'avatar_url' => $this->avatar_url,
             'followers_count' => (int) ($this->followers_count ?? 0),

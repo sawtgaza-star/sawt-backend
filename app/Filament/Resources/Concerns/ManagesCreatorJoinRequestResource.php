@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Concerns;
 
+use App\Filament\Resources\CreatorResource;
 use App\Models\CreatorJoinRequest;
 use App\Services\CreatorJoinRequestService;
 use Filament\Forms;
@@ -158,7 +159,7 @@ trait ManagesCreatorJoinRequestResource
                 ->action(function (CreatorJoinRequest $record) {
                     try {
                         $service = app(CreatorJoinRequestService::class);
-                        $service->approve($record, auth()->id());
+                        $creator = $service->approve($record, auth()->id());
                     } catch (ValidationException $e) {
                         Notification::make()
                             ->title(collect($e->errors())->flatten()->first() ?: 'تعذر قبول الطلب')
@@ -175,10 +176,15 @@ trait ManagesCreatorJoinRequestResource
                             ->warning()
                             ->send();
 
-                        return;
+                        return redirect(CreatorResource::getUrl('edit', ['record' => $creator]));
                     }
 
-                    Notification::make()->title('تم قبول الطلب ونقل البيانات إلى حساب صانع المحتوى')->success()->send();
+                    Notification::make()
+                        ->title('تم قبول الطلب — أكمل الملف (الصورة، روابط التواصل…)')
+                        ->success()
+                        ->send();
+
+                    return redirect(CreatorResource::getUrl('edit', ['record' => $creator]));
                 }),
             Tables\Actions\Action::make('reject')
                 ->label('رفض')

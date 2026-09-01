@@ -185,6 +185,98 @@ class CreatorJoinRequestService
     }
 
     /**
+     * Create or reuse a website user for an admin-created creator profile.
+     */
+    public function createUserForCreatorProfile(
+        string $name,
+        string $email,
+        ?string $phone = null,
+        ?string $password = null,
+    ): User {
+        $email = Str::lower(trim($email));
+
+        $existing = User::query()->whereRaw('LOWER(email) = ?', [$email])->first();
+
+        if ($existing?->isFilamentAdmin()) {
+            throw ValidationException::withMessages([
+                'account_email' => ['لا يمكن ربط حساب إداري بصانع محتوى.'],
+            ]);
+        }
+
+        if ($existing) {
+            if ($existing->creator()->exists()) {
+                throw ValidationException::withMessages([
+                    'account_email' => ['هذا البريد مرتبط بملف صانع محتوى آخر.'],
+                ]);
+            }
+
+            $existing->fill([
+                'name' => $name,
+                'phone' => $phone,
+            ]);
+
+            if (filled($password)) {
+                $existing->password = $password;
+            }
+
+            $existing->save();
+            $this->promoteUserToContentCreator($existing);
+
+            return $existing->fresh();
+        }
+
+        $user = User::create([
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'password' => $password ?: Str::password(12),
+            'status' => 'active',
+            'type' => User::TYPE_CONTENT_CREATOR,
+        ]);
+
+        $this->promoteUserToContentCreator($user);
+
+        return $user;
+    }
+
+    public function updateUserForCreatorProfile(
+        User $user,
+        string $name,
+        string $email,
+        ?string $phone = null,
+        ?string $password = null,
+    ): User {
+        if ($user->isFilamentAdmin()) {
+            throw ValidationException::withMessages([
+                'account_email' => ['لا يمكن ربط حساب إداري بصانع محتوى.'],
+            ]);
+        }
+
+        $email = Str::lower(trim($email));
+
+        if (User::query()->whereRaw('LOWER(email) = ?', [$email])->whereKeyNot($user->id)->exists()) {
+            throw ValidationException::withMessages([
+                'account_email' => ['هذا البريد مستخدم من حساب آخر.'],
+            ]);
+        }
+
+        $user->fill([
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+        ]);
+
+        if (filled($password)) {
+            $user->password = $password;
+        }
+
+        $user->save();
+        $this->promoteUserToContentCreator($user);
+
+        return $user->fresh();
+    }
+
+    /**
      * @return array{0: Creator, 1: ?string}
      */
     protected function provisionCreator(CreatorJoinRequest $request): array

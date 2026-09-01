@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CreatorJoinRequestResource\Pages;
 
 use App\Filament\Resources\CreatorJoinRequestResource;
+use App\Filament\Resources\CreatorResource;
 use App\Services\CreatorJoinRequestService;
 use Filament\Actions;
 use Filament\Forms;
@@ -27,7 +28,7 @@ class ViewCreatorJoinRequest extends ViewRecord
                 ->action(function () {
                     try {
                         $service = app(CreatorJoinRequestService::class);
-                        $service->approve($this->record, auth()->id());
+                        $creator = $service->approve($this->record, auth()->id());
                     } catch (ValidationException $e) {
                         Notification::make()
                             ->title(collect($e->errors())->flatten()->first() ?: 'تعذر قبول الطلب')
@@ -43,13 +44,16 @@ class ViewCreatorJoinRequest extends ViewRecord
                             ->body($service->lastEmailError)
                             ->warning()
                             ->send();
-                        $this->redirect(CreatorJoinRequestResource::getUrl('index'));
+                        $this->redirect(CreatorResource::getUrl('edit', ['record' => $creator]));
 
                         return;
                     }
 
-                    Notification::make()->title('تم قبول الطلب ونقل البيانات إلى حساب صانع المحتوى')->success()->send();
-                    $this->redirect(CreatorJoinRequestResource::getUrl('index'));
+                    Notification::make()
+                        ->title('تم قبول الطلب — أكمل الملف (الصورة، روابط التواصل…)')
+                        ->success()
+                        ->send();
+                    $this->redirect(CreatorResource::getUrl('edit', ['record' => $creator]));
                 }),
             Actions\Action::make('reject')
                 ->label('رفض')

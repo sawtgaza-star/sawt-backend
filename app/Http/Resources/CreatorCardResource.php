@@ -12,7 +12,7 @@ class CreatorCardResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'username' => $this->username,
-            'name' => $this->user?->name,
+            'name' => $this->user?->name ?? $this->username,
             'role' => $this->getTranslations('role'),
             'bio' => $this->getTranslations('bio'),
             'avatar_url' => $this->avatar_url,

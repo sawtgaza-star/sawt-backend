@@ -3,13 +3,14 @@
 namespace App\Filament\Resources\CreatorResource\Pages;
 
 use App\Filament\Resources\CreatorResource;
-use App\Services\CreatorJoinRequestService;
+use App\Filament\Resources\CreatorResource\Concerns\ProvisionsCreatorUser;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateCreator extends CreateRecord
 {
     use CreateRecord\Concerns\Translatable;
+    use ProvisionsCreatorUser;
 
     protected static string $resource = CreatorResource::class;
 
@@ -20,10 +21,13 @@ class CreateCreator extends CreateRecord
         ];
     }
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return $this->mutateCreatorFormData($data);
+    }
+
     protected function afterCreate(): void
     {
-        if ($this->record->user) {
-            app(CreatorJoinRequestService::class)->promoteUserToContentCreator($this->record->user);
-        }
+        $this->afterCreatorSaved();
     }
 }
