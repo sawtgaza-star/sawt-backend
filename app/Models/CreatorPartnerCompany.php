@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use App\Support\MediaUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,7 +11,10 @@ use Spatie\Translatable\HasTranslations;
 
 class CreatorPartnerCompany extends Model
 {
-    use HasTranslations, HasUuid;
+    use HasTranslations, HasUuid, PrunesStoredUploads;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['logo'];
 
     public array $translatable = ['name'];
 

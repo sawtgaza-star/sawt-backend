@@ -19,6 +19,7 @@ class StoryResource extends JsonResource
             'cover_url' => MediaUrl::make($this->cover_image),
             'hero_url' => MediaUrl::make($this->heroImagePath()),
             'breadcrumb' => $this->breadcrumb(),
+            'badge' => $this->primaryBadge(),
             'categories' => $this->formattedCategories(),
             'author' => $this->getTranslations('author_name'),
             'read_time_minutes' => $this->readTimeMinutes(),

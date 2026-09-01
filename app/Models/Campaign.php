@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
 class Campaign extends Model
 {
-    use HasTranslations, HasUuid;
+    use HasTranslations, HasUuid, PrunesStoredUploads;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['image'];
 
     public array $translatable = ['title', 'description'];
 

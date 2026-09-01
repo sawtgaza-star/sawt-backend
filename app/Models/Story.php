@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,10 @@ use Spatie\Translatable\HasTranslations;
 
 class Story extends Model
 {
-    use HasTranslations, HasUuid, SoftDeletes;
+    use HasTranslations, HasUuid, PrunesStoredUploads, SoftDeletes;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['cover_image', 'hero_image'];
 
     public array $translatable = [
         'title',
@@ -18,6 +22,7 @@ class Story extends Model
         'excerpt',
         'card_footer_title',
         'card_footer_subtitle',
+        'badge',
         'content',
         'quote_text',
         'quote_author',
@@ -31,6 +36,7 @@ class Story extends Model
         'excerpt',
         'card_footer_title',
         'card_footer_subtitle',
+        'badge',
         'cover_image',
         'hero_image',
         'content',
@@ -124,6 +130,15 @@ class Story extends Model
      */
     public function primaryBadge(): ?array
     {
+        $badge = $this->getTranslations('badge');
+
+        if (filled($badge['ar'] ?? null) || filled($badge['en'] ?? null)) {
+            return [
+                'ar' => (string) ($badge['ar'] ?? ''),
+                'en' => (string) ($badge['en'] ?? ''),
+            ];
+        }
+
         $first = $this->formattedCategories()[0]['name'] ?? null;
 
         return filled($first['ar'] ?? null) || filled($first['en'] ?? null) ? $first : null;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use App\Support\MediaUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +14,10 @@ use Spatie\Translatable\HasTranslations;
  */
 class SupportMethod extends Model
 {
-    use HasTranslations, HasUuid;
+    use HasTranslations, HasUuid, PrunesStoredUploads;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['logo', 'qr_image'];
 
     public array $translatable = ['name', 'description', 'instructions'];
 

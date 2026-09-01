@@ -82,6 +82,13 @@ class StoryResource extends Resource
                         ->maxLength(255)
                         ->columnSpanFull(),
 
+                    Forms\Components\TextInput::make('badge')
+                        ->label('شارة البطاقة')
+                        ->helperText('مثال: قصة نجاح — تظهر على البطاقة في الرئيسية وقائمة القصص')
+                        ->placeholder('قصة نجاح')
+                        ->maxLength(80)
+                        ->columnSpanFull(),
+
                     Forms\Components\FileUpload::make('cover_image')
                         ->label('صورة البطاقة')
                         ->image()
@@ -146,7 +153,11 @@ class StoryResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Section::make('3) التصنيفات (شارة البطاقة)')->schema([
+                Forms\Components\Section::make('3) التصنيفات')->schema([
+                    Forms\Components\Placeholder::make('categories_badge_hint')
+                        ->label('شارة البطاقة')
+                        ->content('تُعدَّل من حقل «شارة البطاقة» في القسم 1. إن تُركت فارغة تُستخدم أول تصنيف أدناه.')
+                        ->columnSpanFull(),
                     Forms\Components\Repeater::make('categories')
                         ->label('تصنيفات القصة')
                         ->schema([
@@ -244,6 +255,11 @@ class StoryResource extends Resource
                     ->label('العنوان')
                     ->searchable()
                     ->limit(50),
+                Tables\Columns\TextColumn::make('badge')
+                    ->label('شارة البطاقة')
+                    ->getStateUsing(fn (Story $record): ?string => $record->primaryBadge()['ar'] ?? null)
+                    ->badge()
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('category_labels')
                     ->label('التصنيفات')
                     ->getStateUsing(fn (Story $record): array => $record->categoryLabels('ar'))

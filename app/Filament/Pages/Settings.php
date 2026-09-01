@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use App\Support\StoredUploadCleanup;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -1680,9 +1681,20 @@ class Settings extends Page implements HasForms
     public function save(): void
     {
         $state = $this->form->getState();
+        $meta = $this->fieldMeta();
 
-        foreach ($this->fieldMeta() as $key => [$group, $type, $default]) {
-            $value = $state[$key] ?? $default;
+        $oldValues = [];
+        $newValues = [];
+
+        foreach ($meta as $key => [$group, $type, $default]) {
+            $oldValues[$key] = Setting::get($key, $default);
+            $newValues[$key] = $state[$key] ?? $default;
+        }
+
+        StoredUploadCleanup::pruneReplaced($oldValues, $newValues);
+
+        foreach ($meta as $key => [$group, $type, $default]) {
+            $value = $newValues[$key];
 
             if ($key === 'header_nav_links' && is_array($value)) {
                 $value = $this->filterHeaderNavLinks($value);

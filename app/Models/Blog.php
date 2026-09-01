@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,10 @@ use Spatie\Translatable\HasTranslations;
 
 class Blog extends Model
 {
-    use HasTranslations, HasUuid, SoftDeletes;
+    use HasTranslations, HasUuid, PrunesStoredUploads, SoftDeletes;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['cover_image', 'hero_image'];
 
     public array $translatable = [
         'title',

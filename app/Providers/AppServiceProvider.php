@@ -44,6 +44,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         FileUpload::configureUsing(function (FileUpload $component): void {
+            $component->deleteUploadedFileUsing(function (FileUpload $component, string $file): void {
+                $component->getDisk()->delete($file);
+            });
+
             $component->getUploadedFileUsing(function (FileUpload $component, string $file, string | array | null $storedFileNames): ?array {
                 $storage = $component->getDisk();
                 $shouldFetchFileInformation = $component->shouldFetchFileInformation();

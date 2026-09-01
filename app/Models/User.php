@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +13,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, JWTSubject
 {
-    use HasRoles, HasUuid, Notifiable;
+    use HasRoles, HasUuid, Notifiable, PrunesStoredUploads;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['avatar'];
 
     public const TYPE_ADMIN = 'admin';
 

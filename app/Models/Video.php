@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 class Video extends Model
 {
-    use SoftDeletes, HasTranslations, HasUuid;
+    use HasTranslations, HasUuid, PrunesStoredUploads, SoftDeletes;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['cover_url'];
 
     public array $translatable = ['title', 'description'];
 

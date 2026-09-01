@@ -4,13 +4,17 @@ namespace App\Models;
 
 use App\Enums\CollaborationTypeKey;
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use App\Support\MediaUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CollaborationJoinRequest extends Model
 {
-    use HasUuid;
+    use HasUuid, PrunesStoredUploads;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['attachment'];
 
     /** @var list<string> */
     public const SPONSORSHIP_SUPPORT_TYPES = [

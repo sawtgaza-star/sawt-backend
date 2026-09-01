@@ -3,14 +3,18 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
 class Course extends Model
 {
-    use HasTranslations, HasUuid;
+    use HasTranslations, HasUuid, PrunesStoredUploads;
 
     public array $translatable = ['title', 'description'];
+
+    /** @var list<string> */
+    protected array $storedUploads = ['image'];
 
     protected $fillable = [
         'instructor_id',

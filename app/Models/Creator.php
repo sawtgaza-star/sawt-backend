@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\PrunesStoredUploads;
 use App\Support\MediaUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,10 @@ use Spatie\Translatable\HasTranslations;
 
 class Creator extends Model
 {
-    use SoftDeletes, HasTranslations, HasUuid;
+    use HasTranslations, HasUuid, PrunesStoredUploads, SoftDeletes;
+
+    /** @var list<string> */
+    protected array $storedUploads = ['avatar'];
 
     public array $translatable = ['bio', 'role'];
 
