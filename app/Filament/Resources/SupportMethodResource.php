@@ -136,7 +136,7 @@ class SupportMethodResource extends Resource
                             Forms\Components\TextInput::make('label_ar')->label('التسمية (عربي)')->required(),
                             Forms\Components\TextInput::make('label_en')->label('Label (English)'),
                             Forms\Components\TextInput::make('value')->label('القيمة')->required()->columnSpanFull(),
-                            Forms\Components\Toggle::make('is_copyable')->label('قابل للنسخ')->default(true),
+                            Forms\Components\Toggle::make('is_copyable')->label('قابل للنسخ')->default(true)->columnSpanFull(),
                         ])
                         ->columns(2)
                         ->reorderable()

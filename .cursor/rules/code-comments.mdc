@@ -1,0 +1,27 @@
+---
+description: Always add clear comments when writing or changing code
+alwaysApply: true
+---
+
+# Code comments (required)
+
+When writing or editing code in this project, **always add comments**. The user explicitly wants this — do not skip comments for brevity.
+
+## What to comment
+
+- **Class / file**: short docblock describing purpose and how it fits the feature
+- **Public methods**: what they do, important inputs/outputs, API side effects
+- **Non-obvious logic**: why (not what) — e.g. 12h↔24h time, settings vs DB tables, AR|EN field pairs, offline-only courses
+- **Sections** in large files: brief `//` markers (hero, sponsor, events, …)
+- **Migrations / seeders**: what the change is for
+
+## Style
+
+- Prefer PHPDoc on classes and methods; use `//` for inline “why”
+- Keep comments accurate and concise — explain intent, constraints, and gotchas
+- Update comments when behavior changes; remove comments that become wrong
+- Do not comment obvious one-liners (`$i++`, simple getters) unless the surrounding context is unclear
+
+## Reminder
+
+If you ship new Filament forms, API services, models, or routes without comments, that is incomplete work for this repo.

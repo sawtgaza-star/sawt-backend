@@ -14,7 +14,7 @@ class CourseController extends Controller
     {
         $courses = Course::query()
             ->published()
-            ->with(['instructor', 'category'])
+            ->with(['trainer', 'courseCategory'])
             ->latest()
             ->paginate(12);
 
@@ -25,7 +25,7 @@ class CourseController extends Controller
     {
         abort_unless($course->status === 'published', 404);
 
-        $course->load(['instructor', 'category']);
+        $course->load(['trainer', 'courseCategory']);
         $user = auth()->user();
         $joinRequest = $course->joinRequestFor($user);
 

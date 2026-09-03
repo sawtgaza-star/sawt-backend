@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\SupportRequestController;
 use App\Http\Controllers\Api\SupportSubscriptionController;
 use App\Http\Controllers\Api\CollaborationController;
+use App\Http\Controllers\Api\IncubatorController;
+use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\StoryController;
 use App\Http\Controllers\Api\TeamController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,11 @@ Route::prefix('layout')->name('layout.')->group(function () {
     Route::get('/', [LayoutController::class, 'show'])->name('index');
     Route::get('/navbar', [LayoutController::class, 'navbar'])->name('navbar');
     Route::get('/footer', [LayoutController::class, 'footer'])->name('footer');
+
+    // Incubator chrome (separate from main platform header/footer)
+    Route::get('/incubator', [LayoutController::class, 'incubator'])->name('incubator');
+    Route::get('/incubator/navbar', [LayoutController::class, 'incubatorNavbar'])->name('incubator.navbar');
+    Route::get('/incubator/footer', [LayoutController::class, 'incubatorFooter'])->name('incubator.footer');
 });
 
 // ===== Pages (home, about, team, creators, …) =====
@@ -46,6 +53,13 @@ Route::prefix('pages')->name('pages.')->group(function () {
     Route::post('/collaborate/other', [CollaborationController::class, 'submitOther'])->name('collaborate.other.submit');
 
     Route::get('/about', [AboutController::class, 'show'])->name('about');
+
+    // Incubator landing (settings-driven sections + published course cards)
+    Route::get('/incubator', [IncubatorController::class, 'show'])->name('incubator');
+
+    // Courses index (cards) + detail by slug or uuid
+    Route::get('/courses', [CourseController::class, 'index'])->name('courses');
+    Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
 
     Route::get('/team', [TeamController::class, 'index'])->name('team');
     Route::get('/team/{uuid}', [TeamController::class, 'show'])->name('team.show');

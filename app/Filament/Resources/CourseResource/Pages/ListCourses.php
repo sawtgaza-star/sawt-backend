@@ -6,6 +6,7 @@ use App\Filament\Resources\CourseResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
+/** Courses index in Filament (offline incubator courses). */
 class ListCourses extends ListRecords
 {
     protected static string $resource = CourseResource::class;

@@ -24,7 +24,7 @@ class Settings extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     protected static string $view = 'filament.pages.settings';
 
@@ -32,17 +32,17 @@ class Settings extends Page implements HasForms
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Administration');
+        return 'الإعدادات';
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('Settings');
+        return 'الإعدادات العامة';
     }
 
     public function getTitle(): string | \Illuminate\Contracts\Support\Htmlable
     {
-        return __('Platform Settings');
+        return 'الإعدادات العامة';
     }
 
     /**
@@ -722,8 +722,8 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('home_who_subtitle_en')->label('Subtitle (EN)'),
                         Forms\Components\TextInput::make('home_welcome_title_ar')->label('العنوان الرئيسي (عربي)'),
                         Forms\Components\TextInput::make('home_welcome_title_en')->label('Main title (EN)'),
-                        Forms\Components\Textarea::make('home_welcome_desc_ar')->label('الوصف (عربي)')->rows(4)->columnSpanFull(),
-                        Forms\Components\Textarea::make('home_welcome_desc_en')->label('Description (EN)')->rows(4)->columnSpanFull(),
+                        Forms\Components\Textarea::make('home_welcome_desc_ar')->label('الوصف (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('home_welcome_desc_en')->label('Description (EN)')->rows(4),
                         Forms\Components\TextInput::make('home_who_cta_ar')->label('نص الزر (عربي)'),
                         Forms\Components\TextInput::make('home_who_cta_en')->label('CTA (EN)'),
                         Forms\Components\Repeater::make('home_who_features')
@@ -732,11 +732,12 @@ class Settings extends Page implements HasForms
                                 Forms\Components\FileUpload::make('icon')
                                     ->label('أيقونة (صورة)')
                                     ->image()->disk('public')->directory('home/icons')
-                                    ->imageEditor(),
+                                    ->imageEditor()
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('title_ar')->label('النص (عربي)')->required(),
                                 Forms\Components\TextInput::make('title_en')->label('Text (EN)'),
                             ])
-                            ->columns(3)
+                            ->columns(2)
                             ->maxItems(4)
                             ->reorderable()
                             ->columnSpanFull(),
@@ -755,7 +756,8 @@ class Settings extends Page implements HasForms
                             ->label('عدد البطاقات في الرئيسية')
                             ->numeric()
                             ->minValue(1)
-                            ->maxValue(12),
+                            ->maxValue(12)
+                            ->columnSpanFull(),
                     ])->columns(2)
                         ->description('البطاقات تُجلب من **المحتوى → الأخبار / المدونة**. فعّل «إبراز في الرئيسية» أو انشر أحدث الأخبار.'),
 
@@ -766,7 +768,12 @@ class Settings extends Page implements HasForms
                         Forms\Components\Textarea::make('home_creators_desc_en')->label('Description (EN)')->rows(2),
                         Forms\Components\TextInput::make('home_creators_view_all_ar')->label('عرض الكل (عربي)'),
                         Forms\Components\TextInput::make('home_creators_view_all_en')->label('View all (EN)'),
-                        Forms\Components\TextInput::make('home_creators_limit')->label('عدد البطاقات')->numeric()->minValue(1)->maxValue(30),
+                        Forms\Components\TextInput::make('home_creators_limit')
+                            ->label('عدد البطاقات')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(30)
+                            ->columnSpanFull(),
                     ])->columns(2)
                         ->description('البطاقات تُجلب من قائمة صنّاع المحتوى النشطين في لوحة التحكم.'),
 
@@ -792,7 +799,8 @@ class Settings extends Page implements HasForms
                                     ->image()
                                     ->disk('public')
                                     ->directory('home/sections/icons')
-                                    ->imageEditor(),
+                                    ->imageEditor()
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)'),
                                 Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
                                 Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
@@ -842,7 +850,8 @@ class Settings extends Page implements HasForms
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(12)
-                            ->helperText('القصص من **المحتوى → القصص** (المميزة أولاً)'),
+                            ->helperText('القصص من **المحتوى → القصص** (المميزة أولاً)')
+                            ->columnSpanFull(),
                     ])->columns(2)
                         ->description('حقل «شاركنا قصتك» ثابت في الواجهة — لا يُعدَّل من هنا.'),
 
@@ -853,7 +862,12 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('home_team_subtitle_en')->label('Subtitle (EN)'),
                         Forms\Components\TextInput::make('home_team_cta_ar')->label('نص زر الملف (عربي)'),
                         Forms\Components\TextInput::make('home_team_cta_en')->label('Profile CTA (EN)'),
-                        Forms\Components\TextInput::make('home_team_limit')->label('عدد الأعضاء')->numeric()->minValue(1)->maxValue(30),
+                        Forms\Components\TextInput::make('home_team_limit')
+                            ->label('عدد الأعضاء')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(30)
+                            ->columnSpanFull(),
                     ])->columns(2)
                         ->description('الأعضاء يُجلبون من مورد «أعضاء الفريق» النشطين.'),
 
@@ -903,8 +917,8 @@ class Settings extends Page implements HasForms
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('about_header_ar')->label('العنوان (عربي)')->placeholder('من نحن'),
                         Forms\Components\TextInput::make('about_header_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('about_intro_ar')->label('النص (عربي)')->rows(5)->columnSpanFull(),
-                        Forms\Components\Textarea::make('about_intro_en')->label('Body (English)')->rows(5)->columnSpanFull(),
+                        Forms\Components\Textarea::make('about_intro_ar')->label('النص (عربي)')->rows(5),
+                        Forms\Components\Textarea::make('about_intro_en')->label('Body (English)')->rows(5),
                     ])->columns(2),
 
                     Forms\Components\Section::make('3) القيم')->schema([
@@ -1018,7 +1032,12 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('content_most_viewed_title_en')->label('Title (EN)'),
                         Forms\Components\TextInput::make('content_most_viewed_more_ar')->label('نص «رؤية المزيد» (عربي)'),
                         Forms\Components\TextInput::make('content_most_viewed_more_en')->label('See more (EN)'),
-                        Forms\Components\TextInput::make('content_most_viewed_limit')->label('عدد الريلز')->numeric()->minValue(1)->maxValue(30),
+                        Forms\Components\TextInput::make('content_most_viewed_limit')
+                            ->label('عدد الريلز')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(30)
+                            ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
@@ -1142,7 +1161,12 @@ class Settings extends Page implements HasForms
                         Forms\Components\Textarea::make('creators_grid_subtitle_en')->label('Subtitle (English)')->rows(2),
                         Forms\Components\TextInput::make('creators_card_browse_label_ar')->label('نص «تصفح» (عربي)'),
                         Forms\Components\TextInput::make('creators_card_browse_label_en')->label('Browse label (English)'),
-                        Forms\Components\TextInput::make('creators_grid_limit')->label('عدد البطاقات في الصفحة الرئيسية')->numeric()->minValue(1)->default(10),
+                        Forms\Components\TextInput::make('creators_grid_limit')
+                            ->label('عدد البطاقات في الصفحة الرئيسية')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(10)
+                            ->columnSpanFull(),
                         Forms\Components\Placeholder::make('creators_grid_hint')
                             ->content('إدارة صناع المحتوى من **صنّاع المحتوى → Content Creators** في الشريط الجانبي.')
                             ->columnSpanFull(),
@@ -1155,7 +1179,8 @@ class Settings extends Page implements HasForms
                             ->minValue(1)
                             ->maxValue(50)
                             ->default(10)
-                            ->helperText('صفحة /creators/all — الترقيم أسفل الشبكة'),
+                            ->helperText('صفحة /creators/all — الترقيم أسفل الشبكة')
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('creators_all_followers_suffix_ar')->label('لاحقة المتابعين (عربي)')->placeholder('متابع'),
                         Forms\Components\TextInput::make('creators_all_followers_suffix_en')->label('Followers suffix (English)')->placeholder('followers'),
                         Forms\Components\Placeholder::make('creators_all_hint')
@@ -1173,37 +1198,41 @@ class Settings extends Page implements HasForms
                             Forms\Components\TextInput::make('creators_stat_creators_value')
                                 ->label('الرقم')
                                 ->numeric()
-                                ->helperText('مثال: 45 يظهر كـ 45+'),
+                                ->helperText('مثال: 45 يظهر كـ 45+')
+                                ->columnSpanFull(),
                             Forms\Components\TextInput::make('creators_stat_creators_label_ar')->label('التسمية (عربي)'),
                             Forms\Components\TextInput::make('creators_stat_creators_label_en')->label('Label (English)'),
-                        ])->columns(3)->compact(),
+                        ])->columns(2)->compact(),
 
                         Forms\Components\Section::make('② إعلان تعاوني نُفّذ')->schema([
                             Forms\Components\TextInput::make('creators_stat_collabs_value')
                                 ->label('الرقم')
                                 ->numeric()
-                                ->helperText('مثال: 500 يظهر كـ 500+'),
+                                ->helperText('مثال: 500 يظهر كـ 500+')
+                                ->columnSpanFull(),
                             Forms\Components\TextInput::make('creators_stat_collabs_label_ar')->label('التسمية (عربي)'),
                             Forms\Components\TextInput::make('creators_stat_collabs_label_en')->label('Label (English)'),
-                        ])->columns(3)->compact(),
+                        ])->columns(2)->compact(),
 
                         Forms\Components\Section::make('③ دعم مالي وُزّع')->schema([
                             Forms\Components\TextInput::make('creators_stat_support_value')
                                 ->label('الرقم')
                                 ->numeric()
-                                ->helperText('مثال: 250000 يظهر كـ +$250K'),
+                                ->helperText('مثال: 250000 يظهر كـ +$250K')
+                                ->columnSpanFull(),
                             Forms\Components\TextInput::make('creators_stat_support_label_ar')->label('التسمية (عربي)'),
                             Forms\Components\TextInput::make('creators_stat_support_label_en')->label('Label (English)'),
-                        ])->columns(3)->compact(),
+                        ])->columns(2)->compact(),
 
                         Forms\Components\Section::make('④ شخص وصلهم المحتوى')->schema([
                             Forms\Components\TextInput::make('creators_stat_reach_value')
                                 ->label('الرقم')
                                 ->numeric()
-                                ->helperText('مثال: 4000000 يظهر كـ 4M+'),
+                                ->helperText('مثال: 4000000 يظهر كـ 4M+')
+                                ->columnSpanFull(),
                             Forms\Components\TextInput::make('creators_stat_reach_label_ar')->label('التسمية (عربي)'),
                             Forms\Components\TextInput::make('creators_stat_reach_label_en')->label('Label (English)'),
-                        ])->columns(3)->compact(),
+                        ])->columns(2)->compact(),
                     ])->columns(2),
 
                     Forms\Components\Section::make('4) دعوة الانضمام (CTA)')->schema([
@@ -1242,11 +1271,15 @@ class Settings extends Page implements HasForms
                         Forms\Components\Repeater::make('creators_join_content_types')
                             ->label('أنواع المحتوى (الخطوة 2)')
                             ->schema([
-                                Forms\Components\TextInput::make('key')->label('المفتاح')->required()->maxLength(80),
+                                Forms\Components\TextInput::make('key')
+                                    ->label('المفتاح')
+                                    ->required()
+                                    ->maxLength(80)
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('label_ar')->label('التسمية (عربي)')->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (English)'),
                             ])
-                            ->columns(3)
+                            ->columns(2)
                             ->reorderable()
                             ->collapsible()
                             ->columnSpanFull(),
@@ -1395,7 +1428,7 @@ class Settings extends Page implements HasForms
                                     Forms\Components\Hidden::make('key'),
                                     Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
                                     Forms\Components\TextInput::make('label_en')->label('Label (English)'),
-                                    Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
+                                    Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true)->columnSpanFull(),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
@@ -1427,7 +1460,7 @@ class Settings extends Page implements HasForms
                                 Forms\Components\Hidden::make('key'),
                                 Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (English)'),
-                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
+                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true)->columnSpanFull(),
                             ])
                             ->columns(2)
                             ->reorderable()
@@ -1452,7 +1485,7 @@ class Settings extends Page implements HasForms
                                     ->placeholder('https://example.com أو /page')
                                     ->helperText('رابط خارجي أو مسار داخلي — اترك # إن لم يكن جاهزاً')
                                     ->columnSpanFull(),
-                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true),
+                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true)->columnSpanFull(),
                             ])
                             ->columns(2)
                             ->reorderable()
@@ -1472,11 +1505,13 @@ class Settings extends Page implements HasForms
                     Forms\Components\Section::make('حقوق النشر')->schema([
                         Forms\Components\TextInput::make('footer_copyright_ar')->label('حقوق النشر (عربي)'),
                         Forms\Components\TextInput::make('footer_copyright_en')->label('Copyright (English)'),
-                        Forms\Components\TextInput::make('footer_brand')->label('العلامة (مثل SAWTGAZA)'),
                         Forms\Components\TextInput::make('footer_newsletter_title_ar')->label('عنوان النشرة (عربي)'),
                         Forms\Components\TextInput::make('footer_newsletter_title_en')->label('Newsletter title (English)'),
                         Forms\Components\TextInput::make('footer_newsletter_desc_ar')->label('وصف النشرة (عربي)'),
                         Forms\Components\TextInput::make('footer_newsletter_desc_en')->label('Newsletter description (English)'),
+                        Forms\Components\TextInput::make('footer_brand')
+                            ->label('العلامة (مثل SAWTGAZA)')
+                            ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
@@ -1592,7 +1627,9 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('support_default_currency')->label('العملة الافتراضية')->maxLength(3),
                         Forms\Components\TextInput::make('support_min_amount')->label('أقل مبلغ')->numeric()->prefix('$'),
                         Forms\Components\TextInput::make('support_max_amount')->label('أعلى مبلغ')->numeric()->prefix('$'),
-                        Forms\Components\Toggle::make('support_custom_amount_enabled')->label('السماح بمبلغ مخصص'),
+                        Forms\Components\Toggle::make('support_custom_amount_enabled')
+                            ->label('السماح بمبلغ مخصص')
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('support_custom_amount_label_ar')->label('نص حقل المبلغ (عربي)'),
                         Forms\Components\TextInput::make('support_custom_amount_label_en')->label('Amount field text (English)'),
                     ])->columns(2)->collapsible(),

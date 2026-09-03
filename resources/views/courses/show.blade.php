@@ -53,8 +53,8 @@
           @if ($course->max_seats)
             <li class="mb-2"><strong>المقاعد:</strong> {{ $course->max_seats }}</li>
           @endif
-          @if ($course->instructor)
-            <li class="mb-2"><strong>المدرّب:</strong> {{ $course->instructor->username }}</li>
+          @if ($course->trainer)
+            <li class="mb-2"><strong>المدرّب:</strong> {{ $course->trainer->getTranslation('name', app()->getLocale()) ?: $course->trainer->getTranslation('name', 'ar') }}</li>
           @endif
         </ul>
 
@@ -63,7 +63,7 @@
             <h2 class="h5 fw-bold">المتطلبات</h2>
             <ul>
               @foreach ($course->requirements as $req)
-                <li>{{ $req }}</li>
+                <li>{{ is_array($req) ? ($req['ar'] ?? $req['en'] ?? '') : $req }}</li>
               @endforeach
             </ul>
           </div>

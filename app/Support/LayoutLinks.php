@@ -2,13 +2,12 @@
 
 namespace App\Support;
 
+/**
+ * Fixed page-key → URL maps for platform + incubator chrome.
+ * Admin edits labels/visibility only; the front owns routing via these keys.
+ */
 class LayoutLinks
 {
-    /**
-     * Fixed page keys → site URLs (not editable from the dashboard).
-     *
-     * @var array<string, string>
-     */
     /** Keys excluded from the public navbar (legacy / not shown). */
     public const NAV_EXCLUDED_KEYS = ['courses'];
 
@@ -18,6 +17,11 @@ class LayoutLinks
     /** Keys rendered beside the logo / left of the main nav (often external). */
     public const NAV_SECONDARY_KEYS = ['incubator', 'media'];
 
+    /**
+     * Fixed page keys → site URLs (not editable from the dashboard).
+     *
+     * @var array<string, string>
+     */
     public const PAGE_PATHS = [
         'home' => '/',
         'about' => '/about',
@@ -101,11 +105,55 @@ class LayoutLinks
         return self::hrefForKey($item['key'] ?? null);
     }
 
+    /** Keys for incubator-site navbar (hash anchors on /incubator). */
+    public const INCUBATOR_PAGE_PATHS = [
+        'about' => '/incubator#about',
+        'courses' => '/incubator#courses',
+        'workshops' => '/incubator#workshops',
+        'platform' => '/',
+        'join' => '/incubator#join',
+        'support_students' => '/support',
+        'home' => '/',
+        'team' => '/team',
+        'creators' => '/creators',
+        'content' => '/content',
+        'incubator' => '/incubator',
+        'media' => '/media',
+    ];
+
     public static function pathForKey(?string $key): string
     {
         $key = trim((string) $key);
 
         return self::PAGE_PATHS[$key] ?? '#';
+    }
+
+    /** Resolve incubator nav key → hash path (falls back to main PAGE_PATHS). */
+    public static function incubatorPathForKey(?string $key): string
+    {
+        $key = trim((string) $key);
+
+        return self::INCUBATOR_PAGE_PATHS[$key] ?? self::pathForKey($key);
+    }
+
+    /**
+     * Prefer explicit item url when absolute/path; otherwise map by key.
+     *
+     * @param  array<string, mixed>  $item
+     */
+    public static function incubatorPathForItem(array $item): string
+    {
+        $url = trim((string) ($item['url'] ?? ''));
+
+        if ($url !== '' && $url !== '#') {
+            if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, 'mailto:') || str_starts_with($url, 'tel:') || str_starts_with($url, '/')) {
+                return $url;
+            }
+
+            return '/'.ltrim($url, '/');
+        }
+
+        return self::incubatorPathForKey($item['key'] ?? null);
     }
 
     public static function pathForItem(array $item): string

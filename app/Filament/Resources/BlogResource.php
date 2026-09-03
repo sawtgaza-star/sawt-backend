@@ -152,9 +152,10 @@ class BlogResource extends Resource
                             Forms\Components\TextInput::make('name_en')->label('Name (EN)'),
                             Forms\Components\TextInput::make('slug')
                                 ->label('Slug')
-                                ->maxLength(80),
+                                ->maxLength(80)
+                                ->columnSpanFull(),
                         ])
-                        ->columns(3)
+                        ->columns(2)
                         ->reorderable()
                         ->collapsible()
                         ->itemLabel(function ($state): ?string {

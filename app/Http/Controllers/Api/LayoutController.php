@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Services\LayoutService;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Public layout endpoints for main site + incubator chrome.
+ * Settings: الإعدادات العامة / إعدادات الحاضنة.
+ */
 class LayoutController extends Controller
 {
     public function __construct(
@@ -39,6 +43,36 @@ class LayoutController extends Controller
     {
         return response()->json([
             'data' => $this->layout->footer(),
+        ]);
+    }
+
+    /**
+     * Incubator navbar + footer (الإعدادات → إعدادات الحاضنة).
+     */
+    public function incubator(): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->layout->incubatorPage(),
+        ]);
+    }
+
+    /**
+     * Incubator navbar only.
+     */
+    public function incubatorNavbar(): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->layout->incubatorNavbar(),
+        ]);
+    }
+
+    /**
+     * Incubator footer only.
+     */
+    public function incubatorFooter(): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->layout->incubatorFooter(),
         ]);
     }
 }

@@ -30,6 +30,11 @@ Public. No auth.
 | `GET` | `/api/v1/layout` | Navbar + footer together |
 | `GET` | `/api/v1/layout/navbar` | Navbar only |
 | `GET` | `/api/v1/layout/footer` | Footer only |
+| `GET` | `/api/v1/layout/incubator` | **Incubator** navbar + footer |
+| `GET` | `/api/v1/layout/incubator/navbar` | Incubator navbar only |
+| `GET` | `/api/v1/layout/incubator/footer` | Incubator footer only |
+
+Incubator layout is edited under **الإعدادات → إعدادات الحاضنة**. See [INCUBATOR_API.md](./INCUBATOR_API.md).
 
 ### Navbar
 

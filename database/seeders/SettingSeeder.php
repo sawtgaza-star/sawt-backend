@@ -5,6 +5,10 @@ namespace Database\Seeders;
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
+/**
+ * Default Setting rows for platform + incubator (updateOrCreate by key).
+ * Incubator landing copy/JSON defaults also live in IncubatorSettings::fieldMeta().
+ */
 class SettingSeeder extends Seeder
 {
     public function run(): void
@@ -209,6 +213,79 @@ class SettingSeeder extends Seeder
             ['group' => 'collaborate', 'key' => 'collaborate_hero_title_en', 'value' => 'Collaborate with us', 'type' => 'string'],
             ['group' => 'collaborate', 'key' => 'collaborate_hero_desc_ar', 'value' => 'تعرّف على صناع المحتوى في صوت، حيث كل فكرة لها صوت، وكل صانع محتوى له قصة.', 'type' => 'text'],
             ['group' => 'collaborate', 'key' => 'collaborate_hero_desc_en', 'value' => 'Get to know the content creators in Sawt, where every idea has a voice, and every creator has a story.', 'type' => 'text'],
+
+            // حاضنة صوت — chrome + landing defaults (sponsor / events keys included)
+            ['group' => 'incubator', 'key' => 'incubator_site_name', 'value' => 'حاضنة صوت', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_back_label_ar', 'value' => 'العودة لمنصة صوت', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_back_label_en', 'value' => 'Back to Sawt Platform', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_nav_join_label_ar', 'value' => 'انضم للحاضنة', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_nav_join_label_en', 'value' => 'Join the incubator', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_nav_support_label_ar', 'value' => 'ادعم طلاب الحاضنة', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_nav_support_label_en', 'value' => 'Support incubator students', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_nav_links', 'value' => json_encode([
+                ['key' => 'about', 'label_ar' => 'عن الحاضنة', 'label_en' => 'About the incubator', 'is_visible' => true],
+                ['key' => 'courses', 'label_ar' => 'الدورات', 'label_en' => 'Courses', 'is_visible' => true],
+                ['key' => 'workshops', 'label_ar' => 'الورشات', 'label_en' => 'Workshops', 'is_visible' => true],
+            ], JSON_UNESCAPED_UNICODE), 'type' => 'json'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_title_ar', 'value' => 'حوّل قصتك إلى محتوى يصنع أثرًا', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_title_en', 'value' => 'Turn your story into content that creates impact', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_badge_top_value', 'value' => '1,247', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_badge_top_label_ar', 'value' => 'هذا الشهر', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_badge_top_label_en', 'value' => 'This month', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_badge_bottom_value', 'value' => '+340', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_badge_bottom_label_ar', 'value' => 'قصة وثقت', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_hero_badge_bottom_label_en', 'value' => 'Stories documented', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_courses_title_ar', 'value' => 'دوراتنا الأكثر شهرة', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_courses_title_en', 'value' => 'Our most popular courses', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_courses_limit', 'value' => '6', 'type' => 'number'],
+            // Sponsor students section
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_title_ar', 'value' => 'ساعد طلاب في الانضمام للحاضنة', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_title_en', 'value' => 'Help students join the incubator', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_subtitle_ar', 'value' => 'مبلغ بسيط يفتح باب المعرفة أمام شاب في غزة — تبرعك يصل مباشرة لتغطية تكاليف التدريب', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_subtitle_en', 'value' => 'A small amount opens the door to knowledge for a young person in Gaza — your donation covers training costs directly.', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_waiting_title_ar', 'value' => 'طلاب ينتظرون داعماً', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_waiting_title_en', 'value' => 'Students waiting for a sponsor', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_waiting_more_ar', 'value' => '+28 طالباً آخرين', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_waiting_more_en', 'value' => '+28 more students', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_impact_title_ar', 'value' => 'أثر البرنامج', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_sponsor_impact_title_en', 'value' => 'Program impact', 'type' => 'string'],
+            // Events / workshops section («استكشف أحدث فعالياتنا»)
+            ['group' => 'incubator', 'key' => 'incubator_events_title_ar', 'value' => 'استكشف أحدث فعالياتنا', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_events_title_en', 'value' => 'Explore our latest events', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_events_subtitle_ar', 'value' => 'أرقام حقيقية تعكس قوة مجتمعنا', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_events_subtitle_en', 'value' => 'Real numbers that reflect the strength of our community', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_events_all_label_ar', 'value' => 'الكل', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_events_all_label_en', 'value' => 'All', 'type' => 'string'],
+            // Gallery / album («البوم الحاضنة»)
+            ['group' => 'incubator', 'key' => 'incubator_gallery_title_ar', 'value' => 'الحاضنة بيتك الثاني ، البوم الحاضنة', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_gallery_title_en', 'value' => 'The incubator is your second home — album', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_gallery_subtitle_ar', 'value' => 'مبلغ بسيط يفتح باب المعرفة أمام شاب في غزة — تبرعك يصل مباشرة لتغطية تكاليف التدريب', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_gallery_subtitle_en', 'value' => 'A small amount opens the door to knowledge for a young person in Gaza — your donation covers training costs directly.', 'type' => 'text'],
+            // Experts («فريق خبراء متخصص») — items from course_trainers
+            ['group' => 'incubator', 'key' => 'incubator_experts_title_ar', 'value' => 'فريق خبراء متخصص', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_experts_title_en', 'value' => 'Specialized expert team', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_experts_subtitle_ar', 'value' => 'أرقام حقيقية تعكس قوة مجتمعنا', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_experts_subtitle_en', 'value' => 'Real numbers that reflect the strength of our community', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_experts_limit', 'value' => '8', 'type' => 'number'],
+            // FAQ («الأسئلة التي تدور ببالك؟»)
+            ['group' => 'incubator', 'key' => 'incubator_faq_title_ar', 'value' => 'الأسئلة التي تدور ببالك؟', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_faq_title_en', 'value' => 'Questions on your mind?', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_faq_subtitle_ar', 'value' => 'أرقام حقيقية تعكس قوة مجتمعنا', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_faq_subtitle_en', 'value' => 'Real numbers that reflect the strength of our community', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_faq_more_title_ar', 'value' => 'لديك سؤال آخر؟', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_faq_more_title_en', 'value' => 'Have another question?', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_faq_more_desc_ar', 'value' => 'فريقنا جاهز للإجابة — سنردّ عليك خلال ساعات', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_faq_more_desc_en', 'value' => 'Our team is ready to help — we usually reply within hours', 'type' => 'text'],
+            // Employers logos («يعمل خريجونا لدى جهات موثوقة»)
+            ['group' => 'incubator', 'key' => 'incubator_employers_title_ar', 'value' => 'يعمل خريجونا لدى جهات موثوقة', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_employers_title_en', 'value' => 'Our graduates work at trusted organizations', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_employers_subtitle_ar', 'value' => 'نفخر بتميز خريجينا وحصولهم على وظائف مرموقة في جهات عالمية', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_employers_subtitle_en', 'value' => 'We are proud of our graduates and the prestigious roles they hold worldwide', 'type' => 'text'],
+            // Testimonials («شهادات وتجارب خريجينا»)
+            ['group' => 'incubator', 'key' => 'incubator_testimonials_title_ar', 'value' => 'شهادات وتجارب خريجينا', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_testimonials_title_en', 'value' => 'Graduate testimonials', 'type' => 'string'],
+            ['group' => 'incubator', 'key' => 'incubator_testimonials_subtitle_ar', 'value' => 'اكتشف كيف غيّرت حاضنة صوت حياة المئات من الطلاب الذين بدأوا رحلتهم من الصفر وأصبحوا اليوم محترفين مطلوبين في سوق العمل.', 'type' => 'text'],
+            ['group' => 'incubator', 'key' => 'incubator_testimonials_subtitle_en', 'value' => 'See how Sawt Incubator changed the lives of hundreds of students who started from zero and are now in demand.', 'type' => 'text'],
         ];
 
         foreach ($settings as $setting) {

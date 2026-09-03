@@ -56,11 +56,6 @@ class Creator extends Model
         return $this->hasMany(Video::class);
     }
 
-    public function courses()
-    {
-        return $this->hasMany(Course::class, 'instructor_id');
-    }
-
     public function partnerCompanies()
     {
         return $this->belongsToMany(CreatorPartnerCompany::class, 'creator_partner_company_creator')
