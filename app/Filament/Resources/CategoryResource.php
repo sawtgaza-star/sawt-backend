@@ -32,17 +32,17 @@ class CategoryResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'فئات المحتوى';
+        return __('Content Categories');
     }
 
     public static function getModelLabel(): string
     {
-        return 'فئة';
+        return __('Category');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'فئات المحتوى';
+        return __('Content Categories');
     }
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -57,7 +57,7 @@ class CategoryResource extends Resource
         return $form->schema([
             Forms\Components\Section::make()->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('الاسم')
+                    ->label(__('الاسم'))
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) =>
@@ -65,18 +65,18 @@ class CategoryResource extends Resource
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('slug')
-                    ->label('الرابط (Slug)')
+                    ->label(__('الرابط (Slug)'))
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('sort_order')
-                    ->label('ترتيب العرض')
+                    ->label(__('ترتيب العرض'))
                     ->numeric()
                     ->default(0),
 
                 Forms\Components\Toggle::make('is_active')
-                    ->label('مفعّلة')
+                    ->label(__('مفعّلة'))
                     ->default(true),
             ])->columns(2),
         ]);
@@ -86,16 +86,16 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
+                Tables\Columns\TextColumn::make('name')->label(__('الاسم'))->searchable(),
                 Tables\Columns\TextColumn::make('slug')->label('Slug')->searchable(),
-                Tables\Columns\TextColumn::make('videos_count')->label('عدد الفيديوهات')->counts('videos'),
-                Tables\Columns\IconColumn::make('is_active')->label('مفعّلة')->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
+                Tables\Columns\TextColumn::make('videos_count')->label(__('عدد الفيديوهات'))->counts('videos'),
+                Tables\Columns\IconColumn::make('is_active')->label(__('مفعّلة'))->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')->label(__('الترتيب'))->sortable(),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->filters([
-                Tables\Filters\TernaryFilter::make('is_active')->label('الحالة'),
+                Tables\Filters\TernaryFilter::make('is_active')->label(__('الحالة')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

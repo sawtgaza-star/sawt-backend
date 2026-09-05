@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\SupportRequestController;
 use App\Http\Controllers\Api\SupportSubscriptionController;
 use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\IncubatorController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\StoryController;
 use App\Http\Controllers\Api\TeamController;
@@ -32,6 +33,11 @@ Route::prefix('layout')->name('layout.')->group(function () {
     Route::get('/incubator', [LayoutController::class, 'incubator'])->name('incubator');
     Route::get('/incubator/navbar', [LayoutController::class, 'incubatorNavbar'])->name('incubator.navbar');
     Route::get('/incubator/footer', [LayoutController::class, 'incubatorFooter'])->name('incubator.footer');
+
+    // Sawt Media chrome (separate from platform + incubator)
+    Route::get('/media', [LayoutController::class, 'media'])->name('media');
+    Route::get('/media/navbar', [LayoutController::class, 'mediaNavbar'])->name('media.navbar');
+    Route::get('/media/footer', [LayoutController::class, 'mediaFooter'])->name('media.footer');
 });
 
 // ===== Pages (home, about, team, creators, …) =====
@@ -56,6 +62,16 @@ Route::prefix('pages')->name('pages.')->group(function () {
 
     // Incubator landing (settings-driven sections + published course cards)
     Route::get('/incubator', [IncubatorController::class, 'show'])->name('incubator');
+
+    // Sawt Media landing + contact + services + works
+    Route::get('/media', [MediaController::class, 'show'])->name('media');
+    Route::get('/media/contact', [MediaController::class, 'contact'])->name('media.contact');
+    Route::post('/media/consultation', [MediaController::class, 'storeConsultation'])->name('media.consultation.submit');
+    Route::get('/media/services', [MediaController::class, 'services'])->name('media.services');
+    Route::get('/media/services/options', [MediaController::class, 'servicesOptions'])->name('media.services.options');
+    Route::get('/media/services/{slug}', [MediaController::class, 'service'])->name('media.services.show'); // slug or uuid
+    Route::get('/media/works', [MediaController::class, 'works'])->name('media.works');
+    Route::get('/media/works/{slug}', [MediaController::class, 'work'])->name('media.works.show'); // slug or uuid
 
     // Courses index (cards) + detail by slug or uuid
     Route::get('/courses', [CourseController::class, 'index'])->name('courses');

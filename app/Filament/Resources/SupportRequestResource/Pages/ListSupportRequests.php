@@ -24,7 +24,7 @@ class ListSupportRequests extends ListRecords
             ->pluck('aggregate', 'status');
 
         $tabs = [
-            'all' => Tab::make('الكل')->badge(SupportRequest::query()->count()),
+            'all' => Tab::make(__('All'))->badge(SupportRequest::query()->count()),
         ];
 
         foreach (SupportOptions::requestStatuses() as $status => $label) {

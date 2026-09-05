@@ -8,6 +8,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -45,12 +46,27 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
+            // Sidebar group order: product content first, admin/settings last
+            ->navigationGroups([
+                NavigationGroup::make()->label(fn (): string => __('Content')),
+                NavigationGroup::make()->label(fn (): string => __('Creators')),
+                NavigationGroup::make()->label(fn (): string => __('Courses')),
+                NavigationGroup::make()->label(fn (): string => __('Sawt Media')),
+                NavigationGroup::make()->label(fn (): string => __('Collaboration')),
+                NavigationGroup::make()->label(fn (): string => __('Finance')),
+                NavigationGroup::make()->label(fn (): string => __('Team')),
+                NavigationGroup::make()->label(fn (): string => __('Settings')),
+                NavigationGroup::make()->label(fn (): string => __('Administration')),
+                NavigationGroup::make()->label(fn (): string => __('filament-shield::filament-shield.nav.group')),
+            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 \App\Filament\Widgets\KpiOverview::class,
+                \App\Filament\Widgets\ContentStatsOverview::class,
                 \App\Filament\Widgets\DonationsChart::class,
-                \App\Filament\Widgets\TopVideosWidget::class,
+                \App\Filament\Widgets\LatestMediaConsultationsWidget::class,
                 \App\Filament\Widgets\LatestApplicationsWidget::class,
+                \App\Filament\Widgets\TopVideosWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

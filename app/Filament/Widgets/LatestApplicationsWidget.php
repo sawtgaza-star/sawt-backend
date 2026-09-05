@@ -12,11 +12,17 @@ use Illuminate\Support\Facades\Schema;
 
 class LatestApplicationsWidget extends BaseWidget
 {
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
 
     protected int|string|array $columnSpan = 1;
 
-    protected static ?string $heading = 'طلبات انضمام بانتظار المراجعة';
+    /**
+     * TableWidget reads getTableHeading() (not getHeading()) for the card title.
+     */
+    protected function getTableHeading(): ?string
+    {
+        return __('طلبات انضمام بانتظار المراجعة');
+    }
 
     public static function canView(): bool
     {
@@ -28,17 +34,17 @@ class LatestApplicationsWidget extends BaseWidget
         return $table
             ->query($this->requestsQuery())
             ->columns([
-                Tables\Columns\TextColumn::make('full_name')->label('الاسم'),
-                Tables\Columns\TextColumn::make('email')->label('البريد')->limit(24),
-                Tables\Columns\TextColumn::make('created_at')->label('تاريخ التقديم')->since(),
+                Tables\Columns\TextColumn::make('full_name')->label(__('الاسم')),
+                Tables\Columns\TextColumn::make('email')->label(__('البريد'))->limit(24),
+                Tables\Columns\TextColumn::make('created_at')->label(__('تاريخ التقديم'))->since(),
             ])
             ->actions([
                 Tables\Actions\Action::make('view')
-                    ->label('مراجعة')
+                    ->label(__('مراجعة'))
                     ->url(fn (CreatorJoinRequest $record) => CreatorJoinRequestResource::getUrl('view', ['record' => $record])),
             ])
             ->paginated(false)
-            ->emptyStateHeading('لا توجد طلبات معلقة')
+            ->emptyStateHeading(__('لا توجد طلبات معلقة'))
             ->emptyStateIcon('heroicon-o-inbox');
     }
 

@@ -64,44 +64,44 @@ class AdminResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('مدير لوحة التحكم')->schema([
-                Forms\Components\TextInput::make('name')->label('الاسم')->required(),
-                Forms\Components\TextInput::make('email')->label('البريد الإلكتروني')->email()->required()->unique(ignoreRecord: true),
-                Forms\Components\TextInput::make('phone')->label('الهاتف'),
+            Forms\Components\Section::make(__('مدير لوحة التحكم'))->schema([
+                Forms\Components\TextInput::make('name')->label(__('الاسم'))->required(),
+                Forms\Components\TextInput::make('email')->label(__('البريد الإلكتروني'))->email()->required()->unique(ignoreRecord: true),
+                Forms\Components\TextInput::make('phone')->label(__('الهاتف')),
 
                 Forms\Components\TextInput::make('password')
-                    ->label('كلمة المرور')
+                    ->label(__('كلمة المرور'))
                     ->password()
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $operation) => $operation === 'create'),
 
                 Forms\Components\FileUpload::make('avatar')
-                    ->label('الصورة الشخصية')
+                    ->label(__('الصورة الشخصية'))
                     ->image()
                     ->disk('public')
                     ->directory('users/avatars')
                     ->visibility('public'),
 
                 Forms\Components\Select::make('status')
-                    ->label('الحالة')
-                    ->options(['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور'])
+                    ->label(__('الحالة'))
+                    ->options(['active' => __('نشط'), 'inactive' => __('غير نشط'), 'banned' => 'محظور'])
                     ->default('active')
                     ->required(),
 
                 Forms\Components\Select::make('type')
-                    ->label('النوع')
+                    ->label(__('النوع'))
                     ->options([
-                        User::TYPE_ADMIN => 'مدير',
-                        User::TYPE_USER => 'مستخدم',
-                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                        User::TYPE_ADMIN => __('مدير'),
+                        User::TYPE_USER => __('مستخدم'),
+                        User::TYPE_CONTENT_CREATOR => __('صانع محتوى'),
                     ])
                     ->default(User::TYPE_ADMIN)
                     ->disabled()
                     ->dehydrated()
-                    ->helperText('حسابات لوحة التحكم نوعها admin دائماً.'),
+                    ->helperText(__('حسابات لوحة التحكم نوعها admin دائماً.')),
 
                 Forms\Components\Select::make('roles')
-                    ->label('أدوار Filament')
+                    ->label(__('أدوار Filament'))
                     ->relationship(
                         name: 'roles',
                         titleAttribute: 'name',
@@ -110,7 +110,7 @@ class AdminResource extends Resource
                     ->multiple()
                     ->preload()
                     ->required()
-                    ->helperText('super_admin / admin / moderator فقط — لا يُمنح دور user'),
+                    ->helperText(__('super_admin / admin / moderator فقط — لا يُمنح دور user')),
             ])->columns(2),
         ]);
     }
@@ -120,28 +120,28 @@ class AdminResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('avatar', '')->circular()->height(40),
-                Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('البريد')->searchable(),
-                Tables\Columns\TextColumn::make('roles.name')->label('الأدوار')->badge(),
-                Tables\Columns\BadgeColumn::make('type')->label('النوع')
+                Tables\Columns\TextColumn::make('name')->label(__('الاسم'))->searchable(),
+                Tables\Columns\TextColumn::make('email')->label(__('البريد'))->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')->label(__('الأدوار'))->badge(),
+                Tables\Columns\BadgeColumn::make('type')->label(__('النوع'))
                     ->colors(['danger' => User::TYPE_ADMIN])
                     ->formatStateUsing(fn (?string $state) => match ($state) {
-                        User::TYPE_ADMIN => 'مدير',
-                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
-                        default => 'مستخدم',
+                        User::TYPE_ADMIN => __('مدير'),
+                        User::TYPE_CONTENT_CREATOR => __('صانع محتوى'),
+                        default => __('مستخدم'),
                     }),
-                Tables\Columns\BadgeColumn::make('status')->label('الحالة')
+                Tables\Columns\BadgeColumn::make('status')->label(__('الحالة'))
                     ->colors(['success' => 'active', 'gray' => 'inactive', 'danger' => 'banned'])
-                    ->formatStateUsing(fn (string $state) => ['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور'][$state] ?? $state),
-                Tables\Columns\TextColumn::make('created_at')->label('انضم في')->dateTime('Y-m-d')->sortable(),
+                    ->formatStateUsing(fn (string $state) => ['active' => __('نشط'), 'inactive' => __('غير نشط'), 'banned' => 'محظور'][$state] ?? $state),
+                Tables\Columns\TextColumn::make('created_at')->label(__('انضم في'))->dateTime('Y-m-d')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('الحالة')
-                    ->options(['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور']),
+                    ->label(__('الحالة'))
+                    ->options(['active' => __('نشط'), 'inactive' => __('غير نشط'), 'banned' => 'محظور']),
                 Tables\Filters\SelectFilter::make('roles')
-                    ->label('الدور')
+                    ->label(__('الدور'))
                     ->relationship(
                         name: 'roles',
                         titleAttribute: 'name',

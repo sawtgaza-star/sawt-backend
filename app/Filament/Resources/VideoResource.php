@@ -35,17 +35,17 @@ class VideoResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'الريلز / الفيديوهات';
+        return __('Reels / Videos');
     }
 
     public static function getModelLabel(): string
     {
-        return 'ريل / فيديو';
+        return __('Reel / Video');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'الريلز / الفيديوهات';
+        return __('Reels / Videos');
     }
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -67,9 +67,9 @@ class VideoResource extends Resource
     {
         return $form->schema([
             Forms\Components\Group::make()->columnSpan(2)->schema([
-                Forms\Components\Section::make('المحتوى')->schema([
+                Forms\Components\Section::make(__('المحتوى'))->schema([
                     Forms\Components\TextInput::make('title')
-                        ->label('العنوان')
+                        ->label(__('العنوان'))
                         ->required()
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) =>
@@ -77,20 +77,20 @@ class VideoResource extends Resource
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('slug')
-                        ->label('الرابط (Slug)')
+                        ->label(__('الرابط (Slug)'))
                         ->required()
                         ->unique(ignoreRecord: true)
                         ->maxLength(255),
 
                     Forms\Components\Textarea::make('description')
-                        ->label('الوصف')
+                        ->label(__('الوصف'))
                         ->rows(4),
 
-                    Forms\Components\TextInput::make('video_url')->label('رابط الفيديو')->url(),
-                    Forms\Components\TextInput::make('audio_url')->label('رابط الصوت')->url(),
+                    Forms\Components\TextInput::make('video_url')->label(__('رابط الفيديو'))->url(),
+                    Forms\Components\TextInput::make('audio_url')->label(__('رابط الصوت'))->url(),
 
                     Forms\Components\FileUpload::make('cover_url')
-                        ->label('صورة الغلاف')
+                        ->label(__('صورة الغلاف'))
                         ->image()
                         ->disk('public')
                         ->directory('videos/covers')
@@ -98,47 +98,47 @@ class VideoResource extends Resource
                         ->imagePreviewHeight('200'),
 
                     Forms\Components\TextInput::make('duration_seconds')
-                        ->label('المدة (ثانية)')
+                        ->label(__('المدة (ثانية)'))
                         ->numeric(),
                 ])->columns(2),
             ]),
 
             Forms\Components\Group::make()->columnSpan(1)->schema([
-                Forms\Components\Section::make('النشر')->schema([
+                Forms\Components\Section::make(__('النشر'))->schema([
                     Forms\Components\Select::make('creator_id')
-                        ->label('صانع المحتوى')
+                        ->label(__('صانع المحتوى'))
                         ->relationship('creator', 'username')
                         ->searchable()
                         ->preload()
                         ->required(),
 
                     Forms\Components\Select::make('category_id')
-                        ->label('الفئة')
+                        ->label(__('الفئة'))
                         ->relationship('category', 'name')
                         ->searchable()
                         ->preload(),
 
                     Forms\Components\Select::make('status')
-                        ->label('الحالة')
+                        ->label(__('الحالة'))
                         ->options([
-                            'draft' => 'مسودة',
-                            'published' => 'منشور',
-                            'scheduled' => 'مجدوَل',
-                            'archived' => 'مؤرشف',
+                            'draft' => __('مسودة'),
+                            'published' => __('منشور'),
+                            'scheduled' => __('مجدوَل'),
+                            'archived' => __('مؤرشف'),
                         ])
                         ->default('draft')
                         ->required(),
 
                     Forms\Components\DateTimePicker::make('published_at')
-                        ->label('تاريخ النشر'),
+                        ->label(__('تاريخ النشر')),
 
-                    Forms\Components\Toggle::make('is_featured')->label('مميّز'),
+                    Forms\Components\Toggle::make('is_featured')->label(__('مميّز')),
                 ]),
 
-                Forms\Components\Section::make('الإحصائيات')->schema([
-                    Forms\Components\TextInput::make('play_count')->label('المشاهدات')->numeric()->default(0),
-                    Forms\Components\TextInput::make('like_count')->label('الإعجابات')->numeric()->default(0),
-                    Forms\Components\TextInput::make('comment_count')->label('التعليقات')->numeric()->default(0),
+                Forms\Components\Section::make(__('الإحصائيات'))->schema([
+                    Forms\Components\TextInput::make('play_count')->label(__('المشاهدات'))->numeric()->default(0),
+                    Forms\Components\TextInput::make('like_count')->label(__('الإعجابات'))->numeric()->default(0),
+                    Forms\Components\TextInput::make('comment_count')->label(__('التعليقات'))->numeric()->default(0),
                 ])->collapsed(),
             ]),
         ])->columns(3);
@@ -149,10 +149,10 @@ class VideoResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('cover_url', '')->height(48)->square(),
-                Tables\Columns\TextColumn::make('title')->label('العنوان')->searchable()->limit(40),
-                Tables\Columns\TextColumn::make('creator.username')->label('صانع المحتوى')->searchable(),
-                Tables\Columns\TextColumn::make('category.name')->label('الفئة'),
-                Tables\Columns\BadgeColumn::make('status')->label('الحالة')
+                Tables\Columns\TextColumn::make('title')->label(__('العنوان'))->searchable()->limit(40),
+                Tables\Columns\TextColumn::make('creator.username')->label(__('صانع المحتوى'))->searchable(),
+                Tables\Columns\TextColumn::make('category.name')->label(__('الفئة')),
+                Tables\Columns\BadgeColumn::make('status')->label(__('الحالة'))
                     ->colors([
                         'gray' => 'draft',
                         'success' => 'published',
@@ -160,25 +160,25 @@ class VideoResource extends Resource
                         'danger' => 'archived',
                     ])
                     ->formatStateUsing(fn (string $state) => [
-                        'draft' => 'مسودة', 'published' => 'منشور',
-                        'scheduled' => 'مجدوَل', 'archived' => 'مؤرشف',
+                        'draft' => __('مسودة'), 'published' => __('منشور'),
+                        'scheduled' => __('مجدوَل'), 'archived' => __('مؤرشف'),
                     ][$state] ?? $state),
-                Tables\Columns\TextColumn::make('play_count')->label('المشاهدات')->numeric()->sortable(),
-                Tables\Columns\IconColumn::make('is_featured')->label('مميّز')->boolean(),
-                Tables\Columns\TextColumn::make('published_at')->label('النشر')->dateTime('Y-m-d')->sortable(),
+                Tables\Columns\TextColumn::make('play_count')->label(__('المشاهدات'))->numeric()->sortable(),
+                Tables\Columns\IconColumn::make('is_featured')->label(__('مميّز'))->boolean(),
+                Tables\Columns\TextColumn::make('published_at')->label(__('النشر'))->dateTime('Y-m-d')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->options([
-                        'draft' => 'مسودة', 'published' => 'منشور',
-                        'scheduled' => 'مجدوَل', 'archived' => 'مؤرشف',
+                        'draft' => __('مسودة'), 'published' => __('منشور'),
+                        'scheduled' => __('مجدوَل'), 'archived' => __('مؤرشف'),
                     ]),
                 Tables\Filters\SelectFilter::make('category_id')
-                    ->label('الفئة')
+                    ->label(__('الفئة'))
                     ->relationship('category', 'name'),
-                Tables\Filters\TernaryFilter::make('is_featured')->label('مميّز'),
+                Tables\Filters\TernaryFilter::make('is_featured')->label(__('مميّز')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

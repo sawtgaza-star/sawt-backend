@@ -123,7 +123,7 @@ trait ProvisionsCreatorUser
     protected function notifyContentCreatorType(User $user): void
     {
         Notification::make()
-            ->title('تم حفظ حساب صانع المحتوى')
+            ->title(__('تم حفظ حساب صانع المحتوى'))
             ->body($user->email)
             ->success()
             ->send();

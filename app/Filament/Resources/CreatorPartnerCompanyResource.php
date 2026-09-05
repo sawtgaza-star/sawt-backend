@@ -50,12 +50,12 @@ class CreatorPartnerCompanyResource extends Resource
     {
         return $form->schema([
             Forms\Components\TextInput::make('name')
-                ->label('اسم الشركة')
+                ->label(__('اسم الشركة'))
                 ->required()
                 ->maxLength(255),
 
             Forms\Components\FileUpload::make('logo')
-                ->label('الشعار')
+                ->label(__('الشعار'))
                 ->image()
                 ->disk('public')
                 ->directory('creators/partners')
@@ -64,26 +64,26 @@ class CreatorPartnerCompanyResource extends Resource
                 ->columnSpanFull(),
 
             Forms\Components\TextInput::make('url')
-                ->label('الموقع / الرابط')
+                ->label(__('الموقع / الرابط'))
                 ->url()
                 ->maxLength(255),
 
             Forms\Components\Select::make('creators')
-                ->label('صناع المحتوى المرتبطون')
+                ->label(__('صناع المحتوى المرتبطون'))
                 ->relationship('creators', 'username')
                 ->multiple()
                 ->searchable()
                 ->preload()
-                ->helperText('يظهرون كصور صغيرة أسفل بطاقة الشركة')
+                ->helperText(__('يظهرون كصور صغيرة أسفل بطاقة الشركة'))
                 ->columnSpanFull(),
 
             Forms\Components\TextInput::make('sort_order')
-                ->label('ترتيب العرض')
+                ->label(__('ترتيب العرض'))
                 ->numeric()
                 ->default(0),
 
             Forms\Components\Toggle::make('is_active')
-                ->label('مفعّل')
+                ->label(__('مفعّل'))
                 ->default(true),
         ])->columns(2);
     }
@@ -93,12 +93,12 @@ class CreatorPartnerCompanyResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('logo', '')->height(40),
-                Tables\Columns\TextColumn::make('name')->label('الشركة')->searchable(),
+                Tables\Columns\TextColumn::make('name')->label(__('الشركة'))->searchable(),
                 Tables\Columns\TextColumn::make('creators_count')
-                    ->label('صناع المحتوى')
+                    ->label(__('صناع المحتوى'))
                     ->counts('creators'),
-                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
-                Tables\Columns\IconColumn::make('is_active')->label('مفعّل')->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')->label(__('الترتيب'))->sortable(),
+                Tables\Columns\IconColumn::make('is_active')->label(__('مفعّل'))->boolean(),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')

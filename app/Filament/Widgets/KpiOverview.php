@@ -2,15 +2,23 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Creator;
+use App\Filament\Resources\CreatorJoinRequestResource;
+use App\Filament\Resources\DonationResource;
+use App\Filament\Resources\MediaConsultationRequestResource;
+use App\Filament\Resources\SupportRequestResource;
+use App\Models\CollaborationJoinRequest;
+use App\Models\CreatorJoinRequest;
 use App\Models\Donation;
-use App\Models\User;
-use App\Models\Video;
+use App\Models\MediaConsultationRequest;
+use App\Models\SupportRequest;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
 
+/**
+ * Top dashboard row — pending work that needs admin attention today.
+ */
 class KpiOverview extends BaseWidget
 {
     protected static ?int $sort = 1;
@@ -23,19 +31,24 @@ class KpiOverview extends BaseWidget
     protected function getStats(): array
     {
         try {
-            $activeCreators = Schema::hasTable('creators')
-                ? Creator::query()->where('status', 'active')->count()
+            $pendingConsultations = Schema::hasTable('media_consultation_requests')
+                ? MediaConsultationRequest::query()->pending()->count()
                 : 0;
-            $totalCreators = Schema::hasTable('creators') ? Creator::count() : 0;
 
-            $publishedVideos = Schema::hasTable('videos')
-                ? Video::query()->where('status', 'published')->count()
+            $pendingCreatorJoins = Schema::hasTable('creator_join_requests')
+                ? CreatorJoinRequest::query()->pending()->count()
                 : 0;
-            $totalVideos = Schema::hasTable('videos') ? Video::count() : 0;
+
+            $pendingSupport = Schema::hasTable('support_requests')
+                ? SupportRequest::query()->pending()->count()
+                : 0;
+
+            $pendingCollab = Schema::hasTable('collaboration_join_requests')
+                ? CollaborationJoinRequest::query()->pending()->count()
+                : 0;
 
             $donationsThisMonth = 0.0;
             $donationsLastMonth = 0.0;
-
             if (Schema::hasTable('donations')) {
                 $donationsThisMonth = (float) Donation::succeeded()->thisMonth()->sum('amount');
                 $donationsLastMonth = (float) Donation::succeeded()
@@ -54,35 +67,37 @@ class KpiOverview extends BaseWidget
                     ? "+{$donationsTrend}% ".__('vs last month')
                     : "{$donationsTrend}% ".__('vs last month'));
 
-            $totalUsers = Schema::hasTable('users') ? User::count() : 0;
-
             return [
-                Stat::make(__('Total Users'), $totalUsers)
-                    ->description(__('All registered accounts'))
-                    ->descriptionIcon('heroicon-m-users')
-                    ->color('gray'),
+                Stat::make(__('استشارات ميديا معلّقة'), $pendingConsultations)
+                    ->description(__('بانتظار المراجعة'))
+                    ->descriptionIcon('heroicon-m-calendar-days')
+                    ->color($pendingConsultations > 0 ? 'warning' : 'gray')
+                    ->url(MediaConsultationRequestResource::getUrl('index')),
 
-                Stat::make(__('Donations This Month'), number_format($donationsThisMonth, 2).' $')
+                Stat::make(__('طلبات انضمام معلّقة'), $pendingCreatorJoins)
+                    ->description(__('صنّاع المحتوى'))
+                    ->descriptionIcon('heroicon-m-user-plus')
+                    ->color($pendingCreatorJoins > 0 ? 'warning' : 'gray')
+                    ->url(CreatorJoinRequestResource::getUrl('index')),
+
+                Stat::make(__('طلبات دعم معلّقة'), $pendingSupport)
+                    ->description($pendingCollab.' '.__('طلبات تعاون معلّقة'))
+                    ->descriptionIcon('heroicon-m-heart')
+                    ->color($pendingSupport > 0 ? 'danger' : 'gray')
+                    ->url(SupportRequestResource::getUrl('index')),
+
+                Stat::make(__('تبرعات هذا الشهر'), number_format($donationsThisMonth, 2).' $')
                     ->description($trendDescription)
                     ->descriptionIcon($donationsTrend !== null && $donationsTrend < 0 ? 'heroicon-m-arrow-trending-down' : 'heroicon-m-arrow-trending-up')
-                    ->color($donationsTrend !== null && $donationsTrend < 0 ? 'danger' : 'success'),
-
-                Stat::make(__('Published Videos'), $publishedVideos)
-                    ->description($totalVideos.' '.__('total'))
-                    ->descriptionIcon('heroicon-m-play-circle')
-                    ->color('success'),
-
-                Stat::make(__('Active Creators'), $activeCreators)
-                    ->description($totalCreators.' '.__('total'))
-                    ->descriptionIcon('heroicon-m-microphone')
-                    ->color('primary'),
+                    ->color($donationsTrend !== null && $donationsTrend < 0 ? 'danger' : 'success')
+                    ->url(DonationResource::getUrl('index')),
             ];
         } catch (Throwable) {
             return [
-                Stat::make(__('Total Users'), 0)->description(__('All registered accounts'))->color('gray'),
-                Stat::make(__('Donations This Month'), '0.00 $')->description(__('No comparison data'))->color('success'),
-                Stat::make(__('Published Videos'), 0)->description('0 '.__('total'))->color('success'),
-                Stat::make(__('Active Creators'), 0)->description('0 '.__('total'))->color('primary'),
+                Stat::make(__('استشارات ميديا معلّقة'), 0)->color('gray'),
+                Stat::make(__('طلبات انضمام معلّقة'), 0)->color('gray'),
+                Stat::make(__('طلبات دعم معلّقة'), 0)->color('gray'),
+                Stat::make(__('تبرعات هذا الشهر'), '0.00 $')->color('success'),
             ];
         }
     }

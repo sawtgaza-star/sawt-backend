@@ -27,7 +27,7 @@ class SocialsRelationManager extends RelationManager
     {
         return $form->schema([
             Forms\Components\Select::make('platform')
-                ->label('المنصة')
+                ->label(__('المنصة'))
                 ->options([
                     'instagram' => 'Instagram',
                     'facebook' => 'Facebook',
@@ -36,23 +36,23 @@ class SocialsRelationManager extends RelationManager
                     'youtube' => 'YouTube',
                     'tiktok' => 'TikTok',
                     'telegram' => 'Telegram',
-                    'other' => 'أخرى',
+                    'other' => __('أخرى'),
                 ])
                 ->required(),
 
             Forms\Components\TextInput::make('url')
-                ->label('الرابط')
+                ->label(__('الرابط'))
                 ->url()
                 ->required()
                 ->maxLength(255),
 
             Forms\Components\TextInput::make('followers_count')
-                ->label('عدد المتابعين')
+                ->label(__('عدد المتابعين'))
                 ->numeric()
                 ->default(0),
 
             Forms\Components\TextInput::make('display_order')
-                ->label('ترتيب العرض')
+                ->label(__('ترتيب العرض'))
                 ->numeric()
                 ->default(0),
         ])->columns(2);
@@ -63,10 +63,10 @@ class SocialsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('platform')
             ->columns([
-                Tables\Columns\TextColumn::make('platform')->label('المنصة'),
-                Tables\Columns\TextColumn::make('url')->label('الرابط')->limit(40),
-                Tables\Columns\TextColumn::make('followers_count')->label('المتابعون')->numeric(),
-                Tables\Columns\TextColumn::make('display_order')->label('الترتيب')->sortable(),
+                Tables\Columns\TextColumn::make('platform')->label(__('المنصة')),
+                Tables\Columns\TextColumn::make('url')->label(__('الرابط'))->limit(40),
+                Tables\Columns\TextColumn::make('followers_count')->label(__('المتابعون'))->numeric(),
+                Tables\Columns\TextColumn::make('display_order')->label(__('الترتيب'))->sortable(),
             ])
             ->defaultSort('display_order')
             ->headerActions([

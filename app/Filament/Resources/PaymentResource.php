@@ -24,12 +24,12 @@ class PaymentResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'دفعة';
+        return __('Payment');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'المدفوعات';
+        return __('Payments');
     }
 
     // قراءة فقط — المدفوعات يُنشئها النظام عبر PayPal
@@ -43,29 +43,29 @@ class PaymentResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('uuid')->label('المرجع')->searchable()->copyable()->limit(8),
-                Tables\Columns\TextColumn::make('payable_type')->label('النوع')->badge()
+                Tables\Columns\TextColumn::make('uuid')->label(__('المرجع'))->searchable()->copyable()->limit(8),
+                Tables\Columns\TextColumn::make('payable_type')->label(__('النوع'))->badge()
                     ->formatStateUsing(fn ($state) => str_contains($state, 'Donation') ? 'تبرع' : (str_contains($state, 'Course') ? 'كورس' : class_basename($state)))
                     ->color(fn ($state) => str_contains($state, 'Donation') ? 'info' : 'warning'),
-                Tables\Columns\TextColumn::make('amount')->label('المبلغ')->money(fn ($record) => $record->currency)->sortable(),
-                Tables\Columns\TextColumn::make('status')->label('الحالة')->badge()
+                Tables\Columns\TextColumn::make('amount')->label(__('المبلغ'))->money(fn ($record) => $record->currency)->sortable(),
+                Tables\Columns\TextColumn::make('status')->label(__('الحالة'))->badge()
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'completed',
                         'danger' => 'failed',
                         'gray' => 'refunded',
                     ]),
-                Tables\Columns\TextColumn::make('payer_name')->label('الدافع')->searchable()->toggleable(),
-                Tables\Columns\TextColumn::make('payer_email')->label('البريد')->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('payer_name')->label(__('الدافع'))->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('payer_email')->label(__('البريد'))->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('gateway_capture_id')->label('PayPal')->searchable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('paid_at')->label('تاريخ الدفع')->dateTime()->sortable(),
+                Tables\Columns\TextColumn::make('paid_at')->label(__('تاريخ الدفع'))->dateTime()->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')->label('الحالة')->options([
-                    'pending' => 'قيد الانتظار',
-                    'completed' => 'مكتمل',
-                    'failed' => 'فشل',
-                    'refunded' => 'مُسترجع',
+                Tables\Filters\SelectFilter::make('status')->label(__('الحالة'))->options([
+                    'pending' => __('قيد الانتظار'),
+                    'completed' => __('مكتمل'),
+                    'failed' => __('فشل'),
+                    'refunded' => __('مُسترجع'),
                 ]),
             ])
             ->actions([

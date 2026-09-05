@@ -67,33 +67,33 @@ class DonationResource extends Resource
     {
         return $form->schema([
             Forms\Components\Select::make('campaign_id')
-                ->label('الحملة')
+                ->label(__('الحملة'))
                 ->relationship('campaign', 'title')
                 ->searchable()
                 ->preload(),
 
             Forms\Components\Select::make('user_id')
-                ->label('حساب مستخدم (اختياري)')
+                ->label(__('حساب مستخدم (اختياري)'))
                 ->relationship('user', 'name')
                 ->searchable()
                 ->preload(),
 
-            Forms\Components\TextInput::make('donor_name')->label('اسم المتبرع'),
-            Forms\Components\TextInput::make('donor_email')->label('بريد المتبرع')->email(),
+            Forms\Components\TextInput::make('donor_name')->label(__('اسم المتبرع')),
+            Forms\Components\TextInput::make('donor_email')->label(__('بريد المتبرع'))->email(),
 
-            Forms\Components\TextInput::make('amount')->label('المبلغ')->numeric()->required(),
-            Forms\Components\TextInput::make('currency')->label('العملة')->default('USD')->maxLength(3),
+            Forms\Components\TextInput::make('amount')->label(__('المبلغ'))->numeric()->required(),
+            Forms\Components\TextInput::make('currency')->label(__('العملة'))->default('USD')->maxLength(3),
 
             Forms\Components\Select::make('payment_method')
-                ->label('طريقة الدفع')
-                ->options(['card' => 'بطاقة', 'bank_transfer' => 'تحويل بنكي', 'paypal' => 'PayPal'])
+                ->label(__('طريقة الدفع'))
+                ->options(['card' => __('بطاقة'), 'bank_transfer' => __('تحويل بنكي'), 'paypal' => 'PayPal'])
                 ->required(),
 
             Forms\Components\Select::make('status')
-                ->label('الحالة')
+                ->label(__('الحالة'))
                 ->options([
-                    'pending' => 'قيد الانتظار', 'succeeded' => 'ناجح',
-                    'failed' => 'فاشل', 'refunded' => 'مسترجَع',
+                    'pending' => __('قيد الانتظار'), 'succeeded' => __('ناجح'),
+                    'failed' => __('فاشل'), 'refunded' => __('مسترجَع'),
                 ])
                 ->default('pending')
                 ->required(),
@@ -104,29 +104,29 @@ class DonationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('campaign.title')->label('الحملة')->searchable()->limit(30)->placeholder('—'),
-                Tables\Columns\TextColumn::make('donor_name')->label('المتبرع')->searchable()->placeholder('ضيف'),
-                Tables\Columns\TextColumn::make('amount')->label('المبلغ')->money(fn ($record) => $record->currency ?? 'USD')->sortable(),
-                Tables\Columns\TextColumn::make('payment_method')->label('طريقة الدفع')
-                    ->formatStateUsing(fn (string $state) => ['card' => 'بطاقة', 'bank_transfer' => 'تحويل بنكي', 'paypal' => 'PayPal'][$state] ?? $state),
+                Tables\Columns\TextColumn::make('campaign.title')->label(__('الحملة'))->searchable()->limit(30)->placeholder('—'),
+                Tables\Columns\TextColumn::make('donor_name')->label(__('المتبرع'))->searchable()->placeholder(__('ضيف')),
+                Tables\Columns\TextColumn::make('amount')->label(__('المبلغ'))->money(fn ($record) => $record->currency ?? 'USD')->sortable(),
+                Tables\Columns\TextColumn::make('payment_method')->label(__('طريقة الدفع'))
+                    ->formatStateUsing(fn (string $state) => ['card' => __('بطاقة'), 'bank_transfer' => __('تحويل بنكي'), 'paypal' => 'PayPal'][$state] ?? $state),
                 Tables\Columns\SelectColumn::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->options([
-                        'pending' => 'قيد الانتظار', 'succeeded' => 'ناجح',
-                        'failed' => 'فاشل', 'refunded' => 'مسترجَع',
+                        'pending' => __('قيد الانتظار'), 'succeeded' => __('ناجح'),
+                        'failed' => __('فاشل'), 'refunded' => __('مسترجَع'),
                     ]),
-                Tables\Columns\TextColumn::make('created_at')->label('التاريخ')->dateTime('Y-m-d H:i')->sortable(),
+                Tables\Columns\TextColumn::make('created_at')->label(__('التاريخ'))->dateTime('Y-m-d H:i')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->options([
-                        'pending' => 'قيد الانتظار', 'succeeded' => 'ناجح',
-                        'failed' => 'فاشل', 'refunded' => 'مسترجَع',
+                        'pending' => __('قيد الانتظار'), 'succeeded' => __('ناجح'),
+                        'failed' => __('فاشل'), 'refunded' => __('مسترجَع'),
                     ]),
                 Tables\Filters\SelectFilter::make('campaign_id')
-                    ->label('الحملة')
+                    ->label(__('الحملة'))
                     ->relationship('campaign', 'title'),
             ])
             ->actions([

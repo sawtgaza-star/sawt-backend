@@ -33,8 +33,14 @@ Public. No auth.
 | `GET` | `/api/v1/layout/incubator` | **Incubator** navbar + footer |
 | `GET` | `/api/v1/layout/incubator/navbar` | Incubator navbar only |
 | `GET` | `/api/v1/layout/incubator/footer` | Incubator footer only |
+| `GET` | `/api/v1/layout/media` | **Sawt Media** navbar + footer |
+| `GET` | `/api/v1/layout/media/navbar` | Media navbar only |
+| `GET` | `/api/v1/layout/media/footer` | Media footer only |
 
-Incubator layout is edited under **الإعدادات → إعدادات الحاضنة**. See [INCUBATOR_API.md](./INCUBATOR_API.md).
+Media navbar CTA `start_project` → path `/media/contact` (page API: `GET /api/v1/pages/media/contact`).
+
+Incubator layout: **الإعدادات → إعدادات الحاضنة** — [INCUBATOR_API.md](./INCUBATOR_API.md).  
+Media layout: **الإعدادات → إعدادات ميديا** — [MEDIA_API.md](./MEDIA_API.md).
 
 ### Navbar
 

@@ -49,24 +49,24 @@ class CreatorFaqResource extends Resource
     {
         return $form->schema([
             Forms\Components\TextInput::make('question')
-                ->label('السؤال')
+                ->label(__('السؤال'))
                 ->required()
                 ->maxLength(500)
                 ->columnSpanFull(),
 
             Forms\Components\Textarea::make('answer')
-                ->label('الإجابة')
+                ->label(__('الإجابة'))
                 ->required()
                 ->rows(5)
                 ->columnSpanFull(),
 
             Forms\Components\TextInput::make('sort_order')
-                ->label('ترتيب العرض')
+                ->label(__('ترتيب العرض'))
                 ->numeric()
                 ->default(0),
 
             Forms\Components\Toggle::make('is_active')
-                ->label('مفعّل')
+                ->label(__('مفعّل'))
                 ->default(true),
         ])->columns(2);
     }
@@ -75,9 +75,9 @@ class CreatorFaqResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('question')->label('السؤال')->limit(60)->searchable(),
-                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
-                Tables\Columns\IconColumn::make('is_active')->label('مفعّل')->boolean(),
+                Tables\Columns\TextColumn::make('question')->label(__('السؤال'))->limit(60)->searchable(),
+                Tables\Columns\TextColumn::make('sort_order')->label(__('الترتيب'))->sortable(),
+                Tables\Columns\IconColumn::make('is_active')->label(__('مفعّل'))->boolean(),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')

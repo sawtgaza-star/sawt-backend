@@ -26,4 +26,20 @@ enum CollaborationTypeKey: string
             self::Other => 'تعاون آخر',
         };
     }
+
+    public function labelEn(): string
+    {
+        return match ($this) {
+            self::Creator => 'Content creator',
+            self::Sponsorship => 'Sponsorship / funding',
+            self::Partnership => 'Strategic partnership',
+            self::Other => 'Other collaboration',
+        };
+    }
+
+    /** Label for current Filament UI locale. */
+    public function label(): string
+    {
+        return app()->getLocale() === 'en' ? $this->labelEn() : $this->labelAr();
+    }
 }

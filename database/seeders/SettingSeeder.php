@@ -286,6 +286,24 @@ class SettingSeeder extends Seeder
             ['group' => 'incubator', 'key' => 'incubator_testimonials_title_en', 'value' => 'Graduate testimonials', 'type' => 'string'],
             ['group' => 'incubator', 'key' => 'incubator_testimonials_subtitle_ar', 'value' => 'اكتشف كيف غيّرت حاضنة صوت حياة المئات من الطلاب الذين بدأوا رحلتهم من الصفر وأصبحوا اليوم محترفين مطلوبين في سوق العمل.', 'type' => 'text'],
             ['group' => 'incubator', 'key' => 'incubator_testimonials_subtitle_en', 'value' => 'See how Sawt Incubator changed the lives of hundreds of students who started from zero and are now in demand.', 'type' => 'text'],
+
+            // صوت ميديا — chrome defaults (landing defaults live in MediaSettings::fieldMeta)
+            ['group' => 'media', 'key' => 'media_site_name', 'value' => 'صوت ميديا', 'type' => 'string'],
+            ['group' => 'media', 'key' => 'media_back_label_ar', 'value' => 'العودة لمنصة صوت', 'type' => 'string'],
+            ['group' => 'media', 'key' => 'media_back_label_en', 'value' => 'Back to Sawt Platform', 'type' => 'string'],
+            ['group' => 'media', 'key' => 'media_nav_start_label_ar', 'value' => 'ابدأ مشروعك', 'type' => 'string'],
+            ['group' => 'media', 'key' => 'media_nav_start_label_en', 'value' => 'Start your project', 'type' => 'string'],
+            // Navbar CTA is start_project only (no book-consultation button)
+            ['group' => 'media', 'key' => 'media_nav_links', 'value' => json_encode([
+                ['key' => 'methodology', 'label_ar' => 'منهجيتنا', 'label_en' => 'Our methodology', 'is_visible' => true],
+                ['key' => 'services', 'label_ar' => 'خدماتنا', 'label_en' => 'Our services', 'is_visible' => true],
+                ['key' => 'works', 'label_ar' => 'أعمالنا', 'label_en' => 'Our work', 'is_visible' => true],
+                ['key' => 'about', 'label_ar' => 'عن صوت ميديا', 'label_en' => 'About Sawt Media', 'is_visible' => true],
+            ], JSON_UNESCAPED_UNICODE), 'type' => 'json'],
+            ['group' => 'media', 'key' => 'media_hero_eyebrow_ar', 'value' => 'صوت ميديا تقدم', 'type' => 'string'],
+            ['group' => 'media', 'key' => 'media_hero_eyebrow_en', 'value' => 'Sawt Media presents', 'type' => 'string'],
+            ['group' => 'media', 'key' => 'media_about_title_ar', 'value' => 'شريكك الإعلامي المتكامل', 'type' => 'string'],
+            ['group' => 'media', 'key' => 'media_about_title_en', 'value' => 'Your complete media partner', 'type' => 'string'],
         ];
 
         foreach ($settings as $setting) {

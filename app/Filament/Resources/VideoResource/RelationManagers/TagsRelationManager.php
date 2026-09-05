@@ -29,15 +29,15 @@ class TagsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('الوسم'),
+                Tables\Columns\TextColumn::make('name')->label(__('الوسم')),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->label('إضافة وسم')
+                    ->label(__('إضافة وسم'))
                     ->preloadRecordSelect(),
             ])
             ->actions([
-                Tables\Actions\DetachAction::make()->label('إزالة'),
+                Tables\Actions\DetachAction::make()->label(__('إزالة')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

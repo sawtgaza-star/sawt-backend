@@ -34,17 +34,17 @@ class CourseCategoryResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'تصنيفات الدورات';
+        return __('Course Categories');
     }
 
     public static function getModelLabel(): string
     {
-        return 'تصنيف دورة';
+        return __('Course Category');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'تصنيفات الدورات';
+        return __('Course Categories');
     }
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -54,7 +54,7 @@ class CourseCategoryResource extends Resource
         return $form->schema([
             Forms\Components\Section::make()->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('الاسم')
+                    ->label(__('الاسم'))
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
@@ -64,11 +64,11 @@ class CourseCategoryResource extends Resource
                         }
                     })
                     ->maxLength(255)
-                    ->helperText('مثال: التصميم — لفئات كورسات الحاضنة فقط (ليس فئات المحتوى)'),
+                    ->helperText(__('مثال: التصميم — لفئات كورسات الحاضنة فقط (ليس فئات المحتوى)')),
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug')->required()->unique(ignoreRecord: true)->maxLength(255),
-                Forms\Components\TextInput::make('sort_order')->label('الترتيب')->numeric()->default(0),
-                Forms\Components\Toggle::make('is_active')->label('مفعّل')->default(true),
+                Forms\Components\TextInput::make('sort_order')->label(__('الترتيب'))->numeric()->default(0),
+                Forms\Components\Toggle::make('is_active')->label(__('مفعّل'))->default(true),
             ])->columns(2),
         ]);
     }
@@ -77,11 +77,11 @@ class CourseCategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
+                Tables\Columns\TextColumn::make('name')->label(__('الاسم'))->searchable(),
                 Tables\Columns\TextColumn::make('slug')->label('Slug')->searchable(),
-                Tables\Columns\TextColumn::make('courses_count')->counts('courses')->label('الكورسات'),
-                Tables\Columns\IconColumn::make('is_active')->label('مفعّل')->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
+                Tables\Columns\TextColumn::make('courses_count')->counts('courses')->label(__('الكورسات')),
+                Tables\Columns\IconColumn::make('is_active')->label(__('مفعّل'))->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')->label(__('الترتيب'))->sortable(),
             ])
             ->defaultSort('sort_order')
             ->actions([

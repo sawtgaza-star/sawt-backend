@@ -58,7 +58,7 @@ class CreatorResource extends Resource
             'youtube' => 'YouTube',
             'tiktok' => 'TikTok',
             'telegram' => 'Telegram',
-            'other' => 'أخرى',
+            'other' => __('أخرى'),
         ];
     }
 
@@ -78,48 +78,48 @@ class CreatorResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('حساب المنصة')
-                ->description('يُنشأ تلقائياً بنوع «صانع محتوى» عند الحفظ')
+            Forms\Components\Section::make(__('حساب المنصة'))
+                ->description(__('يُنشأ تلقائياً بنوع «صانع محتوى» عند الحفظ'))
                 ->schema([
                     Forms\Components\TextInput::make('account_name')
-                        ->label('الاسم')
+                        ->label(__('الاسم'))
                         ->required()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('account_email')
-                        ->label('البريد الإلكتروني')
+                        ->label(__('البريد الإلكتروني'))
                         ->email()
                         ->required()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('account_phone')
-                        ->label('الهاتف')
+                        ->label(__('الهاتف'))
                         ->maxLength(40),
                     Forms\Components\TextInput::make('account_password')
-                        ->label('كلمة المرور')
+                        ->label(__('كلمة المرور'))
                         ->password()
                         ->revealable()
-                        ->helperText('اتركها فارغة لتوليد كلمة مرور تلقائياً'),
+                        ->helperText(__('اتركها فارغة لتوليد كلمة مرور تلقائياً')),
                 ])->columns(2),
 
-            Forms\Components\Section::make('ملف صانع المحتوى')->schema([
+            Forms\Components\Section::make(__('ملف صانع المحتوى'))->schema([
                 Forms\Components\TextInput::make('username')
-                    ->label('اسم المستخدم (username)')
-                    ->helperText('يُستخدم في رابط الملف الشخصي')
+                    ->label(__('اسم المستخدم (username)'))
+                    ->helperText(__('يُستخدم في رابط الملف الشخصي'))
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('role')
-                    ->label('المسمى / التخصص')
-                    ->placeholder('ممثل مسرحي')
+                    ->label(__('المسمى / التخصص'))
+                    ->placeholder(__('ممثل مسرحي'))
                     ->maxLength(255),
 
                 Forms\Components\Textarea::make('bio')
-                    ->label('نبذة تعريفية')
+                    ->label(__('نبذة تعريفية'))
                     ->rows(4)
                     ->columnSpanFull(),
 
                 Forms\Components\FileUpload::make('avatar')
-                    ->label('الصورة')
+                    ->label(__('الصورة'))
                     ->image()
                     ->disk('public')
                     ->directory('creators/avatars')
@@ -128,46 +128,46 @@ class CreatorResource extends Resource
                     ->columnSpanFull(),
 
                 Forms\Components\TextInput::make('followers_count')
-                    ->label('عدد المتابعين')
+                    ->label(__('عدد المتابعين'))
                     ->numeric()
                     ->default(0)
                     ->minValue(0),
 
                 Forms\Components\TextInput::make('sort_order')
-                    ->label('ترتيب العرض')
+                    ->label(__('ترتيب العرض'))
                     ->numeric()
                     ->default(0),
 
                 Forms\Components\Toggle::make('is_verified')
-                    ->label('موثّق (شارة)')
+                    ->label(__('موثّق (شارة)'))
                     ->default(false),
 
                 Forms\Components\Select::make('status')
-                    ->label('الحالة')
-                    ->options(['active' => 'نشط', 'inactive' => 'غير نشط'])
+                    ->label(__('الحالة'))
+                    ->options(['active' => __('نشط'), 'inactive' => 'غير نشط'])
                     ->default('active')
                     ->required(),
             ])->columns(2),
 
-            Forms\Components\Section::make('مواقع التواصل')->schema([
+            Forms\Components\Section::make(__('مواقع التواصل'))->schema([
                 Forms\Components\Repeater::make('socials')
                     ->label('')
                     ->schema([
                         Forms\Components\Select::make('platform')
-                            ->label('المنصة')
+                            ->label(__('المنصة'))
                             ->options(static::socialPlatformOptions())
                             ->required(),
                         Forms\Components\TextInput::make('url')
-                            ->label('الرابط')
+                            ->label(__('الرابط'))
                             ->url()
                             ->required()
                             ->maxLength(500),
                         Forms\Components\TextInput::make('followers_count')
-                            ->label('عدد المتابعين')
+                            ->label(__('عدد المتابعين'))
                             ->numeric()
                             ->default(0),
                         Forms\Components\TextInput::make('display_order')
-                            ->label('ترتيب العرض')
+                            ->label(__('ترتيب العرض'))
                             ->numeric()
                             ->default(0),
                     ])
@@ -175,7 +175,7 @@ class CreatorResource extends Resource
                     ->reorderable()
                     ->collapsible()
                     ->defaultItems(0)
-                    ->addActionLabel('إضافة رابط')
+                    ->addActionLabel(__('إضافة رابط'))
                     ->columnSpanFull(),
             ]),
         ]);
@@ -186,28 +186,28 @@ class CreatorResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('avatar', '')->circular()->height(40),
-                Tables\Columns\TextColumn::make('user.name')->label('الاسم')->searchable(),
+                Tables\Columns\TextColumn::make('user.name')->label(__('الاسم'))->searchable(),
                 Tables\Columns\TextColumn::make('username')->label('username')->searchable(),
-                Tables\Columns\TextColumn::make('role')->label('التخصص')->limit(30),
-                Tables\Columns\TextColumn::make('user.email')->label('البريد')->searchable(),
+                Tables\Columns\TextColumn::make('role')->label(__('التخصص'))->limit(30),
+                Tables\Columns\TextColumn::make('user.email')->label(__('البريد'))->searchable(),
                 Tables\Columns\TextColumn::make('user.type')
-                    ->label('نوع الحساب')
+                    ->label(__('نوع الحساب'))
                     ->formatStateUsing(fn (?string $state): string => $state === User::TYPE_CONTENT_CREATOR ? 'صانع محتوى' : ($state ?? '—'))
                     ->badge()
                     ->color('success'),
-                Tables\Columns\TextColumn::make('followers_count')->label('المتابعون')->numeric()->sortable(),
-                Tables\Columns\IconColumn::make('is_verified')->label('موثّق')->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
-                Tables\Columns\BadgeColumn::make('status')->label('الحالة')
+                Tables\Columns\TextColumn::make('followers_count')->label(__('المتابعون'))->numeric()->sortable(),
+                Tables\Columns\IconColumn::make('is_verified')->label(__('موثّق'))->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')->label(__('الترتيب'))->sortable(),
+                Tables\Columns\BadgeColumn::make('status')->label(__('الحالة'))
                     ->colors(['success' => 'active', 'danger' => 'inactive'])
                     ->formatStateUsing(fn (string $state) => $state === 'active' ? 'نشط' : 'غير نشط'),
-                Tables\Columns\TextColumn::make('updated_at')->label('آخر تحديث')->dateTime('Y-m-d')->sortable(),
+                Tables\Columns\TextColumn::make('updated_at')->label(__('آخر تحديث'))->dateTime('Y-m-d')->sortable(),
             ])
             ->defaultSort('sort_order')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('الحالة')
-                    ->options(['active' => 'نشط', 'inactive' => 'غير نشط']),
+                    ->label(__('الحالة'))
+                    ->options(['active' => __('نشط'), 'inactive' => 'غير نشط']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

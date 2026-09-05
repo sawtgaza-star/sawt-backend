@@ -56,7 +56,7 @@ class MajorResource extends Resource
         return $form->schema([
             Forms\Components\Section::make()->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('الاسم')
+                    ->label(__('الاسم'))
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
@@ -66,22 +66,22 @@ class MajorResource extends Resource
                         }
                     })
                     ->maxLength(255)
-                    ->helperText('مثال: فريق التصميم — يظهر في تبويبات صفحة الفريق'),
+                    ->helperText(__('مثال: فريق التصميم — يظهر في تبويبات صفحة الفريق')),
 
                 Forms\Components\TextInput::make('slug')
-                    ->label('الرابط (Slug)')
+                    ->label(__('الرابط (Slug)'))
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255)
-                    ->helperText('مثال: design'),
+                    ->helperText(__('مثال: design')),
 
                 Forms\Components\TextInput::make('sort_order')
-                    ->label('ترتيب العرض')
+                    ->label(__('ترتيب العرض'))
                     ->numeric()
                     ->default(0),
 
                 Forms\Components\Toggle::make('is_active')
-                    ->label('مفعّل')
+                    ->label(__('مفعّل'))
                     ->default(true),
             ])->columns(2),
         ]);
@@ -91,16 +91,16 @@ class MajorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
+                Tables\Columns\TextColumn::make('name')->label(__('الاسم'))->searchable(),
                 Tables\Columns\TextColumn::make('slug')->label('Slug')->searchable(),
-                Tables\Columns\TextColumn::make('members_count')->label('عدد الأعضاء')->counts('members'),
-                Tables\Columns\IconColumn::make('is_active')->label('مفعّل')->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
+                Tables\Columns\TextColumn::make('members_count')->label(__('عدد الأعضاء'))->counts('members'),
+                Tables\Columns\IconColumn::make('is_active')->label(__('مفعّل'))->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')->label(__('الترتيب'))->sortable(),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->filters([
-                Tables\Filters\TernaryFilter::make('is_active')->label('الحالة'),
+                Tables\Filters\TernaryFilter::make('is_active')->label(__('الحالة')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

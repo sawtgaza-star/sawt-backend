@@ -7,7 +7,7 @@ use App\Support\LayoutLinks;
 use App\Support\MediaUrl;
 
 /**
- * Builds public layout JSON for the main platform and the incubator site.
+ * Builds public layout JSON for the main platform, incubator, and Sawt Media sites.
  * Link hrefs come from LayoutLinks (not editable URLs in admin).
  */
 class LayoutService
@@ -270,6 +270,155 @@ class LayoutService
             ),
             'brand' => (string) ($this->settings->get('incubator_footer_brand') ?: $this->settings->get('footer_brand', 'SAWTGAZA')),
         ];
+    }
+
+    /**
+     * Sawt Media site chrome (navbar + footer).
+     *
+     * @return array{navbar: array<string, mixed>, footer: array<string, mixed>}
+     */
+    public function mediaPage(): array
+    {
+        return [
+            'navbar' => $this->mediaNavbar(),
+            'footer' => $this->mediaFooter(),
+        ];
+    }
+
+    /**
+     * Media navbar — labels from settings; paths from LayoutLinks::mediaPathFor*.
+     *
+     * @return array<string, mixed>
+     */
+    public function mediaNavbar(): array
+    {
+        $nav = $this->settings->get('media_nav_links', []);
+        if (! is_array($nav)) {
+            $nav = [];
+        }
+
+        return [
+            'site_name' => (string) ($this->settings->get('media_site_name') ?: 'صوت ميديا'),
+            'logo_url' => MediaUrl::make(
+                $this->settings->get('media_logo'),
+                MediaUrl::make($this->settings->get('home_logo'), '/assets/images/صوت 1.png')
+            ),
+            'back_to_platform' => [
+                'label' => $this->settings->i18n(
+                    'media_back_label',
+                    'العودة لمنصة صوت',
+                    'Back to Sawt Platform'
+                ),
+                'key' => 'platform',
+            ],
+            // Socials + contact live only on media footer (not navbar)
+            'topbar' => [
+                'language' => [
+                    'label' => ['ar' => 'En', 'en' => 'Ar'],
+                ],
+            ],
+            'nav' => [
+                'primary' => $this->mapMediaLinks($nav),
+            ],
+            // Single CTA — «ابدأ مشروعك» opens /media/contact (LayoutLinks::start_project)
+            'actions' => [
+                'start_project' => [
+                    'key' => 'start_project',
+                    'path' => LayoutLinks::mediaPathForKey('start_project'),
+                    'label' => $this->settings->i18n(
+                        'media_nav_start_label',
+                        'ابدأ مشروعك',
+                        'Start your project'
+                    ),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Media footer — about, columns, newsletter, contact + socials (footer only), copyright.
+     *
+     * @return array<string, mixed>
+     */
+    public function mediaFooter(): array
+    {
+        $main = $this->settings->get('media_footer_main_links', []);
+        $sawt = $this->settings->get('media_footer_sawt_links', []);
+        if (! is_array($main)) {
+            $main = [];
+        }
+        if (! is_array($sawt)) {
+            $sawt = [];
+        }
+
+        return [
+            'logo_url' => MediaUrl::make(
+                $this->settings->get('media_footer_logo'),
+                MediaUrl::make(
+                    $this->settings->get('media_logo'),
+                    MediaUrl::make($this->settings->get('footer_logo'), MediaUrl::make($this->settings->get('home_logo'), '/assets/images/صوت 1.png'))
+                )
+            ),
+            'about' => $this->settings->i18n(
+                'media_footer_about',
+                'منصة صوت، تأسست لتكون مساحة للمبدعين، تجمع الحاضنة، صوت ميديا، والصوت نفسه، لتقديم محتوى ملهم وتجارب فريدة لكل من يسعى لصوته أن يُسمع.',
+                'Sawt platform was founded as a space for creators — bringing together the incubator, Sawt Media, and Sawt itself.'
+            ),
+            'main' => [
+                'title' => $this->settings->i18n('media_footer_main_title', 'الأقسام الرئيسية', 'Main Sections'),
+                'links' => $this->mapMediaLinks($main),
+            ],
+            'sawt' => [
+                'title' => $this->settings->i18n('media_footer_sawt_title', 'اقسام صوت', 'Sawt Sections'),
+                'links' => $this->mapMediaLinks($sawt),
+            ],
+            'newsletter' => [
+                'title' => $this->settings->i18n('media_footer_newsletter_title', 'ابقَ على اطلاع', 'Stay Updated'),
+                'description' => $this->settings->i18n(
+                    'media_footer_newsletter_desc',
+                    'اشترك في نشرتنا الإخبارية ..',
+                    'Subscribe to our newsletter..'
+                ),
+                'email_placeholder' => [
+                    'ar' => 'ادخل بريدك الالكتروني',
+                    'en' => 'Enter your email',
+                ],
+            ],
+            'contact' => [
+                'phone' => (string) $this->settings->get('contact_phone', ''),
+                'email' => (string) $this->settings->get('contact_email', ''),
+            ],
+            'socials_label' => $this->settings->i18n(
+                'media_socials_label',
+                'وسائل التواصل الاجتماعي',
+                'Social Media'
+            ),
+            'socials' => $this->socials(),
+            'copyright' => $this->settings->i18n(
+                'media_footer_copyright',
+                '© جميع الحقوق محفوظة. 2026',
+                '© All rights reserved. 2026'
+            ),
+            'brand' => (string) ($this->settings->get('media_footer_brand') ?: $this->settings->get('footer_brand', 'SAWTGAZA')),
+        ];
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $items
+     * @return list<array{key: string, label: array{ar: string, en: string}}>
+     */
+    protected function mapMediaLinks(array $items): array
+    {
+        return collect(LayoutLinks::visible($items))
+            ->map(fn (array $item) => [
+                'key' => (string) ($item['key'] ?? ''),
+                'label' => [
+                    'ar' => (string) ($item['label_ar'] ?? ''),
+                    'en' => (string) ($item['label_en'] ?? ''),
+                ],
+            ])
+            ->values()
+            ->all();
     }
 
     /**

@@ -4,16 +4,16 @@
     <x-filament::section class="mt-4">
         <x-slot name="heading">
             <div class="flex items-center justify-between gap-4">
-                <span>ريلز إنستغرام الحية</span>
+                <span>{{ __('ريلز إنستغرام الحية') }}</span>
                 <x-filament::button size="sm" color="gray" icon="heroicon-o-arrow-path" wire:click="refreshReels">
-                    تحديث الآن
+                    {{ __('تحديث الآن') }}
                 </x-filament::button>
             </div>
         </x-slot>
 
         @if (empty($reels))
             <div class="text-sm text-gray-500 dark:text-gray-400 py-6 text-center">
-                لا يوجد ريلز للعرض. تأكد من إدخال <strong>معرّف الحساب</strong> و<strong>رمز الوصول</strong> بالأعلى ثم اضغط حفظ.
+                {{ __('لا يوجد ريلز للعرض. تأكد من إدخال معرّف الحساب ورمز الوصول بالأعلى ثم اضغط حفظ.') }}
             </div>
         @else
             <div
@@ -73,7 +73,7 @@
                                 @click="open = false; src = ''; embed = ''"
                                 class="absolute -top-10 end-0 flex items-center gap-1 text-sm text-white/90 hover:text-white"
                             >
-                                إغلاق <x-heroicon-o-x-mark class="h-5 w-5" />
+                                {{ __('إغلاق') }} <x-heroicon-o-x-mark class="h-5 w-5" />
                             </button>
 
                             <video
@@ -100,7 +100,7 @@
                                 rel="noopener"
                                 class="mt-3 block text-center text-sm text-white/80 underline hover:text-white"
                             >
-                                افتح في إنستغرام
+                                {{ __('افتح في إنستغرام') }}
                             </a>
                         </div>
                     </div>

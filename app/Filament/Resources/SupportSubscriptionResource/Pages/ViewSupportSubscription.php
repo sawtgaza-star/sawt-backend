@@ -18,7 +18,7 @@ class ViewSupportSubscription extends ViewRecord
     {
         return [
             Actions\Action::make('sync')
-                ->label('مزامنة مع PayPal')
+                ->label(__('مزامنة مع PayPal'))
                 ->icon('heroicon-o-arrow-path')
                 ->color('info')
                 ->visible(fn () => filled($this->getRecord()->gateway_subscription_id))
@@ -29,17 +29,17 @@ class ViewSupportSubscription extends ViewRecord
                     try {
                         app(SupportSubscriptionService::class)->activate($record);
                     } catch (Throwable $e) {
-                        Notification::make()->title('تعذّرت المزامنة')->body($e->getMessage())->danger()->send();
+                        Notification::make()->title(__('تعذّرت المزامنة'))->body($e->getMessage())->danger()->send();
 
                         return;
                     }
 
-                    Notification::make()->title('تمت مزامنة حالة الاشتراك')->success()->send();
+                    Notification::make()->title(__('تمت مزامنة حالة الاشتراك'))->success()->send();
                     $this->refreshFormData([]);
                 }),
 
             Actions\Action::make('cancel')
-                ->label('إلغاء الاشتراك')
+                ->label(__('إلغاء الاشتراك'))
                 ->icon('heroicon-o-x-circle')
                 ->color('danger')
                 ->requiresConfirmation()
@@ -51,12 +51,12 @@ class ViewSupportSubscription extends ViewRecord
                     try {
                         app(SupportSubscriptionService::class)->cancel($record, 'Cancelled by admin');
                     } catch (Throwable $e) {
-                        Notification::make()->title('تعذّر الإلغاء')->body($e->getMessage())->danger()->send();
+                        Notification::make()->title(__('تعذّر الإلغاء'))->body($e->getMessage())->danger()->send();
 
                         return;
                     }
 
-                    Notification::make()->title('تم إلغاء الاشتراك')->warning()->send();
+                    Notification::make()->title(__('تم إلغاء الاشتراك'))->warning()->send();
                     $this->refreshFormData([]);
                 }),
         ];

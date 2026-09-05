@@ -22,14 +22,14 @@ class ListCollaborationJoinRequests extends ListRecords
             ->pluck('aggregate', 'status');
 
         return [
-            'all' => Tab::make('الكل')->badge((clone $base)->count()),
-            'pending' => Tab::make('بانتظار المراجعة')
+            'all' => Tab::make(__('All'))->badge((clone $base)->count()),
+            'pending' => Tab::make(__('Pending review'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'pending'))
                 ->badge($counts['pending'] ?? 0),
-            'approved' => Tab::make('مقبول')
+            'approved' => Tab::make(__('Approved'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'approved'))
                 ->badge($counts['approved'] ?? 0),
-            'rejected' => Tab::make('مرفوض')
+            'rejected' => Tab::make(__('Rejected'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'rejected'))
                 ->badge($counts['rejected'] ?? 0),
         ];

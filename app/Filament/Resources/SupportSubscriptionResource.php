@@ -81,26 +81,26 @@ class SupportSubscriptionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')->label('التاريخ')->dateTime('Y-m-d')->sortable(),
-                Tables\Columns\TextColumn::make('subscriber_name')->label('المشترك')->searchable()->placeholder('—'),
-                Tables\Columns\TextColumn::make('subscriber_email')->label('البريد')->searchable()->limit(24)->placeholder('—'),
+                Tables\Columns\TextColumn::make('created_at')->label(__('التاريخ'))->dateTime('Y-m-d')->sortable(),
+                Tables\Columns\TextColumn::make('subscriber_name')->label(__('المشترك'))->searchable()->placeholder('—'),
+                Tables\Columns\TextColumn::make('subscriber_email')->label(__('البريد'))->searchable()->limit(24)->placeholder('—'),
                 Tables\Columns\TextColumn::make('amount')
-                    ->label('المبلغ')
+                    ->label(__('المبلغ'))
                     ->money(fn ($record) => $record->currency ?? 'USD')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('interval')
-                    ->label('الدورية')
+                    ->label(__('الدورية'))
                     ->badge()
                     ->formatStateUsing(fn (string $state) => SupportOptions::intervals()[$state] ?? $state)
                     ->colors(['success' => 'monthly', 'warning' => 'yearly']),
-                Tables\Columns\TextColumn::make('cycles_completed')->label('دورات مُحصَّلة')->badge()->color('gray'),
+                Tables\Columns\TextColumn::make('cycles_completed')->label(__('دورات مُحصَّلة'))->badge()->color('gray'),
                 Tables\Columns\TextColumn::make('total_paid')
-                    ->label('الإجمالي المحصَّل')
+                    ->label(__('الإجمالي المحصَّل'))
                     ->money(fn ($record) => $record->currency ?? 'USD')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('next_billing_at')->label('التحصيل القادم')->date('Y-m-d')->placeholder('—'),
+                Tables\Columns\TextColumn::make('next_billing_at')->label(__('التحصيل القادم'))->date('Y-m-d')->placeholder('—'),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->badge()
                     ->formatStateUsing(fn (string $state) => SupportOptions::subscriptionStatuses()[$state] ?? $state)
                     ->color(fn (string $state) => SupportOptions::subscriptionStatusColors()[$state] ?? 'gray'),
@@ -108,17 +108,17 @@ class SupportSubscriptionResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->options(SupportOptions::subscriptionStatuses()),
                 Tables\Filters\SelectFilter::make('interval')
-                    ->label('الدورية')
-                    ->options(['monthly' => 'شهري', 'yearly' => 'سنوي']),
+                    ->label(__('الدورية'))
+                    ->options(['monthly' => __('شهري'), 'yearly' => 'سنوي']),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
 
                 Tables\Actions\Action::make('sync')
-                    ->label('مزامنة')
+                    ->label(__('مزامنة'))
                     ->icon('heroicon-o-arrow-path')
                     ->color('info')
                     ->visible(fn (SupportSubscription $record) => filled($record->gateway_subscription_id))
@@ -126,33 +126,33 @@ class SupportSubscriptionResource extends Resource
                         try {
                             app(SupportSubscriptionService::class)->activate($record);
                         } catch (Throwable $e) {
-                            Notification::make()->title('تعذّرت المزامنة مع PayPal')->body($e->getMessage())->danger()->send();
+                            Notification::make()->title(__('تعذّرت المزامنة مع PayPal'))->body($e->getMessage())->danger()->send();
 
                             return;
                         }
 
-                        Notification::make()->title('تمت مزامنة حالة الاشتراك')->success()->send();
+                        Notification::make()->title(__('تمت مزامنة حالة الاشتراك'))->success()->send();
                     }),
 
                 Tables\Actions\Action::make('cancel')
-                    ->label('إلغاء')
+                    ->label(__('إلغاء'))
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->requiresConfirmation()
                     ->form([
-                        Forms\Components\TextInput::make('reason')->label('السبب')->default('Cancelled by admin'),
+                        Forms\Components\TextInput::make('reason')->label(__('السبب'))->default('Cancelled by admin'),
                     ])
                     ->visible(fn (SupportSubscription $record) => $record->isCancellable())
                     ->action(function (SupportSubscription $record, array $data): void {
                         try {
                             app(SupportSubscriptionService::class)->cancel($record, $data['reason'] ?? 'Cancelled by admin');
                         } catch (Throwable $e) {
-                            Notification::make()->title('تعذّر إلغاء الاشتراك')->body($e->getMessage())->danger()->send();
+                            Notification::make()->title(__('تعذّر إلغاء الاشتراك'))->body($e->getMessage())->danger()->send();
 
                             return;
                         }
 
-                        Notification::make()->title('تم إلغاء الاشتراك')->warning()->send();
+                        Notification::make()->title(__('تم إلغاء الاشتراك'))->warning()->send();
                     }),
             ]);
     }
@@ -160,33 +160,33 @@ class SupportSubscriptionResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Infolists\Components\Section::make('الاشتراك')->schema([
-                Infolists\Components\TextEntry::make('uuid')->label('المعرّف')->copyable(),
+            Infolists\Components\Section::make(__('الاشتراك'))->schema([
+                Infolists\Components\TextEntry::make('uuid')->label(__('المعرّف'))->copyable(),
                 Infolists\Components\TextEntry::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->badge()
                     ->formatStateUsing(fn (string $state) => SupportOptions::subscriptionStatuses()[$state] ?? $state)
                     ->color(fn (string $state) => SupportOptions::subscriptionStatusColors()[$state] ?? 'gray'),
-                Infolists\Components\TextEntry::make('amount')->label('المبلغ')->money(fn ($record) => $record->currency ?? 'USD'),
+                Infolists\Components\TextEntry::make('amount')->label(__('المبلغ'))->money(fn ($record) => $record->currency ?? 'USD'),
                 Infolists\Components\TextEntry::make('interval')
-                    ->label('الدورية')
+                    ->label(__('الدورية'))
                     ->formatStateUsing(fn (string $state) => SupportOptions::intervals()[$state] ?? $state),
-                Infolists\Components\TextEntry::make('gateway_subscription_id')->label('معرّف PayPal')->copyable()->placeholder('—'),
-                Infolists\Components\TextEntry::make('gateway_plan_id')->label('خطة PayPal')->copyable()->placeholder('—'),
+                Infolists\Components\TextEntry::make('gateway_subscription_id')->label(__('معرّف PayPal'))->copyable()->placeholder('—'),
+                Infolists\Components\TextEntry::make('gateway_plan_id')->label(__('خطة PayPal'))->copyable()->placeholder('—'),
             ])->columns(3),
 
-            Infolists\Components\Section::make('المشترك')->schema([
-                Infolists\Components\TextEntry::make('subscriber_name')->label('الاسم')->placeholder('—'),
-                Infolists\Components\TextEntry::make('subscriber_email')->label('البريد')->copyable()->placeholder('—'),
-                Infolists\Components\TextEntry::make('user.name')->label('الحساب المرتبط')->placeholder('ضيف'),
+            Infolists\Components\Section::make(__('المشترك'))->schema([
+                Infolists\Components\TextEntry::make('subscriber_name')->label(__('الاسم'))->placeholder('—'),
+                Infolists\Components\TextEntry::make('subscriber_email')->label(__('البريد'))->copyable()->placeholder('—'),
+                Infolists\Components\TextEntry::make('user.name')->label(__('الحساب المرتبط'))->placeholder(__('ضيف')),
             ])->columns(3),
 
-            Infolists\Components\Section::make('التحصيل')->schema([
-                Infolists\Components\TextEntry::make('started_at')->label('تاريخ البدء')->dateTime('Y-m-d H:i')->placeholder('—'),
-                Infolists\Components\TextEntry::make('next_billing_at')->label('التحصيل القادم')->dateTime('Y-m-d H:i')->placeholder('—'),
-                Infolists\Components\TextEntry::make('cancelled_at')->label('تاريخ الإلغاء')->dateTime('Y-m-d H:i')->placeholder('—'),
-                Infolists\Components\TextEntry::make('cycles_completed')->label('عدد الدورات'),
-                Infolists\Components\TextEntry::make('total_paid')->label('الإجمالي المحصَّل')->money(fn ($record) => $record->currency ?? 'USD'),
+            Infolists\Components\Section::make(__('التحصيل'))->schema([
+                Infolists\Components\TextEntry::make('started_at')->label(__('تاريخ البدء'))->dateTime('Y-m-d H:i')->placeholder('—'),
+                Infolists\Components\TextEntry::make('next_billing_at')->label(__('التحصيل القادم'))->dateTime('Y-m-d H:i')->placeholder('—'),
+                Infolists\Components\TextEntry::make('cancelled_at')->label(__('تاريخ الإلغاء'))->dateTime('Y-m-d H:i')->placeholder('—'),
+                Infolists\Components\TextEntry::make('cycles_completed')->label(__('عدد الدورات')),
+                Infolists\Components\TextEntry::make('total_paid')->label(__('الإجمالي المحصَّل'))->money(fn ($record) => $record->currency ?? 'USD'),
             ])->columns(3),
         ]);
     }

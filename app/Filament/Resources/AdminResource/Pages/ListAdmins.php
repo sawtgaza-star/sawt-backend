@@ -14,7 +14,7 @@ class ListAdmins extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('إضافة مدير'),
+                ->label(__('إضافة مدير')),
         ];
     }
 }

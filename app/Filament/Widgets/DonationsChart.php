@@ -9,14 +9,17 @@ use Throwable;
 
 class DonationsChart extends ChartWidget
 {
-    protected static ?string $heading = 'التبرعات خلال آخر 6 أشهر';
-
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
 
     protected int|string|array $columnSpan = [
         'md' => 2,
         'xl' => 2,
     ];
+
+    public function getHeading(): ?string
+    {
+        return __('التبرعات خلال آخر 6 أشهر');
+    }
 
     public static function canView(): bool
     {
@@ -45,7 +48,7 @@ class DonationsChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'إجمالي التبرعات ($)',
+                    'label' => __('إجمالي التبرعات ($)'),
                     'data' => $totals->toArray(),
                     'borderColor' => '#22c55e',
                     'backgroundColor' => 'rgba(34, 197, 94, 0.15)',

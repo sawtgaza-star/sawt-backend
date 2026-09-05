@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Support\LocaleText;
+
 use App\Models\Setting;
 use App\Support\StoredUploadCleanup;
 use Filament\Forms;
@@ -32,17 +34,17 @@ class Settings extends Page implements HasForms
 
     public static function getNavigationGroup(): ?string
     {
-        return 'الإعدادات';
+        return __('Settings');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'الإعدادات العامة';
+        return __('General Settings');
     }
 
     public function getTitle(): string | \Illuminate\Contracts\Support\Htmlable
     {
-        return 'الإعدادات العامة';
+        return __('General Settings');
     }
 
     /**
@@ -618,7 +620,7 @@ class Settings extends Page implements HasForms
     {
         app(\App\Services\InstagramService::class)->reels(12, bypassCache: true);
 
-        Notification::make()->title('تم تحديث الريلز')->success()->send();
+        Notification::make()->title(__('تم تحديث الريلز'))->success()->send();
     }
 
     public function mount(): void
@@ -641,100 +643,100 @@ class Settings extends Page implements HasForms
         return $form->schema([
             Forms\Components\Tabs::make('Settings')->columnSpanFull()->tabs([
 
-                Forms\Components\Tabs\Tab::make('الهوية و SEO')->icon('heroicon-o-identification')->schema([
-                    Forms\Components\Section::make('الهوية البصرية')->schema([
+                Forms\Components\Tabs\Tab::make(__('الهوية و SEO'))->icon('heroicon-o-identification')->schema([
+                    Forms\Components\Section::make(__('الهوية البصرية'))->schema([
                         Forms\Components\FileUpload::make('home_logo')
-                            ->label('شعار الهيدر')
+                            ->label(__('شعار الهيدر'))
                             ->image()->disk('public')->directory('branding')->imageEditor()
-                            ->helperText('يظهر أعلى الموقع — اتركه فارغاً للشعار الافتراضي'),
+                            ->helperText(__('يظهر أعلى الموقع — اتركه فارغاً للشعار الافتراضي')),
                         Forms\Components\FileUpload::make('site_favicon')
-                            ->label('أيقونة الموقع (Favicon)')
+                            ->label(__('أيقونة الموقع (Favicon)'))
                             ->image()->disk('public')->directory('branding')
-                            ->helperText('تظهر بتبويب المتصفح — يُفضّل صورة مربعة 512×512'),
+                            ->helperText(__('تظهر بتبويب المتصفح — يُفضّل صورة مربعة 512×512')),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('تحسين محركات البحث (SEO)')->schema([
+                    Forms\Components\Section::make(__('تحسين محركات البحث (SEO)'))->schema([
                         Forms\Components\TextInput::make('meta_title')
-                            ->label('عنوان الصفحة (Title)')
-                            ->helperText('يظهر بتبويب المتصفح ونتائج جوجل — يُفضّل أقل من 60 حرفاً')
+                            ->label(__('عنوان الصفحة (Title)'))
+                            ->helperText(__('يظهر بتبويب المتصفح ونتائج جوجل — يُفضّل أقل من 60 حرفاً'))
                             ->maxLength(70)->columnSpanFull(),
                         Forms\Components\Textarea::make('meta_description')
-                            ->label('وصف الميتا (Description)')
-                            ->helperText('يظهر تحت العنوان بنتائج البحث — 150–160 حرفاً مثالي')
+                            ->label(__('وصف الميتا (Description)'))
+                            ->helperText(__('يظهر تحت العنوان بنتائج البحث — 150–160 حرفاً مثالي'))
                             ->rows(3)->maxLength(200)->columnSpanFull(),
                         Forms\Components\TextInput::make('meta_keywords')
-                            ->label('الكلمات المفتاحية')
-                            ->helperText('مفصولة بفاصلة')
+                            ->label(__('الكلمات المفتاحية'))
+                            ->helperText(__('مفصولة بفاصلة'))
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('og_image')
-                            ->label('صورة المشاركة (Open Graph)')
+                            ->label(__('صورة المشاركة (Open Graph)'))
                             ->image()->disk('public')->directory('branding')->imageEditor()
-                            ->helperText('تظهر عند مشاركة الرابط على فيسبوك/تويتر/واتساب — 1200×630')
+                            ->helperText(__('تظهر عند مشاركة الرابط على فيسبوك/تويتر/واتساب — 1200×630'))
                             ->columnSpanFull(),
                     ]),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الصفحة الرئيسية')->icon('heroicon-o-home')->schema([
-                    Forms\Components\Section::make('1) الهيرو — الشرائح والأزرار')->schema([
+                Forms\Components\Tabs\Tab::make(__('الصفحة الرئيسية'))->icon('heroicon-o-home')->schema([
+                    Forms\Components\Section::make(__('1) الهيرو — الشرائح والأزرار'))->schema([
                         Forms\Components\Repeater::make('home_hero_slides')
-                            ->label('شرائح الكاروسيل')
+                            ->label(__('شرائح الكاروسيل'))
                             ->schema([
                                 Forms\Components\FileUpload::make('image')
-                                    ->label('صورة الخلفية')
+                                    ->label(__('صورة الخلفية'))
                                     ->image()->disk('public')->directory('home/hero')->imageEditor()
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)'),
+                                Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)')),
                                 Forms\Components\TextInput::make('title_en')->label('Title (English)'),
-                                Forms\Components\Textarea::make('subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                                Forms\Components\Textarea::make('subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                                 Forms\Components\Textarea::make('subtitle_en')->label('Subtitle (English)')->rows(2),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
                             ->cloneable()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'شريحة')
-                            ->addActionLabel('➕ إضافة شريحة')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'شريحة') ?: null)
+                            ->addActionLabel(__('➕ إضافة شريحة'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('home_hero_trust_ar')->label('سطر الثقة (عربي)'),
+                        Forms\Components\TextInput::make('home_hero_trust_ar')->label(__('سطر الثقة (عربي)')),
                         Forms\Components\TextInput::make('home_hero_trust_en')->label('Trust line (English)'),
-                        Forms\Components\TextInput::make('home_hero_btn_support_ar')->label('زر الدعم (عربي)'),
+                        Forms\Components\TextInput::make('home_hero_btn_support_ar')->label(__('زر الدعم (عربي)')),
                         Forms\Components\TextInput::make('home_hero_btn_support_en')->label('Support button (EN)'),
-                        Forms\Components\TextInput::make('home_hero_btn_collab_ar')->label('زر التعاون (عربي)'),
+                        Forms\Components\TextInput::make('home_hero_btn_collab_ar')->label(__('زر التعاون (عربي)')),
                         Forms\Components\TextInput::make('home_hero_btn_collab_en')->label('Collaborate button (EN)'),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) شريط الأرقام')->schema([
-                        Forms\Components\TextInput::make('home_stat_team')->label('أعضاء الفريق'),
-                        Forms\Components\TextInput::make('home_stat_stories')->label('عدد القصص'),
-                        Forms\Components\TextInput::make('home_stat_views')->label('المشاهدات'),
-                        Forms\Components\TextInput::make('home_stat_videos')->label('عدد الفيديوهات'),
-                        Forms\Components\TextInput::make('home_stat_followers')->label('المتابعون'),
+                    Forms\Components\Section::make(__('2) شريط الأرقام'))->schema([
+                        Forms\Components\TextInput::make('home_stat_team')->label(__('أعضاء الفريق')),
+                        Forms\Components\TextInput::make('home_stat_stories')->label(__('عدد القصص')),
+                        Forms\Components\TextInput::make('home_stat_views')->label(__('المشاهدات')),
+                        Forms\Components\TextInput::make('home_stat_videos')->label(__('عدد الفيديوهات')),
+                        Forms\Components\TextInput::make('home_stat_followers')->label(__('المتابعون')),
                     ])->columns(3),
 
-                    Forms\Components\Section::make('3) من نحن (قسم الصفحة الرئيسية)')->schema([
+                    Forms\Components\Section::make(__('3) من نحن (قسم الصفحة الرئيسية)'))->schema([
                         Forms\Components\FileUpload::make('home_hero_image')
-                            ->label('الصورة / التكوين البصري')
+                            ->label(__('الصورة / التكوين البصري'))
                             ->image()->disk('public')->directory('home')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('home_who_we_are_ar')->label('عنوان القسم (عربي)'),
+                        Forms\Components\TextInput::make('home_who_we_are_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('home_who_we_are_en')->label('Section title (EN)'),
-                        Forms\Components\TextInput::make('home_who_subtitle_ar')->label('العنوان الفرعي (عربي)'),
+                        Forms\Components\TextInput::make('home_who_subtitle_ar')->label(__('العنوان الفرعي (عربي)')),
                         Forms\Components\TextInput::make('home_who_subtitle_en')->label('Subtitle (EN)'),
-                        Forms\Components\TextInput::make('home_welcome_title_ar')->label('العنوان الرئيسي (عربي)'),
+                        Forms\Components\TextInput::make('home_welcome_title_ar')->label(__('العنوان الرئيسي (عربي)')),
                         Forms\Components\TextInput::make('home_welcome_title_en')->label('Main title (EN)'),
-                        Forms\Components\Textarea::make('home_welcome_desc_ar')->label('الوصف (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('home_welcome_desc_ar')->label(__('الوصف (عربي)'))->rows(4),
                         Forms\Components\Textarea::make('home_welcome_desc_en')->label('Description (EN)')->rows(4),
-                        Forms\Components\TextInput::make('home_who_cta_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('home_who_cta_ar')->label(__('نص الزر (عربي)')),
                         Forms\Components\TextInput::make('home_who_cta_en')->label('CTA (EN)'),
                         Forms\Components\Repeater::make('home_who_features')
-                            ->label('المميزات الأربع')
+                            ->label(__('المميزات الأربع'))
                             ->schema([
                                 Forms\Components\FileUpload::make('icon')
-                                    ->label('أيقونة (صورة)')
+                                    ->label(__('أيقونة (صورة)'))
                                     ->image()->disk('public')->directory('home/icons')
                                     ->imageEditor()
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('النص (عربي)')->required(),
+                                Forms\Components\TextInput::make('title_ar')->label(__('النص (عربي)'))->required(),
                                 Forms\Components\TextInput::make('title_en')->label('Text (EN)'),
                             ])
                             ->columns(2)
@@ -743,297 +745,297 @@ class Settings extends Page implements HasForms
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('4) آخر الأخبار')->schema([
-                        Forms\Components\TextInput::make('home_news_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('4) آخر الأخبار'))->schema([
+                        Forms\Components\TextInput::make('home_news_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('home_news_title_en')->label('Title (EN)'),
-                        Forms\Components\TextInput::make('home_news_subtitle_ar')->label('الوصف (عربي)'),
+                        Forms\Components\TextInput::make('home_news_subtitle_ar')->label(__('الوصف (عربي)')),
                         Forms\Components\TextInput::make('home_news_subtitle_en')->label('Subtitle (EN)'),
-                        Forms\Components\TextInput::make('home_news_read_more_ar')->label('«اقرأ المزيد» (عربي)'),
+                        Forms\Components\TextInput::make('home_news_read_more_ar')->label(__('«اقرأ المزيد» (عربي)')),
                         Forms\Components\TextInput::make('home_news_read_more_en')->label('Read more (EN)'),
-                        Forms\Components\TextInput::make('home_news_view_all_ar')->label('زر عرض الكل (عربي)'),
+                        Forms\Components\TextInput::make('home_news_view_all_ar')->label(__('زر عرض الكل (عربي)')),
                         Forms\Components\TextInput::make('home_news_view_all_en')->label('View all (EN)'),
                         Forms\Components\TextInput::make('home_news_limit')
-                            ->label('عدد البطاقات في الرئيسية')
+                            ->label(__('عدد البطاقات في الرئيسية'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(12)
                             ->columnSpanFull(),
                     ])->columns(2)
-                        ->description('البطاقات تُجلب من **المحتوى → الأخبار / المدونة**. فعّل «إبراز في الرئيسية» أو انشر أحدث الأخبار.'),
+                        ->description(__('البطاقات تُجلب من **المحتوى → الأخبار / المدونة**. فعّل «إبراز في الرئيسية» أو انشر أحدث الأخبار.')),
 
-                    Forms\Components\Section::make('5) صناع المحتوى (على الرئيسية)')->schema([
-                        Forms\Components\TextInput::make('home_creators_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('5) صناع المحتوى (على الرئيسية)'))->schema([
+                        Forms\Components\TextInput::make('home_creators_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('home_creators_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('home_creators_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('home_creators_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('home_creators_desc_en')->label('Description (EN)')->rows(2),
-                        Forms\Components\TextInput::make('home_creators_view_all_ar')->label('عرض الكل (عربي)'),
+                        Forms\Components\TextInput::make('home_creators_view_all_ar')->label(__('عرض الكل (عربي)')),
                         Forms\Components\TextInput::make('home_creators_view_all_en')->label('View all (EN)'),
                         Forms\Components\TextInput::make('home_creators_limit')
-                            ->label('عدد البطاقات')
+                            ->label(__('عدد البطاقات'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(30)
                             ->columnSpanFull(),
                     ])->columns(2)
-                        ->description('البطاقات تُجلب من قائمة صنّاع المحتوى النشطين في لوحة التحكم.'),
+                        ->description(__('البطاقات تُجلب من قائمة صنّاع المحتوى النشطين في لوحة التحكم.')),
 
-                    Forms\Components\Section::make('6) أقسام المنصة')->schema([
-                        Forms\Components\TextInput::make('home_sections_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('6) أقسام المنصة'))->schema([
+                        Forms\Components\TextInput::make('home_sections_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('home_sections_title_en')->label('Section title (EN)'),
-                        Forms\Components\TextInput::make('home_sections_subtitle_ar')->label('الوصف (عربي)'),
+                        Forms\Components\TextInput::make('home_sections_subtitle_ar')->label(__('الوصف (عربي)')),
                         Forms\Components\TextInput::make('home_sections_subtitle_en')->label('Subtitle (EN)'),
                         Forms\Components\Repeater::make('home_platform_sections')
-                            ->label('البطاقات الثلاث')
+                            ->label(__('البطاقات الثلاث'))
                             ->schema([
                                 Forms\Components\FileUpload::make('image')
-                                    ->label('صورة البطاقة')
-                                    ->helperText('الصورة الكبيرة أعلى البطاقة')
+                                    ->label(__('صورة البطاقة'))
+                                    ->helperText(__('الصورة الكبيرة أعلى البطاقة'))
                                     ->image()
                                     ->disk('public')
                                     ->directory('home/sections')
                                     ->imageEditor()
                                     ->columnSpanFull(),
                                 Forms\Components\FileUpload::make('icon')
-                                    ->label('أيقونة البطاقة')
-                                    ->helperText('الأيقونة الدائرية فوق الصورة')
+                                    ->label(__('أيقونة البطاقة'))
+                                    ->helperText(__('الأيقونة الدائرية فوق الصورة'))
                                     ->image()
                                     ->disk('public')
                                     ->directory('home/sections/icons')
                                     ->imageEditor()
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)'),
+                                Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)')),
                                 Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
-                                Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
+                                Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                                 Forms\Components\Textarea::make('desc_en')->label('Description (EN)')->rows(2),
-                                Forms\Components\TextInput::make('stat1_ar')->label('رقم 1 (عربي)'),
+                                Forms\Components\TextInput::make('stat1_ar')->label(__('رقم 1 (عربي)')),
                                 Forms\Components\TextInput::make('stat1_en')->label('Stat 1 (EN)'),
-                                Forms\Components\TextInput::make('stat2_ar')->label('رقم 2 (عربي)'),
+                                Forms\Components\TextInput::make('stat2_ar')->label(__('رقم 2 (عربي)')),
                                 Forms\Components\TextInput::make('stat2_en')->label('Stat 2 (EN)'),
-                                Forms\Components\TextInput::make('cta_ar')->label('نص الزر (عربي)'),
+                                Forms\Components\TextInput::make('cta_ar')->label(__('نص الزر (عربي)')),
                                 Forms\Components\TextInput::make('cta_en')->label('CTA (EN)'),
                             ])
                             ->columns(2)
                             ->maxItems(6)
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'قسم')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'قسم') ?: null)
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('7) الشركاء')->schema([
-                        Forms\Components\TextInput::make('home_partners_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('7) الشركاء'))->schema([
+                        Forms\Components\TextInput::make('home_partners_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('home_partners_title_en')->label('Title (EN)'),
-                        Forms\Components\TextInput::make('home_partners_subtitle_ar')->label('الوصف (عربي)'),
+                        Forms\Components\TextInput::make('home_partners_subtitle_ar')->label(__('الوصف (عربي)')),
                         Forms\Components\TextInput::make('home_partners_subtitle_en')->label('Subtitle (EN)'),
                         Forms\Components\Repeater::make('home_partners')
-                            ->label('شعارات الشركاء')
+                            ->label(__('شعارات الشركاء'))
                             ->schema([
-                                Forms\Components\TextInput::make('name')->label('الاسم'),
-                                Forms\Components\FileUpload::make('logo')->label('الشعار')->image()->disk('public')->directory('home/partners'),
+                                Forms\Components\TextInput::make('name')->label(__('الاسم')),
+                                Forms\Components\FileUpload::make('logo')->label(__('الشعار'))->image()->disk('public')->directory('home/partners'),
                             ])
                             ->columns(2)
                             ->reorderable()
-                            ->addActionLabel('➕ إضافة شريك')
+                            ->addActionLabel(__('➕ إضافة شريك'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('8) القصص + دعوة المشاركة')->schema([
-                        Forms\Components\TextInput::make('home_stories_title_ar')->label('العنوان فوق الحقل (عربي)'),
+                    Forms\Components\Section::make(__('8) القصص + دعوة المشاركة'))->schema([
+                        Forms\Components\TextInput::make('home_stories_title_ar')->label(__('العنوان فوق الحقل (عربي)')),
                         Forms\Components\TextInput::make('home_stories_title_en')->label('Title above form (EN)'),
-                        Forms\Components\Textarea::make('home_stories_desc_ar')->label('الوصف فوق الحقل (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('home_stories_desc_ar')->label(__('الوصف فوق الحقل (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('home_stories_desc_en')->label('Description above form (EN)')->rows(3),
-                        Forms\Components\TextInput::make('home_stories_badge_ar')->label('شارة الإحصائية (عربي)')
-                            ->helperText('مثال: +100 قصة واقعية نقلتها صوت إلى العالم'),
+                        Forms\Components\TextInput::make('home_stories_badge_ar')->label(__('شارة الإحصائية (عربي)'))
+                            ->helperText(__('مثال: +100 قصة واقعية نقلتها صوت إلى العالم')),
                         Forms\Components\TextInput::make('home_stories_badge_en')->label('Stat badge (EN)'),
                         Forms\Components\TextInput::make('home_stories_limit')
-                            ->label('عدد بطاقات القصص')
+                            ->label(__('عدد بطاقات القصص'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(12)
-                            ->helperText('القصص من **المحتوى → القصص** (المميزة أولاً)')
+                            ->helperText(__('القصص من **المحتوى → القصص** (المميزة أولاً)'))
                             ->columnSpanFull(),
                     ])->columns(2)
-                        ->description('حقل «شاركنا قصتك» ثابت في الواجهة — لا يُعدَّل من هنا.'),
+                        ->description(__('حقل «شاركنا قصتك» ثابت في الواجهة — لا يُعدَّل من هنا.')),
 
-                    Forms\Components\Section::make('9) أعضاء الفريق (على الرئيسية)')->schema([
-                        Forms\Components\TextInput::make('home_team_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('9) أعضاء الفريق (على الرئيسية)'))->schema([
+                        Forms\Components\TextInput::make('home_team_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('home_team_title_en')->label('Title (EN)'),
-                        Forms\Components\TextInput::make('home_team_subtitle_ar')->label('الوصف (عربي)'),
+                        Forms\Components\TextInput::make('home_team_subtitle_ar')->label(__('الوصف (عربي)')),
                         Forms\Components\TextInput::make('home_team_subtitle_en')->label('Subtitle (EN)'),
-                        Forms\Components\TextInput::make('home_team_cta_ar')->label('نص زر الملف (عربي)'),
+                        Forms\Components\TextInput::make('home_team_cta_ar')->label(__('نص زر الملف (عربي)')),
                         Forms\Components\TextInput::make('home_team_cta_en')->label('Profile CTA (EN)'),
                         Forms\Components\TextInput::make('home_team_limit')
-                            ->label('عدد الأعضاء')
+                            ->label(__('عدد الأعضاء'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(30)
                             ->columnSpanFull(),
                     ])->columns(2)
-                        ->description('الأعضاء يُجلبون من مورد «أعضاء الفريق» النشطين.'),
+                        ->description(__('الأعضاء يُجلبون من مورد «أعضاء الفريق» النشطين.')),
 
-                    Forms\Components\Section::make('10) CTA — انضم كصانع محتوى')->schema([
+                    Forms\Components\Section::make(__('10) CTA — انضم كصانع محتوى'))->schema([
                         Forms\Components\FileUpload::make('home_join_cta_bg')
-                            ->label('صورة الخلفية')
+                            ->label(__('صورة الخلفية'))
                             ->image()->disk('public')->directory('home/cta')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('home_join_cta_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('home_join_cta_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('home_join_cta_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('home_join_cta_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('home_join_cta_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('home_join_cta_desc_en')->label('Description (EN)')->rows(2),
-                        Forms\Components\TextInput::make('home_join_cta_button_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('home_join_cta_button_ar')->label(__('نص الزر (عربي)')),
                         Forms\Components\TextInput::make('home_join_cta_button_en')->label('Button (EN)'),
                     ])->columns(2)
-                        ->description('بانر «انضم إلينا كصانع محتوى» أسفل قسم الفريق على الرئيسية.'),
+                        ->description(__('بانر «انضم إلينا كصانع محتوى» أسفل قسم الفريق على الرئيسية.')),
 
-                    Forms\Components\Section::make('11) الآراء / ريلز إنستغرام')->schema([
-                        Forms\Components\TextInput::make('home_reviews_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('11) الآراء / ريلز إنستغرام'))->schema([
+                        Forms\Components\TextInput::make('home_reviews_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('home_reviews_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('home_reviews_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('home_reviews_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('home_reviews_desc_en')->label('Description (EN)')->rows(3),
                         Forms\Components\Toggle::make('home_reviews_use_instagram')
-                            ->label('وضع الريلز مفعّل')
-                            ->helperText('يحتاج أيضاً تفعيل «ريلز إنستغرام» مع Business ID + Access Token. عند التفعيل يُجلب آخر 3 ريلز.')
+                            ->label(__('وضع الريلز مفعّل'))
+                            ->helperText(__('يحتاج أيضاً تفعيل «ريلز إنستغرام» مع Business ID + Access Token. عند التفعيل يُجلب آخر 3 ريلز.'))
                             ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('من نحن')->icon('heroicon-o-user-group')->schema([
-                    Forms\Components\Section::make('1) الهيرو')->schema([
+                Forms\Components\Tabs\Tab::make(__('من نحن'))->icon('heroicon-o-user-group')->schema([
+                    Forms\Components\Section::make(__('1) الهيرو'))->schema([
                         Forms\Components\FileUpload::make('about_header_bg')
-                            ->label('صورة خلفية الهيرو')
+                            ->label(__('صورة خلفية الهيرو'))
                             ->image()->disk('public')->directory('about')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->helperText(__('اتركه فارغاً لاستخدام الصورة الافتراضية'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('about_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('about_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('about_hero_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('about_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('about_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('about_hero_desc_en')->label('Description (English)')->rows(3),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) من نحن (المقدمة)')->schema([
+                    Forms\Components\Section::make(__('2) من نحن (المقدمة)'))->schema([
                         Forms\Components\FileUpload::make('about_intro_image')
-                            ->label('صورة القسم')
+                            ->label(__('صورة القسم'))
                             ->image()->disk('public')->directory('about')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('about_header_ar')->label('العنوان (عربي)')->placeholder('من نحن'),
+                        Forms\Components\TextInput::make('about_header_ar')->label(__('العنوان (عربي)'))->placeholder(__('من نحن')),
                         Forms\Components\TextInput::make('about_header_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('about_intro_ar')->label('النص (عربي)')->rows(5),
+                        Forms\Components\Textarea::make('about_intro_ar')->label(__('النص (عربي)'))->rows(5),
                         Forms\Components\Textarea::make('about_intro_en')->label('Body (English)')->rows(5),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('3) القيم')->schema([
-                        Forms\Components\TextInput::make('about_core_values_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('3) القيم'))->schema([
+                        Forms\Components\TextInput::make('about_core_values_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('about_core_values_title_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('about_core_values_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('about_core_values_subtitle_ar')->label(__('الوصف الفرعي (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('about_core_values_subtitle_en')->label('Subtitle (English)')->rows(2),
                         Forms\Components\Repeater::make('about_core_values')
-                            ->label('بطاقات القيم')
+                            ->label(__('بطاقات القيم'))
                             ->schema([
                                 Forms\Components\FileUpload::make('icon')
-                                    ->label('الأيقونة')
+                                    ->label(__('الأيقونة'))
                                     ->image()->disk('public')->directory('about/values')
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('title_en')->label('Title (English)'),
-                                Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(3),
+                                Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                                 Forms\Components\Textarea::make('desc_en')->label('Description (English)')->rows(3),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
                             ->cloneable()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'قيمة')
-                            ->addActionLabel('➕ إضافة قيمة')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'قيمة') ?: null)
+                            ->addActionLabel(__('➕ إضافة قيمة'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('4) ما الذي يدفعنا لنكون صوتك؟')->schema([
+                    Forms\Components\Section::make(__('4) ما الذي يدفعنا لنكون صوتك؟'))->schema([
                         Forms\Components\FileUpload::make('about_platform_image')
-                            ->label('صورة القسم')
+                            ->label(__('صورة القسم'))
                             ->image()->disk('public')->directory('about')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('about_platform_question_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('about_platform_question_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('about_platform_question_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('about_platform_desc_ar')->label('الوصف (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('about_platform_desc_ar')->label(__('الوصف (عربي)'))->rows(4),
                         Forms\Components\Textarea::make('about_platform_desc_en')->label('Description (English)')->rows(4),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('5) قصة صوت')->schema([
-                        Forms\Components\TextInput::make('about_story_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('5) قصة صوت'))->schema([
+                        Forms\Components\TextInput::make('about_story_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('about_story_title_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('about_story_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('about_story_subtitle_ar')->label(__('الوصف الفرعي (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('about_story_subtitle_en')->label('Subtitle (English)')->rows(2),
                         Forms\Components\Repeater::make('about_story_cards')
-                            ->label('بطاقات القصة')
+                            ->label(__('بطاقات القصة'))
                             ->schema([
                                 Forms\Components\FileUpload::make('icon')
-                                    ->label('الأيقونة')
+                                    ->label(__('الأيقونة'))
                                     ->image()->disk('public')->directory('about/story')
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('title_en')->label('Title (English)'),
-                                Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(3),
+                                Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                                 Forms\Components\Textarea::make('desc_en')->label('Description (English)')->rows(3),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
                             ->cloneable()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'بطاقة')
-                            ->addActionLabel('➕ إضافة بطاقة')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'بطاقة') ?: null)
+                            ->addActionLabel(__('➕ إضافة بطاقة'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('6) بانر المساهمة / الانضمام')->schema([
+                    Forms\Components\Section::make(__('6) بانر المساهمة / الانضمام'))->schema([
                         Forms\Components\FileUpload::make('about_join_bg')
-                            ->label('صورة الخلفية')
+                            ->label(__('صورة الخلفية'))
                             ->image()->disk('public')->directory('about')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('about_join_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('about_join_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('about_join_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('about_join_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('about_join_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('about_join_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\TextInput::make('about_join_button_text_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('about_join_button_text_ar')->label(__('نص الزر (عربي)')),
                         Forms\Components\TextInput::make('about_join_button_text_en')->label('Button text (English)'),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('محتوانا')->icon('heroicon-o-film')->schema([
-                    Forms\Components\Section::make('1) الهيرو — العنوان والوصف')->schema([
+                Forms\Components\Tabs\Tab::make(__('محتوانا'))->icon('heroicon-o-film')->schema([
+                    Forms\Components\Section::make(__('1) الهيرو — العنوان والوصف'))->schema([
                         Forms\Components\FileUpload::make('content_header_bg')
-                            ->label('صورة خلفية الهيرو')
+                            ->label(__('صورة خلفية الهيرو'))
                             ->image()->disk('public')->directory('content')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('content_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('content_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('content_hero_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('content_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('content_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('content_hero_desc_en')->label('Description (EN)')->rows(3),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) شرائح الهيرو (صور فقط)')->schema([
+                    Forms\Components\Section::make(__('2) شرائح الهيرو (صور فقط)'))->schema([
                         Forms\Components\Repeater::make('content_hero_items')
-                            ->label('صور الهيرو')
+                            ->label(__('صور الهيرو'))
                             ->schema([
                                 Forms\Components\FileUpload::make('image')
-                                    ->label('الصورة')
+                                    ->label(__('الصورة'))
                                     ->image()->disk('public')->directory('content/hero')->imageEditor()
-                                    ->helperText('اختياري — إن لم ترفع صورة تُتجاهل هذه الشريحة في الـ API'),
+                                    ->helperText(__('اختياري — إن لم ترفع صورة تُتجاهل هذه الشريحة في الـ API')),
                             ])
                             ->default([])
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => filled($state['image'] ?? null) ? 'صورة' : 'شريحة جديدة')
-                            ->addActionLabel('➕ إضافة صورة')
+                            ->itemLabel(fn (array $state): ?string => filled($state['image'] ?? null) ? __('صورة') : __('شريحة جديدة'))
+                            ->addActionLabel(__('➕ إضافة صورة'))
                             ->columnSpanFull(),
                     ]),
 
-                    Forms\Components\Section::make('3) قسم الأكثر مشاهدة')->schema([
-                        Forms\Components\TextInput::make('content_most_viewed_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('3) قسم الأكثر مشاهدة'))->schema([
+                        Forms\Components\TextInput::make('content_most_viewed_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('content_most_viewed_title_en')->label('Title (EN)'),
-                        Forms\Components\TextInput::make('content_most_viewed_more_ar')->label('نص «رؤية المزيد» (عربي)'),
+                        Forms\Components\TextInput::make('content_most_viewed_more_ar')->label(__('نص «رؤية المزيد» (عربي)')),
                         Forms\Components\TextInput::make('content_most_viewed_more_en')->label('See more (EN)'),
                         Forms\Components\TextInput::make('content_most_viewed_limit')
-                            ->label('عدد الريلز')
+                            ->label(__('عدد الريلز'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(30)
@@ -1041,242 +1043,242 @@ class Settings extends Page implements HasForms
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الأخبار')->icon('heroicon-o-newspaper')->schema([
-                    Forms\Components\Section::make('1) هيرو صفحة قائمة الأخبار')->schema([
+                Forms\Components\Tabs\Tab::make(__('الأخبار'))->icon('heroicon-o-newspaper')->schema([
+                    Forms\Components\Section::make(__('1) هيرو صفحة قائمة الأخبار'))->schema([
                         Forms\Components\FileUpload::make('blog_header_bg')
-                            ->label('صورة خلفية الهيرو')
+                            ->label(__('صورة خلفية الهيرو'))
                             ->image()->disk('public')->directory('blogs')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->helperText(__('اتركه فارغاً لاستخدام الصورة الافتراضية'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('blog_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('blog_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('blog_hero_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('blog_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('blog_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('blog_hero_desc_en')->label('Description (EN)')->rows(3),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('القصص')->icon('heroicon-o-book-open')->schema([
-                    Forms\Components\Section::make('1) هيرو صفحة قائمة القصص')->schema([
+                Forms\Components\Tabs\Tab::make(__('القصص'))->icon('heroicon-o-book-open')->schema([
+                    Forms\Components\Section::make(__('1) هيرو صفحة قائمة القصص'))->schema([
                         Forms\Components\FileUpload::make('story_header_bg')
-                            ->label('صورة خلفية الهيرو')
+                            ->label(__('صورة خلفية الهيرو'))
                             ->image()->disk('public')->directory('stories')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->helperText(__('اتركه فارغاً لاستخدام الصورة الافتراضية'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('story_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('story_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('story_hero_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('story_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('story_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('story_hero_desc_en')->label('Description (EN)')->rows(3),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) صفحة تفاصيل القصة')->schema([
-                        Forms\Components\TextInput::make('story_related_title_ar')->label('عنوان «قصص ذات صلة» (عربي)'),
+                    Forms\Components\Section::make(__('2) صفحة تفاصيل القصة'))->schema([
+                        Forms\Components\TextInput::make('story_related_title_ar')->label(__('عنوان «قصص ذات صلة» (عربي)')),
                         Forms\Components\TextInput::make('story_related_title_en')->label('Related stories title (EN)'),
-                        Forms\Components\Textarea::make('story_related_subtitle_ar')->label('وصف «قصص ذات صلة» (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('story_related_subtitle_ar')->label(__('وصف «قصص ذات صلة» (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('story_related_subtitle_en')->label('Related stories subtitle (EN)')->rows(2),
-                        Forms\Components\TextInput::make('story_view_all_ar')->label('«عرض جميع القصص» (عربي)'),
+                        Forms\Components\TextInput::make('story_view_all_ar')->label(__('«عرض جميع القصص» (عربي)')),
                         Forms\Components\TextInput::make('story_view_all_en')->label('View all stories (EN)'),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('التعاون')->icon('heroicon-o-hand-raised')->schema([
-                    Forms\Components\Section::make('1) هيرو صفحة التعاون')->schema([
+                Forms\Components\Tabs\Tab::make(__('التعاون'))->icon('heroicon-o-hand-raised')->schema([
+                    Forms\Components\Section::make(__('1) هيرو صفحة التعاون'))->schema([
                         Forms\Components\FileUpload::make('collaborate_header_bg')
-                            ->label('صورة خلفية الهيرو')
+                            ->label(__('صورة خلفية الهيرو'))
                             ->image()->disk('public')->directory('collaborate')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->helperText(__('اتركه فارغاً لاستخدام الصورة الافتراضية'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('collaborate_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('collaborate_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('collaborate_hero_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('collaborate_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('collaborate_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('collaborate_hero_desc_en')->label('Description (EN)')->rows(3),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) بطاقات أنواع التعاون')->schema([
+                    Forms\Components\Section::make(__('2) بطاقات أنواع التعاون'))->schema([
                         Forms\Components\Placeholder::make('collaborate_types_hint')
-                            ->content('إدارة البطاقات (صانع محتوى، رعاية، شراكة…) من **التعاون → أنواع التعاون** في الشريط الجانبي.')
+                            ->content(__('إدارة البطاقات (صانع محتوى، رعاية، شراكة…) من **التعاون → أنواع التعاون** في الشريط الجانبي.'))
                             ->columnSpanFull(),
                     ]),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الفريق')->icon('heroicon-o-users')->schema([
-                    Forms\Components\Section::make('1) الهيرو')->schema([
+                Forms\Components\Tabs\Tab::make(__('الفريق'))->icon('heroicon-o-users')->schema([
+                    Forms\Components\Section::make(__('1) الهيرو'))->schema([
                         Forms\Components\FileUpload::make('team_header_bg')
-                            ->label('صورة خلفية الهيرو')
+                            ->label(__('صورة خلفية الهيرو'))
                             ->image()->disk('public')->directory('team')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الصورة الافتراضية')
+                            ->helperText(__('اتركه فارغاً لاستخدام الصورة الافتراضية'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('team_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('team_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('team_hero_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('team_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('team_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('team_hero_desc_en')->label('Description (English)')->rows(3),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) فلتر الأقسام')->schema([
-                        Forms\Components\TextInput::make('team_all_label_ar')->label('تسمية «الكل» (عربي)')->placeholder('الكل'),
+                    Forms\Components\Section::make(__('2) فلتر الأقسام'))->schema([
+                        Forms\Components\TextInput::make('team_all_label_ar')->label(__('تسمية «الكل» (عربي)'))->placeholder(__('الكل')),
                         Forms\Components\TextInput::make('team_all_label_en')->label('"All" label (English)')->placeholder('All'),
                         Forms\Components\Placeholder::make('team_majors_hint')
-                            ->content('إدارة الأقسام (فريق التصميم، التسويق…) من قائمة **الفريق → الأقسام (Majors)** في الشريط الجانبي.')
+                            ->content(__('إدارة الأقسام (فريق التصميم، التسويق…) من قائمة **الفريق → الأقسام (Majors)** في الشريط الجانبي.'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('3) صفحة تفاصيل العضو')->schema([
-                        Forms\Components\TextInput::make('team_bio_label_ar')->label('عنوان النبذة (عربي)')->placeholder('نبذة عنه'),
+                    Forms\Components\Section::make(__('3) صفحة تفاصيل العضو'))->schema([
+                        Forms\Components\TextInput::make('team_bio_label_ar')->label(__('عنوان النبذة (عربي)'))->placeholder(__('نبذة عنه')),
                         Forms\Components\TextInput::make('team_bio_label_en')->label('Bio heading (English)'),
-                        Forms\Components\TextInput::make('team_experience_suffix_ar')->label('لاحقة الخبرة (عربي)')->placeholder('سنوات من الخبرة'),
+                        Forms\Components\TextInput::make('team_experience_suffix_ar')->label(__('لاحقة الخبرة (عربي)'))->placeholder(__('سنوات من الخبرة')),
                         Forms\Components\TextInput::make('team_experience_suffix_en')->label('Experience suffix (English)'),
-                        Forms\Components\TextInput::make('team_follow_label_ar')->label('عنوان المتابعة (عربي)')->placeholder('تابعنا على :'),
+                        Forms\Components\TextInput::make('team_follow_label_ar')->label(__('عنوان المتابعة (عربي)'))->placeholder(__('تابعنا على :')),
                         Forms\Components\TextInput::make('team_follow_label_en')->label('Follow label (English)'),
                         Forms\Components\FileUpload::make('team_detail_intro_image')
-                            ->label('صورة قسم المقدمة أسفل الصفحة')
+                            ->label(__('صورة قسم المقدمة أسفل الصفحة'))
                             ->image()->disk('public')->directory('team')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\Textarea::make('team_detail_intro_ar')->label('نص المقدمة (عربي)')->rows(4),
+                        Forms\Components\Textarea::make('team_detail_intro_ar')->label(__('نص المقدمة (عربي)'))->rows(4),
                         Forms\Components\Textarea::make('team_detail_intro_en')->label('Intro text (English)')->rows(4),
-                        Forms\Components\TextInput::make('team_members_section_title_ar')->label('عنوان شبكة الأعضاء (عربي)'),
+                        Forms\Components\TextInput::make('team_members_section_title_ar')->label(__('عنوان شبكة الأعضاء (عربي)')),
                         Forms\Components\TextInput::make('team_members_section_title_en')->label('Members grid title (English)'),
-                        Forms\Components\TextInput::make('team_view_all_label_ar')->label('نص «عرض الكل» (عربي)'),
+                        Forms\Components\TextInput::make('team_view_all_label_ar')->label(__('نص «عرض الكل» (عربي)')),
                         Forms\Components\TextInput::make('team_view_all_label_en')->label('"View all" (English)'),
                         Forms\Components\Placeholder::make('team_members_hint')
-                            ->content('روابط التواصل لكل عضو تُعدّل من **الفريق → أعضاء الفريق → تاب صفحة التفاصيل**.')
+                            ->content(__('روابط التواصل لكل عضو تُعدّل من **الفريق → أعضاء الفريق → تاب صفحة التفاصيل**.'))
                             ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('صناع المحتوى')->icon('heroicon-o-microphone')->schema([
-                    Forms\Components\Section::make('1) الهيرو')->schema([
+                Forms\Components\Tabs\Tab::make(__('صناع المحتوى'))->icon('heroicon-o-microphone')->schema([
+                    Forms\Components\Section::make(__('1) الهيرو'))->schema([
                         Forms\Components\FileUpload::make('creators_header_bg')
-                            ->label('صورة خلفية الهيرو')
+                            ->label(__('صورة خلفية الهيرو'))
                             ->image()->disk('public')->directory('creators')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('creators_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('creators_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('creators_hero_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('creators_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('creators_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('creators_hero_desc_en')->label('Description (English)')->rows(3),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) شبكة صناع المحتوى')->schema([
-                        Forms\Components\TextInput::make('creators_grid_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('2) شبكة صناع المحتوى'))->schema([
+                        Forms\Components\TextInput::make('creators_grid_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('creators_grid_title_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('creators_grid_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_grid_subtitle_ar')->label(__('الوصف الفرعي (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('creators_grid_subtitle_en')->label('Subtitle (English)')->rows(2),
-                        Forms\Components\TextInput::make('creators_card_browse_label_ar')->label('نص «تصفح» (عربي)'),
+                        Forms\Components\TextInput::make('creators_card_browse_label_ar')->label(__('نص «تصفح» (عربي)')),
                         Forms\Components\TextInput::make('creators_card_browse_label_en')->label('Browse label (English)'),
                         Forms\Components\TextInput::make('creators_grid_limit')
-                            ->label('عدد البطاقات في الصفحة الرئيسية')
+                            ->label(__('عدد البطاقات في الصفحة الرئيسية'))
                             ->numeric()
                             ->minValue(1)
                             ->default(10)
                             ->columnSpanFull(),
                         Forms\Components\Placeholder::make('creators_grid_hint')
-                            ->content('إدارة صناع المحتوى من **صنّاع المحتوى → Content Creators** في الشريط الجانبي.')
+                            ->content(__('إدارة صناع المحتوى من **صنّاع المحتوى → Content Creators** في الشريط الجانبي.'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('صفحة عرض الكل')->schema([
+                    Forms\Components\Section::make(__('صفحة عرض الكل'))->schema([
                         Forms\Components\TextInput::make('creators_all_per_page')
-                            ->label('عدد البطاقات في كل صفحة')
+                            ->label(__('عدد البطاقات في كل صفحة'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(50)
                             ->default(10)
-                            ->helperText('صفحة /creators/all — الترقيم أسفل الشبكة')
+                            ->helperText(__('صفحة /creators/all — الترقيم أسفل الشبكة'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('creators_all_followers_suffix_ar')->label('لاحقة المتابعين (عربي)')->placeholder('متابع'),
+                        Forms\Components\TextInput::make('creators_all_followers_suffix_ar')->label(__('لاحقة المتابعين (عربي)'))->placeholder(__('متابع')),
                         Forms\Components\TextInput::make('creators_all_followers_suffix_en')->label('Followers suffix (English)')->placeholder('followers'),
                         Forms\Components\Placeholder::make('creators_all_hint')
-                            ->content('البطاقات نفسها تُدار من **صنّاع المحتوى → Content Creators** (الصورة، الاسم، التخصص، عدد المتابعين، الترتيب، الحالة).')
+                            ->content(__('البطاقات نفسها تُدار من **صنّاع المحتوى → Content Creators** (الصورة، الاسم، التخصص، عدد المتابعين، الترتيب، الحالة).'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('3) الإحصائيات')->schema([
-                        Forms\Components\TextInput::make('creators_stats_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('3) الإحصائيات'))->schema([
+                        Forms\Components\TextInput::make('creators_stats_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('creators_stats_title_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('creators_stats_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_stats_subtitle_ar')->label(__('الوصف الفرعي (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('creators_stats_subtitle_en')->label('Subtitle (English)')->rows(2),
 
-                        Forms\Components\Section::make('① صانع محتوى نشط')->schema([
+                        Forms\Components\Section::make(__('① صانع محتوى نشط'))->schema([
                             Forms\Components\TextInput::make('creators_stat_creators_value')
-                                ->label('الرقم')
+                                ->label(__('الرقم'))
                                 ->numeric()
-                                ->helperText('مثال: 45 يظهر كـ 45+')
+                                ->helperText(__('مثال: 45 يظهر كـ 45+'))
                                 ->columnSpanFull(),
-                            Forms\Components\TextInput::make('creators_stat_creators_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_creators_label_ar')->label(__('التسمية (عربي)')),
                             Forms\Components\TextInput::make('creators_stat_creators_label_en')->label('Label (English)'),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('② إعلان تعاوني نُفّذ')->schema([
+                        Forms\Components\Section::make(__('② إعلان تعاوني نُفّذ'))->schema([
                             Forms\Components\TextInput::make('creators_stat_collabs_value')
-                                ->label('الرقم')
+                                ->label(__('الرقم'))
                                 ->numeric()
-                                ->helperText('مثال: 500 يظهر كـ 500+')
+                                ->helperText(__('مثال: 500 يظهر كـ 500+'))
                                 ->columnSpanFull(),
-                            Forms\Components\TextInput::make('creators_stat_collabs_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_collabs_label_ar')->label(__('التسمية (عربي)')),
                             Forms\Components\TextInput::make('creators_stat_collabs_label_en')->label('Label (English)'),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('③ دعم مالي وُزّع')->schema([
+                        Forms\Components\Section::make(__('③ دعم مالي وُزّع'))->schema([
                             Forms\Components\TextInput::make('creators_stat_support_value')
-                                ->label('الرقم')
+                                ->label(__('الرقم'))
                                 ->numeric()
-                                ->helperText('مثال: 250000 يظهر كـ +$250K')
+                                ->helperText(__('مثال: 250000 يظهر كـ +$250K'))
                                 ->columnSpanFull(),
-                            Forms\Components\TextInput::make('creators_stat_support_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_support_label_ar')->label(__('التسمية (عربي)')),
                             Forms\Components\TextInput::make('creators_stat_support_label_en')->label('Label (English)'),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('④ شخص وصلهم المحتوى')->schema([
+                        Forms\Components\Section::make(__('④ شخص وصلهم المحتوى'))->schema([
                             Forms\Components\TextInput::make('creators_stat_reach_value')
-                                ->label('الرقم')
+                                ->label(__('الرقم'))
                                 ->numeric()
-                                ->helperText('مثال: 4000000 يظهر كـ 4M+')
+                                ->helperText(__('مثال: 4000000 يظهر كـ 4M+'))
                                 ->columnSpanFull(),
-                            Forms\Components\TextInput::make('creators_stat_reach_label_ar')->label('التسمية (عربي)'),
+                            Forms\Components\TextInput::make('creators_stat_reach_label_ar')->label(__('التسمية (عربي)')),
                             Forms\Components\TextInput::make('creators_stat_reach_label_en')->label('Label (English)'),
                         ])->columns(2)->compact(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('4) دعوة الانضمام (CTA)')->schema([
+                    Forms\Components\Section::make(__('4) دعوة الانضمام (CTA)'))->schema([
                         Forms\Components\FileUpload::make('creators_join_bg')
-                            ->label('صورة الزر / الخلفية')
+                            ->label(__('صورة الزر / الخلفية'))
                             ->image()->disk('public')->directory('creators')->imageEditor()
-                            ->helperText('هذه الصورة هي زر «انضم إلينا كصانع محتوى»')
+                            ->helperText(__('هذه الصورة هي زر «انضم إلينا كصانع محتوى»'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('creators_join_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('creators_join_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('creators_join_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('creators_join_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('creators_join_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\TextInput::make('creators_join_button_text_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_button_text_ar')->label(__('نص الزر (عربي)')),
                         Forms\Components\TextInput::make('creators_join_button_text_en')->label('Button text (English)'),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('نموذج الانضمام (3 خطوات)')->schema([
-                        Forms\Components\TextInput::make('creators_join_form_title_ar')->label('عنوان النموذج (عربي)'),
+                    Forms\Components\Section::make(__('نموذج الانضمام (3 خطوات)'))->schema([
+                        Forms\Components\TextInput::make('creators_join_form_title_ar')->label(__('عنوان النموذج (عربي)')),
                         Forms\Components\TextInput::make('creators_join_form_title_en')->label('Form title (English)'),
-                        Forms\Components\Textarea::make('creators_join_form_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_join_form_subtitle_ar')->label(__('الوصف الفرعي (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('creators_join_form_subtitle_en')->label('Subtitle (English)')->rows(2),
-                        Forms\Components\TextInput::make('creators_join_step_1_ar')->label('الخطوة 1 (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_step_1_ar')->label(__('الخطوة 1 (عربي)')),
                         Forms\Components\TextInput::make('creators_join_step_1_en')->label('Step 1 (English)'),
-                        Forms\Components\TextInput::make('creators_join_step_2_ar')->label('الخطوة 2 (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_step_2_ar')->label(__('الخطوة 2 (عربي)')),
                         Forms\Components\TextInput::make('creators_join_step_2_en')->label('Step 2 (English)'),
-                        Forms\Components\TextInput::make('creators_join_step_3_ar')->label('الخطوة 3 (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_step_3_ar')->label(__('الخطوة 3 (عربي)')),
                         Forms\Components\TextInput::make('creators_join_step_3_en')->label('Step 3 (English)'),
-                        Forms\Components\TextInput::make('creators_join_next_ar')->label('نص «التالي» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_next_ar')->label(__('نص «التالي» (عربي)')),
                         Forms\Components\TextInput::make('creators_join_next_en')->label('Next (English)'),
-                        Forms\Components\TextInput::make('creators_join_prev_ar')->label('نص «السابق» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_prev_ar')->label(__('نص «السابق» (عربي)')),
                         Forms\Components\TextInput::make('creators_join_prev_en')->label('Previous (English)'),
-                        Forms\Components\TextInput::make('creators_join_cancel_ar')->label('نص «إلغاء» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_cancel_ar')->label(__('نص «إلغاء» (عربي)')),
                         Forms\Components\TextInput::make('creators_join_cancel_en')->label('Cancel (English)'),
-                        Forms\Components\TextInput::make('creators_join_submit_ar')->label('نص «تسليم الطلب» (عربي)'),
+                        Forms\Components\TextInput::make('creators_join_submit_ar')->label(__('نص «تسليم الطلب» (عربي)')),
                         Forms\Components\TextInput::make('creators_join_submit_en')->label('Submit (English)'),
                         Forms\Components\Repeater::make('creators_join_content_types')
-                            ->label('أنواع المحتوى (الخطوة 2)')
+                            ->label(__('أنواع المحتوى (الخطوة 2)'))
                             ->schema([
                                 Forms\Components\TextInput::make('key')
-                                    ->label('المفتاح')
+                                    ->label(__('المفتاح'))
                                     ->required()
                                     ->maxLength(80)
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('label_ar')->label('التسمية (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_ar')->label(__('التسمية (عربي)'))->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (English)'),
                             ])
                             ->columns(2)
@@ -1285,254 +1287,254 @@ class Settings extends Page implements HasForms
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('5) الشركات الشريكة')->schema([
-                        Forms\Components\TextInput::make('creators_partners_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('5) الشركات الشريكة'))->schema([
+                        Forms\Components\TextInput::make('creators_partners_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('creators_partners_title_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('creators_partners_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_partners_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('creators_partners_desc_en')->label('Description (English)')->rows(2),
                         Forms\Components\Placeholder::make('creators_partners_hint')
-                            ->content('إدارة الشركات من **صنّاع المحتوى → الشركات الشريكة** في الشريط الجانبي.')
+                            ->content(__('إدارة الشركات من **صنّاع المحتوى → الشركات الشريكة** في الشريط الجانبي.'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('6) خطوات التعاون')->schema([
-                        Forms\Components\TextInput::make('creators_collab_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('6) خطوات التعاون'))->schema([
+                        Forms\Components\TextInput::make('creators_collab_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('creators_collab_title_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('creators_collab_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_collab_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('creators_collab_desc_en')->label('Description (English)')->rows(2),
 
-                        Forms\Components\Section::make('مخطط التعاون — اليمين: صناع المحتوى (نص)')->schema([
-                            Forms\Components\TextInput::make('creators_collab_creators_label_ar')->label('العنوان (عربي)'),
+                        Forms\Components\Section::make(__('مخطط التعاون — اليمين: صناع المحتوى (نص)'))->schema([
+                            Forms\Components\TextInput::make('creators_collab_creators_label_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_creators_label_en')->label('Title (English)'),
-                            Forms\Components\TextInput::make('creators_collab_creators_subtitle_ar')->label('الوصف الفرعي (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_creators_subtitle_ar')->label(__('الوصف الفرعي (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_creators_subtitle_en')->label('Subtitle (English)'),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('مخطط التعاون — الوسط: ميديا صوت (صورة)')->schema([
+                        Forms\Components\Section::make(__('مخطط التعاون — الوسط: ميديا صوت (صورة)'))->schema([
                             Forms\Components\FileUpload::make('creators_collab_media_image')
-                                ->label('صورة / شعار الوسط')
+                                ->label(__('صورة / شعار الوسط'))
                                 ->image()
                                 ->disk('public')
                                 ->directory('creators/collab')
                                 ->imageEditor()
-                                ->helperText('الصورة في الدائرة الوسطى (ميديا صوت)')
+                                ->helperText(__('الصورة في الدائرة الوسطى (ميديا صوت)'))
                                 ->columnSpanFull(),
-                            Forms\Components\TextInput::make('creators_collab_media_label_ar')->label('العنوان تحت الصورة (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_media_label_ar')->label(__('العنوان تحت الصورة (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_media_label_en')->label('Title under image (English)'),
-                            Forms\Components\TextInput::make('creators_collab_media_subtitle_ar')->label('شارة الوسط (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_media_subtitle_ar')->label(__('شارة الوسط (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_media_subtitle_en')->label('Badge text (English)'),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('مخطط التعاون — اليسار: الشركات (نص)')->schema([
-                            Forms\Components\TextInput::make('creators_collab_brands_label_ar')->label('العنوان (عربي)'),
+                        Forms\Components\Section::make(__('مخطط التعاون — اليسار: الشركات (نص)'))->schema([
+                            Forms\Components\TextInput::make('creators_collab_brands_label_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_brands_label_en')->label('Title (English)'),
-                            Forms\Components\TextInput::make('creators_collab_brands_subtitle_ar')->label('الوصف الفرعي (عربي)'),
+                            Forms\Components\TextInput::make('creators_collab_brands_subtitle_ar')->label(__('الوصف الفرعي (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_brands_subtitle_en')->label('Subtitle (English)'),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('عنوان خطوات التعاون')->schema([
-                            Forms\Components\TextInput::make('creators_collab_steps_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\Section::make(__('عنوان خطوات التعاون'))->schema([
+                            Forms\Components\TextInput::make('creators_collab_steps_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_steps_title_en')->label('Title (English)'),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('الخطوة 01')->schema([
-                            Forms\Components\Textarea::make('creators_collab_step_1_ar')->label('النص (عربي)')->rows(3),
+                        Forms\Components\Section::make(__('الخطوة 01'))->schema([
+                            Forms\Components\Textarea::make('creators_collab_step_1_ar')->label(__('النص (عربي)'))->rows(3),
                             Forms\Components\Textarea::make('creators_collab_step_1_en')->label('Text (English)')->rows(3),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('الخطوة 02')->schema([
-                            Forms\Components\Textarea::make('creators_collab_step_2_ar')->label('النص (عربي)')->rows(3),
+                        Forms\Components\Section::make(__('الخطوة 02'))->schema([
+                            Forms\Components\Textarea::make('creators_collab_step_2_ar')->label(__('النص (عربي)'))->rows(3),
                             Forms\Components\Textarea::make('creators_collab_step_2_en')->label('Text (English)')->rows(3),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('الخطوة 03')->schema([
-                            Forms\Components\Textarea::make('creators_collab_step_3_ar')->label('النص (عربي)')->rows(3),
+                        Forms\Components\Section::make(__('الخطوة 03'))->schema([
+                            Forms\Components\Textarea::make('creators_collab_step_3_ar')->label(__('النص (عربي)'))->rows(3),
                             Forms\Components\Textarea::make('creators_collab_step_3_en')->label('Text (English)')->rows(3),
                         ])->columns(2)->compact(),
 
-                        Forms\Components\Section::make('زر التواصل')->schema([
-                            Forms\Components\TextInput::make('creators_collab_cta_label_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\Section::make(__('زر التواصل'))->schema([
+                            Forms\Components\TextInput::make('creators_collab_cta_label_ar')->label(__('نص الزر (عربي)')),
                             Forms\Components\TextInput::make('creators_collab_cta_label_en')->label('Button text (English)'),
                         ])->columns(2)->compact(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('7) الأسئلة الشائعة')->schema([
-                        Forms\Components\TextInput::make('creators_faq_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('7) الأسئلة الشائعة'))->schema([
+                        Forms\Components\TextInput::make('creators_faq_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('creators_faq_title_en')->label('Section title (English)'),
-                        Forms\Components\Textarea::make('creators_faq_subtitle_ar')->label('الوصف الفرعي (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('creators_faq_subtitle_ar')->label(__('الوصف الفرعي (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('creators_faq_subtitle_en')->label('Subtitle (English)')->rows(2),
                         Forms\Components\FileUpload::make('creators_faq_image')
-                            ->label('صورة جانبية')
+                            ->label(__('صورة جانبية'))
                             ->image()->disk('public')->directory('creators')->imageEditor()
                             ->columnSpanFull(),
                         Forms\Components\Placeholder::make('creators_faq_hint')
-                            ->content('إدارة الأسئلة من **صنّاع المحتوى → الأسئلة الشائعة** في الشريط الجانبي.')
+                            ->content(__('إدارة الأسئلة من **صنّاع المحتوى → الأسئلة الشائعة** في الشريط الجانبي.'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('8) صفحة تفاصيل صانع المحتوى')->schema([
-                        Forms\Components\TextInput::make('creators_bio_label_ar')->label('عنوان النبذة (عربي)'),
+                    Forms\Components\Section::make(__('8) صفحة تفاصيل صانع المحتوى'))->schema([
+                        Forms\Components\TextInput::make('creators_bio_label_ar')->label(__('عنوان النبذة (عربي)')),
                         Forms\Components\TextInput::make('creators_bio_label_en')->label('Bio heading (English)'),
-                        Forms\Components\TextInput::make('creators_followers_label_ar')->label('عنوان المتابعين (عربي)'),
+                        Forms\Components\TextInput::make('creators_followers_label_ar')->label(__('عنوان المتابعين (عربي)')),
                         Forms\Components\TextInput::make('creators_followers_label_en')->label('Followers label (English)'),
-                        Forms\Components\TextInput::make('creators_socials_label_ar')->label('عنوان التواصل (عربي)'),
+                        Forms\Components\TextInput::make('creators_socials_label_ar')->label(__('عنوان التواصل (عربي)')),
                         Forms\Components\TextInput::make('creators_socials_label_en')->label('Socials label (English)'),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('عام')->icon('heroicon-o-globe-alt')->schema([
-                    Forms\Components\TextInput::make('site_name')->label('اسم المنصة')->required(),
-                    Forms\Components\Textarea::make('site_description')->label('وصف المنصة')->rows(3),
+                Forms\Components\Tabs\Tab::make(__('عام'))->icon('heroicon-o-globe-alt')->schema([
+                    Forms\Components\TextInput::make('site_name')->label(__('اسم المنصة'))->required(),
+                    Forms\Components\Textarea::make('site_description')->label(__('وصف المنصة'))->rows(3),
                     Forms\Components\Select::make('default_locale')
-                        ->label('اللغة الافتراضية')
+                        ->label(__('اللغة الافتراضية'))
                         ->options(['ar' => 'العربية', 'en' => 'English'])
                         ->required(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الهيدر')->icon('heroicon-o-bars-3')->schema([
-                    Forms\Components\Section::make('الشعار')->schema([
+                Forms\Components\Tabs\Tab::make(__('الهيدر'))->icon('heroicon-o-bars-3')->schema([
+                    Forms\Components\Section::make(__('الشعار'))->schema([
                         Forms\Components\FileUpload::make('home_logo')
-                            ->label('شعار الهيدر')
+                            ->label(__('شعار الهيدر'))
                             ->image()->disk('public')->directory('home')->imageEditor()
-                            ->helperText('يظهر في شريط التنقل')
+                            ->helperText(__('يظهر في شريط التنقل'))
                             ->columnSpanFull(),
                     ]),
 
-                    Forms\Components\Section::make('الشريط العلوي')
-                        ->description('الصف العلوي: زر ادعم صوت، تسجيل الدخول، البحث، وتبديل اللغة')
+                    Forms\Components\Section::make(__('الشريط العلوي'))
+                        ->description(__('الصف العلوي: زر ادعم صوت، تسجيل الدخول، البحث، وتبديل اللغة'))
                         ->schema([
                             Forms\Components\TextInput::make('header_socials_label_ar')
-                                ->label('عنوان السوشيال (عربي)'),
+                                ->label(__('عنوان السوشيال (عربي)')),
                             Forms\Components\TextInput::make('header_socials_label_en')
                                 ->label('Social label (English)'),
                             Forms\Components\TextInput::make('header_auth_register_label_ar')
-                                ->label('زر أنشئ حساب (عربي)'),
+                                ->label(__('زر أنشئ حساب (عربي)')),
                             Forms\Components\TextInput::make('header_auth_register_label_en')
                                 ->label('Register button (English)'),
                             Forms\Components\TextInput::make('header_auth_login_label_ar')
-                                ->label('زر تسجيل الدخول (عربي)'),
+                                ->label(__('زر تسجيل الدخول (عربي)')),
                             Forms\Components\TextInput::make('header_auth_login_label_en')
                                 ->label('Sign in button (English)'),
                             Forms\Components\Placeholder::make('header_social_hint')
                                 ->label('')
-                                ->content('روابط السوشيال ميديا تُعدّل من تبويب «التواصل الاجتماعي» وتُرجع في API ضمن topbar.socials.')
+                                ->content(__('روابط السوشيال ميديا تُعدّل من تبويب «التواصل الاجتماعي» وتُرجع في API ضمن topbar.socials.'))
                                 ->columnSpanFull(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('القائمة')
-                        ->description('«ادعم صوت» يظهر في الشريط العلوي. «حاضنة صوت» و«صوت ميديا» يظهران يسار الشعار. باقي العناصر في القائمة الرئيسية.')
+                    Forms\Components\Section::make(__('القائمة'))
+                        ->description(__('«ادعم صوت» يظهر في الشريط العلوي. «حاضنة صوت» و«صوت ميديا» يظهران يسار الشعار. باقي العناصر في القائمة الرئيسية.'))
                         ->schema([
                             Forms\Components\Repeater::make('header_nav_links')
-                                ->label('عناصر القائمة — اسحب لإعادة الترتيب')
+                                ->label(__('عناصر القائمة — اسحب لإعادة الترتيب'))
                                 ->schema([
                                     Forms\Components\Hidden::make('key'),
-                                    Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                    Forms\Components\TextInput::make('label_ar')->label(__('العنوان (عربي)'))->required(),
                                     Forms\Components\TextInput::make('label_en')->label('Label (English)'),
-                                    Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true)->columnSpanFull(),
+                                    Forms\Components\Toggle::make('is_visible')->label(__('ظاهر'))->default(true)->columnSpanFull(),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
                                 ->deletable(false)
                                 ->addable(false)
-                                ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
+                                ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'عنصر') ?: null)
                                 ->columnSpanFull(),
                         ]),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الفوتر')->icon('heroicon-o-rectangle-group')->schema([
-                    Forms\Components\Section::make('الشعار والنبذة')->schema([
+                Forms\Components\Tabs\Tab::make(__('الفوتر'))->icon('heroicon-o-rectangle-group')->schema([
+                    Forms\Components\Section::make(__('الشعار والنبذة'))->schema([
                         Forms\Components\FileUpload::make('footer_logo')
-                            ->label('شعار الفوتر')
+                            ->label(__('شعار الفوتر'))
                             ->image()->disk('public')->directory('footer')->imageEditor()
-                            ->helperText('اتركه فارغاً لاستخدام الشعار الأبيض الافتراضي')
+                            ->helperText(__('اتركه فارغاً لاستخدام الشعار الأبيض الافتراضي'))
                             ->columnSpanFull(),
-                        Forms\Components\Textarea::make('footer_about_ar')->label('نبذة (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('footer_about_ar')->label(__('نبذة (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('footer_about_en')->label('About (English)')->rows(3),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('الأقسام الرئيسية')->schema([
-                        Forms\Components\TextInput::make('footer_main_title_ar')->label('عنوان العمود (عربي)'),
+                    Forms\Components\Section::make(__('الأقسام الرئيسية'))->schema([
+                        Forms\Components\TextInput::make('footer_main_title_ar')->label(__('عنوان العمود (عربي)')),
                         Forms\Components\TextInput::make('footer_main_title_en')->label('Column title (English)'),
                         Forms\Components\Repeater::make('footer_main_links')
-                            ->label('العناصر — اسحب لإعادة الترتيب')
+                            ->label(__('العناصر — اسحب لإعادة الترتيب'))
                             ->schema([
                                 Forms\Components\Hidden::make('key'),
-                                Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (English)'),
-                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true)->columnSpanFull(),
+                                Forms\Components\Toggle::make('is_visible')->label(__('ظاهر'))->default(true)->columnSpanFull(),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
                             ->deletable(false)
                             ->addable(false)
-                            ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'عنصر') ?: null)
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('روابط سريعة')->schema([
-                        Forms\Components\TextInput::make('footer_quick_title_ar')->label('عنوان العمود (عربي)'),
+                    Forms\Components\Section::make(__('روابط سريعة'))->schema([
+                        Forms\Components\TextInput::make('footer_quick_title_ar')->label(__('عنوان العمود (عربي)')),
                         Forms\Components\TextInput::make('footer_quick_title_en')->label('Column title (English)'),
                         Forms\Components\Repeater::make('footer_quick_links')
-                            ->label('العناصر — اسحب لإعادة الترتيب')
+                            ->label(__('العناصر — اسحب لإعادة الترتيب'))
                             ->schema([
                                 Forms\Components\Hidden::make('key'),
-                                Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (English)'),
                                 Forms\Components\TextInput::make('url')
-                                    ->label('الرابط')
-                                    ->placeholder('https://example.com أو /page')
-                                    ->helperText('رابط خارجي أو مسار داخلي — اترك # إن لم يكن جاهزاً')
+                                    ->label(__('الرابط'))
+                                    ->placeholder(__('https://example.com أو /page'))
+                                    ->helperText(__('رابط خارجي أو مسار داخلي — اترك # إن لم يكن جاهزاً'))
                                     ->columnSpanFull(),
-                                Forms\Components\Toggle::make('is_visible')->label('ظاهر')->default(true)->columnSpanFull(),
+                                Forms\Components\Toggle::make('is_visible')->label(__('ظاهر'))->default(true)->columnSpanFull(),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
                             ->deletable(false)
                             ->addable(false)
-                            ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'عنصر')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'عنصر') ?: null)
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('معلومات التواصل')
+                    Forms\Components\Section::make(__('معلومات التواصل'))
                         ->schema([
-                            Forms\Components\TextInput::make('contact_phone')->label('هاتف التواصل'),
-                            Forms\Components\TextInput::make('contact_email')->label('بريد التواصل')->email(),
+                            Forms\Components\TextInput::make('contact_phone')->label(__('هاتف التواصل')),
+                            Forms\Components\TextInput::make('contact_email')->label(__('بريد التواصل'))->email(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('حقوق النشر')->schema([
-                        Forms\Components\TextInput::make('footer_copyright_ar')->label('حقوق النشر (عربي)'),
+                    Forms\Components\Section::make(__('حقوق النشر'))->schema([
+                        Forms\Components\TextInput::make('footer_copyright_ar')->label(__('حقوق النشر (عربي)')),
                         Forms\Components\TextInput::make('footer_copyright_en')->label('Copyright (English)'),
-                        Forms\Components\TextInput::make('footer_newsletter_title_ar')->label('عنوان النشرة (عربي)'),
+                        Forms\Components\TextInput::make('footer_newsletter_title_ar')->label(__('عنوان النشرة (عربي)')),
                         Forms\Components\TextInput::make('footer_newsletter_title_en')->label('Newsletter title (English)'),
-                        Forms\Components\TextInput::make('footer_newsletter_desc_ar')->label('وصف النشرة (عربي)'),
+                        Forms\Components\TextInput::make('footer_newsletter_desc_ar')->label(__('وصف النشرة (عربي)')),
                         Forms\Components\TextInput::make('footer_newsletter_desc_en')->label('Newsletter description (English)'),
                         Forms\Components\TextInput::make('footer_brand')
-                            ->label('العلامة (مثل SAWTGAZA)')
+                            ->label(__('العلامة (مثل SAWTGAZA)'))
                             ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الدفع')->icon('heroicon-o-credit-card')->schema([
+                Forms\Components\Tabs\Tab::make(__('الدفع'))->icon('heroicon-o-credit-card')->schema([
                     Forms\Components\TextInput::make('platform_fee_pct')
-                        ->label('نسبة عمولة المنصة (%)')->numeric()->minValue(0)->maxValue(100)->suffix('%')->required(),
+                        ->label(__('نسبة عمولة المنصة (%)'))->numeric()->minValue(0)->maxValue(100)->suffix('%')->required(),
                     Forms\Components\TextInput::make('min_donation_amount')
-                        ->label('الحد الأدنى للتبرع')->numeric()->prefix('$'),
-                    Forms\Components\TextInput::make('bank_name')->label('اسم البنك'),
-                    Forms\Components\TextInput::make('bank_account_owner')->label('اسم صاحب الحساب'),
-                    Forms\Components\TextInput::make('bank_account_number')->label('رقم الحساب'),
+                        ->label(__('الحد الأدنى للتبرع'))->numeric()->prefix('$'),
+                    Forms\Components\TextInput::make('bank_name')->label(__('اسم البنك')),
+                    Forms\Components\TextInput::make('bank_account_owner')->label(__('اسم صاحب الحساب')),
+                    Forms\Components\TextInput::make('bank_account_number')->label(__('رقم الحساب')),
                     Forms\Components\TextInput::make('bank_iban')->label('IBAN'),
                     Forms\Components\Select::make('paypal_mode')
-                        ->label('وضع PayPal')
+                        ->label(__('وضع PayPal'))
                         ->options(['sandbox' => 'تجريبي (Sandbox)', 'live' => 'مباشر (Live)']),
                 ])->columns(2),
 
                 Forms\Components\Tabs\Tab::make('PayPal')->icon('heroicon-o-banknotes')->schema([
                     Forms\Components\Placeholder::make('paypal_hint')
                         ->label('')
-                        ->content('أدخل بيانات تطبيق PayPal (REST App). الوضع (تجريبي/مباشر) يُضبط من تبويب «الدفع». الـ Webhook ID اختياري لكنه يزيد الموثوقية.')
+                        ->content(__('أدخل بيانات تطبيق PayPal (REST App). الوضع (تجريبي/مباشر) يُضبط من تبويب «الدفع». الـ Webhook ID اختياري لكنه يزيد الموثوقية.'))
                         ->columnSpanFull(),
                     Forms\Components\TextInput::make('paypal_client_id')
                         ->label('Client ID')
@@ -1542,133 +1544,133 @@ class Settings extends Page implements HasForms
                         ->password()->revealable()
                         ->columnSpanFull(),
                     Forms\Components\TextInput::make('paypal_webhook_id')
-                        ->label('Webhook ID (اختياري)')
-                        ->helperText('من لوحة PayPal → Webhooks — للتحقق من صحة الإشعارات')
+                        ->label(__('Webhook ID (اختياري)'))
+                        ->helperText(__('من لوحة PayPal → Webhooks — للتحقق من صحة الإشعارات'))
                         ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('صفحة الدعم')->icon('heroicon-o-heart')->schema([
+                Forms\Components\Tabs\Tab::make(__('صفحة الدعم'))->icon('heroicon-o-heart')->schema([
                     Forms\Components\Placeholder::make('support_hint')
                         ->label('')
-                        ->content('وسائل الدعم (البنوك، فودافون كاش، العملات الرقمية…) والباقات تُدار من «وسائل الدعم» و«باقات الدعم» بقائمة المالية. هنا نصوص الصفحة فقط.')
+                        ->content(__('وسائل الدعم (البنوك، فودافون كاش، العملات الرقمية…) والباقات تُدار من «وسائل الدعم» و«باقات الدعم» بقائمة المالية. هنا نصوص الصفحة فقط.'))
                         ->columnSpanFull(),
 
-                    Forms\Components\Section::make('الهيدر')->schema([
+                    Forms\Components\Section::make(__('الهيدر'))->schema([
                         Forms\Components\FileUpload::make('support_header_bg')
-                            ->label('خلفية الهيدر')
+                            ->label(__('خلفية الهيدر'))
                             ->image()->disk('public')->directory('support')->visibility('public')
                             ->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('support_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('support_hero_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_hero_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('support_hero_desc_en')->label('Description (English)')->rows(2),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('عنوان قسم الطرق')->schema([
-                        Forms\Components\TextInput::make('support_methods_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('عنوان قسم الطرق'))->schema([
+                        Forms\Components\TextInput::make('support_methods_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('support_methods_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_methods_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_methods_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('support_methods_desc_en')->label('Description (English)')->rows(2),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('بطاقة «دفع إلكتروني»')->schema([
-                        Forms\Components\Toggle::make('support_cat_electronic_enabled')->label('مفعّلة')->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_cat_electronic_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('بطاقة «دفع إلكتروني»'))->schema([
+                        Forms\Components\Toggle::make('support_cat_electronic_enabled')->label(__('مفعّلة'))->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_electronic_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('support_cat_electronic_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_cat_electronic_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('support_cat_electronic_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('support_cat_electronic_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\ColorPicker::make('support_cat_electronic_accent')->label('اللون المميّز'),
+                        Forms\Components\ColorPicker::make('support_cat_electronic_accent')->label(__('اللون المميّز')),
                     ])->columns(2)->collapsible(),
 
-                    Forms\Components\Section::make('بطاقة «تحويل مباشر»')->schema([
-                        Forms\Components\Toggle::make('support_cat_transfer_enabled')->label('مفعّلة')->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_cat_transfer_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('بطاقة «تحويل مباشر»'))->schema([
+                        Forms\Components\Toggle::make('support_cat_transfer_enabled')->label(__('مفعّلة'))->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_transfer_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('support_cat_transfer_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_cat_transfer_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('support_cat_transfer_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('support_cat_transfer_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\ColorPicker::make('support_cat_transfer_accent')->label('اللون المميّز'),
+                        Forms\Components\ColorPicker::make('support_cat_transfer_accent')->label(__('اللون المميّز')),
                     ])->columns(2)->collapsible(),
 
-                    Forms\Components\Section::make('بطاقة «عملات رقمية»')->schema([
-                        Forms\Components\Toggle::make('support_cat_crypto_enabled')->label('مفعّلة')->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_cat_crypto_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('بطاقة «عملات رقمية»'))->schema([
+                        Forms\Components\Toggle::make('support_cat_crypto_enabled')->label(__('مفعّلة'))->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_crypto_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('support_cat_crypto_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_cat_crypto_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('support_cat_crypto_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('support_cat_crypto_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\ColorPicker::make('support_cat_crypto_accent')->label('اللون المميّز'),
+                        Forms\Components\ColorPicker::make('support_cat_crypto_accent')->label(__('اللون المميّز')),
                     ])->columns(2)->collapsible(),
 
-                    Forms\Components\Section::make('خطوات الويزارد')->schema([
-                        Forms\Components\TextInput::make('support_step_method_label_ar')->label('الخطوة 1 (عربي)'),
+                    Forms\Components\Section::make(__('خطوات الويزارد'))->schema([
+                        Forms\Components\TextInput::make('support_step_method_label_ar')->label(__('الخطوة 1 (عربي)')),
                         Forms\Components\TextInput::make('support_step_method_label_en')->label('Step 1 (English)'),
-                        Forms\Components\TextInput::make('support_step_proof_label_ar')->label('الخطوة 2 (عربي)'),
+                        Forms\Components\TextInput::make('support_step_proof_label_ar')->label(__('الخطوة 2 (عربي)')),
                         Forms\Components\TextInput::make('support_step_proof_label_en')->label('Step 2 (English)'),
-                        Forms\Components\TextInput::make('support_step_team_label_ar')->label('الخطوة 3 (عربي)'),
+                        Forms\Components\TextInput::make('support_step_team_label_ar')->label(__('الخطوة 3 (عربي)')),
                         Forms\Components\TextInput::make('support_step_team_label_en')->label('Step 3 (English)'),
-                        Forms\Components\TextInput::make('support_step_contact_label_ar')->label('الخطوة 4 (عربي)'),
+                        Forms\Components\TextInput::make('support_step_contact_label_ar')->label(__('الخطوة 4 (عربي)')),
                         Forms\Components\TextInput::make('support_step_contact_label_en')->label('Step 4 (English)'),
                         Forms\Components\TextInput::make('support_step_progress_label_ar')
-                            ->label('نص التقدّم (عربي)')->helperText('استخدم :current و :total'),
+                            ->label(__('نص التقدّم (عربي)'))->helperText(__('استخدم :current و :total')),
                         Forms\Components\TextInput::make('support_step_progress_label_en')
                             ->label('Progress text (English)')->helperText('Use :current and :total'),
                         Forms\Components\TextInput::make('support_step_completion_label_ar')
-                            ->label('نسبة الإكمال (عربي)')->helperText('استخدم :percent'),
+                            ->label(__('نسبة الإكمال (عربي)'))->helperText(__('استخدم :percent')),
                         Forms\Components\TextInput::make('support_step_completion_label_en')
                             ->label('Completion text (English)')->helperText('Use :percent'),
                     ])->columns(2)->collapsible(),
 
-                    Forms\Components\Section::make('المبالغ والباقات')->schema([
-                        Forms\Components\TextInput::make('support_plans_title_ar')->label('عنوان القسم (عربي)'),
+                    Forms\Components\Section::make(__('المبالغ والباقات'))->schema([
+                        Forms\Components\TextInput::make('support_plans_title_ar')->label(__('عنوان القسم (عربي)')),
                         Forms\Components\TextInput::make('support_plans_title_en')->label('Section title (English)'),
                         Forms\Components\Select::make('support_default_interval')
-                            ->label('الدورية الافتراضية')
+                            ->label(__('الدورية الافتراضية'))
                             ->options(\App\Support\SupportOptions::intervals()),
-                        Forms\Components\TextInput::make('support_default_currency')->label('العملة الافتراضية')->maxLength(3),
-                        Forms\Components\TextInput::make('support_min_amount')->label('أقل مبلغ')->numeric()->prefix('$'),
-                        Forms\Components\TextInput::make('support_max_amount')->label('أعلى مبلغ')->numeric()->prefix('$'),
+                        Forms\Components\TextInput::make('support_default_currency')->label(__('العملة الافتراضية'))->maxLength(3),
+                        Forms\Components\TextInput::make('support_min_amount')->label(__('أقل مبلغ'))->numeric()->prefix('$'),
+                        Forms\Components\TextInput::make('support_max_amount')->label(__('أعلى مبلغ'))->numeric()->prefix('$'),
                         Forms\Components\Toggle::make('support_custom_amount_enabled')
-                            ->label('السماح بمبلغ مخصص')
+                            ->label(__('السماح بمبلغ مخصص'))
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_custom_amount_label_ar')->label('نص حقل المبلغ (عربي)'),
+                        Forms\Components\TextInput::make('support_custom_amount_label_ar')->label(__('نص حقل المبلغ (عربي)')),
                         Forms\Components\TextInput::make('support_custom_amount_label_en')->label('Amount field text (English)'),
                     ])->columns(2)->collapsible(),
 
-                    Forms\Components\Section::make('نصوص الأزرار والرسائل')->schema([
-                        Forms\Components\TextInput::make('support_continue_label_ar')->label('المتابعة (عربي)'),
+                    Forms\Components\Section::make(__('نصوص الأزرار والرسائل'))->schema([
+                        Forms\Components\TextInput::make('support_continue_label_ar')->label(__('المتابعة (عربي)')),
                         Forms\Components\TextInput::make('support_continue_label_en')->label('Continue (English)'),
-                        Forms\Components\TextInput::make('support_back_label_ar')->label('رجوع (عربي)'),
+                        Forms\Components\TextInput::make('support_back_label_ar')->label(__('رجوع (عربي)')),
                         Forms\Components\TextInput::make('support_back_label_en')->label('Back (English)'),
-                        Forms\Components\TextInput::make('support_submit_label_ar')->label('إرسال (عربي)'),
+                        Forms\Components\TextInput::make('support_submit_label_ar')->label(__('إرسال (عربي)')),
                         Forms\Components\TextInput::make('support_submit_label_en')->label('Submit (English)'),
-                        Forms\Components\TextInput::make('support_copy_label_ar')->label('نسخ (عربي)'),
+                        Forms\Components\TextInput::make('support_copy_label_ar')->label(__('نسخ (عربي)')),
                         Forms\Components\TextInput::make('support_copy_label_en')->label('Copy (English)'),
-                        Forms\Components\TextInput::make('support_copied_label_ar')->label('تم النسخ (عربي)'),
+                        Forms\Components\TextInput::make('support_copied_label_ar')->label(__('تم النسخ (عربي)')),
                         Forms\Components\TextInput::make('support_copied_label_en')->label('Copied (English)'),
-                        Forms\Components\TextInput::make('support_choose_method_label_ar')->label('اختر وسيلة التحويل (عربي)'),
+                        Forms\Components\TextInput::make('support_choose_method_label_ar')->label(__('اختر وسيلة التحويل (عربي)')),
                         Forms\Components\TextInput::make('support_choose_method_label_en')->label('Choose method (English)'),
-                        Forms\Components\Textarea::make('support_proof_hint_ar')->label('تنبيه رفع الإثبات (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_proof_hint_ar')->label(__('تنبيه رفع الإثبات (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('support_proof_hint_en')->label('Proof hint (English)')->rows(2),
-                        Forms\Components\TextInput::make('support_success_title_ar')->label('عنوان النجاح (عربي)'),
+                        Forms\Components\TextInput::make('support_success_title_ar')->label(__('عنوان النجاح (عربي)')),
                         Forms\Components\TextInput::make('support_success_title_en')->label('Success title (English)'),
-                        Forms\Components\Textarea::make('support_success_message_ar')->label('رسالة النجاح (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('support_success_message_ar')->label(__('رسالة النجاح (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('support_success_message_en')->label('Success message (English)')->rows(2),
                     ])->columns(2)->collapsible(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('توزيع الأموال')->icon('heroicon-o-chart-pie')->schema([
-                    Forms\Components\TextInput::make('fund_split_creators_pct')->label('نسبة صنّاع المحتوى (%)')->numeric()->suffix('%')->required(),
-                    Forms\Components\TextInput::make('fund_split_media_pct')->label('نسبة الإنتاج الإعلامي (%)')->numeric()->suffix('%')->required(),
-                    Forms\Components\TextInput::make('fund_split_support_pct')->label('نسبة الدعم التشغيلي (%)')->numeric()->suffix('%')->required(),
+                Forms\Components\Tabs\Tab::make(__('توزيع الأموال'))->icon('heroicon-o-chart-pie')->schema([
+                    Forms\Components\TextInput::make('fund_split_creators_pct')->label(__('نسبة صنّاع المحتوى (%)'))->numeric()->suffix('%')->required(),
+                    Forms\Components\TextInput::make('fund_split_media_pct')->label(__('نسبة الإنتاج الإعلامي (%)'))->numeric()->suffix('%')->required(),
+                    Forms\Components\TextInput::make('fund_split_support_pct')->label(__('نسبة الدعم التشغيلي (%)'))->numeric()->suffix('%')->required(),
                 ])->columns(3),
 
-                Forms\Components\Tabs\Tab::make('التواصل')->icon('heroicon-o-envelope')->schema([
-                    Forms\Components\TextInput::make('contact_email')->label('بريد التواصل')->email(),
-                    Forms\Components\TextInput::make('contact_phone')->label('هاتف التواصل'),
-                    Forms\Components\TextInput::make('support_whatsapp')->label('واتساب الدعم'),
+                Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope')->schema([
+                    Forms\Components\TextInput::make('contact_email')->label(__('بريد التواصل'))->email(),
+                    Forms\Components\TextInput::make('contact_phone')->label(__('هاتف التواصل')),
+                    Forms\Components\TextInput::make('support_whatsapp')->label(__('واتساب الدعم')),
                 ])->columns(2),
 
-                Forms\Components\Tabs\Tab::make('التواصل الاجتماعي')->icon('heroicon-o-share')->schema([
+                Forms\Components\Tabs\Tab::make(__('التواصل الاجتماعي'))->icon('heroicon-o-share')->schema([
                     Forms\Components\TextInput::make('facebook_url')->label('Facebook')->url(),
                     Forms\Components\TextInput::make('instagram_url')->label('Instagram')->url(),
                     Forms\Components\TextInput::make('twitter_url')->label('X / Twitter')->url(),
@@ -1677,22 +1679,22 @@ class Settings extends Page implements HasForms
                     Forms\Components\TextInput::make('youtube_url')->label('YouTube')->url(),
                 ])->columns(2),
 
-                Forms\Components\Tabs\Tab::make('ريلز إنستغرام')->icon('heroicon-o-film')->schema([
+                Forms\Components\Tabs\Tab::make(__('ريلز إنستغرام'))->icon('heroicon-o-film')->schema([
                     Forms\Components\Toggle::make('reels_enabled')
-                        ->label('تفعيل عرض الريلز')
-                        ->helperText('لما يكون مفعّل، بيتم جلب الريلز من حساب إنستغرام وعرضها في هذا التاب وعبر /api/v1/reels')
+                        ->label(__('تفعيل عرض الريلز'))
+                        ->helperText(__('لما يكون مفعّل، بيتم جلب الريلز من حساب إنستغرام وعرضها في هذا التاب وعبر /api/v1/reels'))
                         ->columnSpanFull(),
                     Forms\Components\TextInput::make('instagram_user_id')
-                        ->label('معرّف حساب إنستغرام (Business ID)')
-                        ->helperText('رقم حساب Instagram Business — بتجيبه من Graph API'),
+                        ->label(__('معرّف حساب إنستغرام (Business ID)'))
+                        ->helperText(__('رقم حساب Instagram Business — بتجيبه من Graph API')),
                     Forms\Components\TextInput::make('instagram_cache_ttl')
-                        ->label('مدة الكاش (ثانية)')
+                        ->label(__('مدة الكاش (ثانية)'))
                         ->numeric()->minValue(0)
-                        ->helperText('0 = جلب مباشر كل مرة (احذر حد الطلبات). المقترح 300'),
+                        ->helperText(__('0 = جلب مباشر كل مرة (احذر حد الطلبات). المقترح 300')),
                     Forms\Components\Textarea::make('instagram_access_token')
-                        ->label('رمز الوصول (Access Token)')
+                        ->label(__('رمز الوصول (Access Token)'))
                         ->rows(3)
-                        ->helperText('Long-lived token من Meta. إذا انتهت صلاحيته تظهر الريلز فارغة في /pages/content و /reels — جدّد التوكن من Graph API Explorer واحفظه هنا.')
+                        ->helperText(__('Long-lived token من Meta. إذا انتهت صلاحيته تظهر الريلز فارغة في /pages/content و /reels — جدّد التوكن من Graph API Explorer واحفظه هنا.'))
                         ->columnSpanFull(),
 
                     Forms\Components\Placeholder::make('instagram_reels_preview')
@@ -1705,11 +1707,11 @@ class Settings extends Page implements HasForms
                         ->columnSpanFull(),
                 ])->columns(2),
 
-                Forms\Components\Tabs\Tab::make('إحصائيات الواجهة')->icon('heroicon-o-presentation-chart-line')->schema([
-                    Forms\Components\TextInput::make('reach_count')->label('عدد الوصول')->numeric(),
-                    Forms\Components\TextInput::make('supporters_count')->label('عدد الداعمين')->numeric(),
-                    Forms\Components\TextInput::make('collaborations_count')->label('عدد التعاونات')->numeric(),
-                    Forms\Components\TextInput::make('active_creators_count')->label('عدد صنّاع المحتوى النشطين')->numeric(),
+                Forms\Components\Tabs\Tab::make(__('إحصائيات الواجهة'))->icon('heroicon-o-presentation-chart-line')->schema([
+                    Forms\Components\TextInput::make('reach_count')->label(__('عدد الوصول'))->numeric(),
+                    Forms\Components\TextInput::make('supporters_count')->label(__('عدد الداعمين'))->numeric(),
+                    Forms\Components\TextInput::make('collaborations_count')->label(__('عدد التعاونات'))->numeric(),
+                    Forms\Components\TextInput::make('active_creators_count')->label(__('عدد صنّاع المحتوى النشطين'))->numeric(),
                 ])->columns(2),
             ]),
         ])->statePath('data');
@@ -1741,7 +1743,7 @@ class Settings extends Page implements HasForms
         }
 
         Notification::make()
-            ->title('تم حفظ الإعدادات بنجاح')
+            ->title(__('تم حفظ الإعدادات بنجاح'))
             ->success()
             ->send();
     }

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Support\LocaleText;
+
 use App\Models\Setting;
 use App\Support\StoredUploadCleanup;
 use Filament\Forms;
@@ -34,17 +36,17 @@ class IncubatorSettings extends Page implements HasForms
 
     public static function getNavigationGroup(): ?string
     {
-        return 'الإعدادات';
+        return __('Settings');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'إعدادات الحاضنة';
+        return __('Incubator Settings');
     }
 
     public function getTitle(): string | \Illuminate\Contracts\Support\Htmlable
     {
-        return 'إعدادات حاضنة صوت';
+        return __('Incubator Settings');
     }
 
     /**
@@ -454,31 +456,31 @@ class IncubatorSettings extends Page implements HasForms
     {
         return $form->schema([
             Forms\Components\Tabs::make('Incubator')->columnSpanFull()->tabs([
-                Forms\Components\Tabs\Tab::make('الهيدر')->icon('heroicon-o-bars-3')->schema([
-                    Forms\Components\Section::make('هيدر الحاضنة')->schema([
+                Forms\Components\Tabs\Tab::make(__('الهيدر'))->icon('heroicon-o-bars-3')->schema([
+                    Forms\Components\Section::make(__('هيدر الحاضنة'))->schema([
                         Forms\Components\TextInput::make('incubator_site_name')
-                            ->label('اسم الموقع')
+                            ->label(__('اسم الموقع'))
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('incubator_logo')
-                            ->label('شعار الحاضنة')
+                            ->label(__('شعار الحاضنة'))
                             ->image()->disk('public')->directory('incubator/branding')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('incubator_back_label_ar')->label('العودة للمنصة (عربي)'),
+                        Forms\Components\TextInput::make('incubator_back_label_ar')->label(__('العودة للمنصة (عربي)')),
                         Forms\Components\TextInput::make('incubator_back_label_en')->label('Back to platform (EN)'),
-                        Forms\Components\TextInput::make('incubator_socials_label_ar')->label('عنوان السوشيال (عربي)'),
+                        Forms\Components\TextInput::make('incubator_socials_label_ar')->label(__('عنوان السوشيال (عربي)')),
                         Forms\Components\TextInput::make('incubator_socials_label_en')->label('Socials label (EN)'),
-                        Forms\Components\TextInput::make('incubator_nav_join_label_ar')->label('زر انضم (عربي)'),
+                        Forms\Components\TextInput::make('incubator_nav_join_label_ar')->label(__('زر انضم (عربي)')),
                         Forms\Components\TextInput::make('incubator_nav_join_label_en')->label('Join CTA (EN)'),
-                        Forms\Components\TextInput::make('incubator_nav_support_label_ar')->label('زر ادعم الطلاب (عربي)'),
+                        Forms\Components\TextInput::make('incubator_nav_support_label_ar')->label(__('زر ادعم الطلاب (عربي)')),
                         Forms\Components\TextInput::make('incubator_nav_support_label_en')->label('Support students (EN)'),
                         Forms\Components\Repeater::make('incubator_nav_links')
-                            ->label('قائمة الحاضنة')
+                            ->label(__('قائمة الحاضنة'))
                             ->schema([
                                 Forms\Components\Hidden::make('key'),
-                                Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (EN)'),
                                 Forms\Components\Toggle::make('is_visible')
-                                    ->label('ظاهر')
+                                    ->label(__('ظاهر'))
                                     ->default(true)
                                     ->columnSpanFull(),
                             ])
@@ -487,95 +489,95 @@ class IncubatorSettings extends Page implements HasForms
                             ->deletable(false)
                             ->addable(false)
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'رابط')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'رابط') ?: null)
                             ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الفوتر')->icon('heroicon-o-rectangle-group')->schema([
-                    Forms\Components\Section::make('فوتر الحاضنة')->schema([
+                Forms\Components\Tabs\Tab::make(__('الفوتر'))->icon('heroicon-o-rectangle-group')->schema([
+                    Forms\Components\Section::make(__('فوتر الحاضنة'))->schema([
                         Forms\Components\FileUpload::make('incubator_footer_logo')
-                            ->label('شعار الفوتر')
+                            ->label(__('شعار الفوتر'))
                             ->image()->disk('public')->directory('incubator/branding')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\Textarea::make('incubator_footer_about_ar')->label('نبذة (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('incubator_footer_about_ar')->label(__('نبذة (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('incubator_footer_about_en')->label('About (EN)')->rows(3),
-                        Forms\Components\TextInput::make('incubator_footer_main_title_ar')->label('عنوان الأقسام الرئيسية (عربي)'),
+                        Forms\Components\TextInput::make('incubator_footer_main_title_ar')->label(__('عنوان الأقسام الرئيسية (عربي)')),
                         Forms\Components\TextInput::make('incubator_footer_main_title_en')->label('Main sections title (EN)'),
                         Forms\Components\Repeater::make('incubator_footer_main_links')
-                            ->label('روابط الأقسام الرئيسية')
+                            ->label(__('روابط الأقسام الرئيسية'))
                             ->schema([
                                 Forms\Components\Hidden::make('key'),
-                                Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (EN)'),
                                 Forms\Components\Toggle::make('is_visible')
-                                    ->label('ظاهر')
+                                    ->label(__('ظاهر'))
                                     ->default(true)
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'رابط')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'رابط') ?: null)
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('incubator_footer_sawt_title_ar')->label('عنوان أقسام صوت (عربي)'),
+                        Forms\Components\TextInput::make('incubator_footer_sawt_title_ar')->label(__('عنوان أقسام صوت (عربي)')),
                         Forms\Components\TextInput::make('incubator_footer_sawt_title_en')->label('Sawt sections title (EN)'),
                         Forms\Components\Repeater::make('incubator_footer_sawt_links')
-                            ->label('روابط أقسام صوت')
+                            ->label(__('روابط أقسام صوت'))
                             ->schema([
                                 Forms\Components\Hidden::make('key'),
-                                Forms\Components\TextInput::make('label_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('label_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Label (EN)'),
                                 Forms\Components\Toggle::make('is_visible')
-                                    ->label('ظاهر')
+                                    ->label(__('ظاهر'))
                                     ->default(true)
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'رابط')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'رابط') ?: null)
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('incubator_footer_newsletter_title_ar')->label('عنوان النشرة (عربي)'),
+                        Forms\Components\TextInput::make('incubator_footer_newsletter_title_ar')->label(__('عنوان النشرة (عربي)')),
                         Forms\Components\TextInput::make('incubator_footer_newsletter_title_en')->label('Newsletter title (EN)'),
-                        Forms\Components\TextInput::make('incubator_footer_newsletter_desc_ar')->label('وصف النشرة (عربي)'),
+                        Forms\Components\TextInput::make('incubator_footer_newsletter_desc_ar')->label(__('وصف النشرة (عربي)')),
                         Forms\Components\TextInput::make('incubator_footer_newsletter_desc_en')->label('Newsletter desc (EN)'),
-                        Forms\Components\TextInput::make('incubator_footer_copyright_ar')->label('حقوق النشر (عربي)'),
+                        Forms\Components\TextInput::make('incubator_footer_copyright_ar')->label(__('حقوق النشر (عربي)')),
                         Forms\Components\TextInput::make('incubator_footer_copyright_en')->label('Copyright (EN)'),
                         Forms\Components\TextInput::make('incubator_footer_brand')
-                            ->label('العلامة')
+                            ->label(__('العلامة'))
                             ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الصفحة الأولى')->icon('heroicon-o-home')->schema([
+                Forms\Components\Tabs\Tab::make(__('الصفحة الأولى'))->icon('heroicon-o-home')->schema([
                     // Landing sections mirror GET /api/v1/pages/incubator
-                    Forms\Components\Section::make('1) الهيرو')->schema([
+                    Forms\Components\Section::make(__('1) الهيرو'))->schema([
                         Forms\Components\FileUpload::make('incubator_hero_image')
-                            ->label('صورة الخلفية')
-                            ->helperText('الكولاج / الصور خلف الشجرة — بدون أرقام وبدون الشجرة')
+                            ->label(__('صورة الخلفية'))
+                            ->helperText(__('الكولاج / الصور خلف الشجرة — بدون أرقام وبدون الشجرة'))
                             ->image()->disk('public')->directory('incubator/hero')->imageEditor()
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('incubator_hero_foreground')
-                            ->label('الصورة الأمامية (الشجرة)')
-                            ->helperText('صورة الزيتونة فوق الخلفية — منفصلة عن الخلفية والشارات')
+                            ->label(__('الصورة الأمامية (الشجرة)'))
+                            ->helperText(__('صورة الزيتونة فوق الخلفية — منفصلة عن الخلفية والشارات'))
                             ->image()->disk('public')->directory('incubator/hero')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('incubator_hero_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('incubator_hero_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('incubator_hero_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('incubator_hero_desc_ar')->label('الوصف (عربي)')->rows(3),
+                        Forms\Components\Textarea::make('incubator_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('incubator_hero_desc_en')->label('Description (EN)')->rows(3),
-                        Forms\Components\TextInput::make('incubator_hero_cta_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('incubator_hero_cta_ar')->label(__('نص الزر (عربي)')),
                         Forms\Components\TextInput::make('incubator_hero_cta_en')->label('CTA (EN)'),
 
                         Forms\Components\Grid::make(3)
                             ->schema([
                                 Forms\Components\TextInput::make('incubator_hero_badge_top_value')
-                                    ->label('شارة أعلى — الرقم')
+                                    ->label(__('شارة أعلى — الرقم'))
                                     ->placeholder('1,247'),
                                 Forms\Components\TextInput::make('incubator_hero_badge_top_label_ar')
-                                    ->label('التسمية (عربي)')
-                                    ->placeholder('هذا الشهر'),
+                                    ->label(__('التسمية (عربي)'))
+                                    ->placeholder(__('هذا الشهر')),
                                 Forms\Components\TextInput::make('incubator_hero_badge_top_label_en')
                                     ->label('Label (EN)')
                                     ->placeholder('This month'),
@@ -585,11 +587,11 @@ class IncubatorSettings extends Page implements HasForms
                         Forms\Components\Grid::make(3)
                             ->schema([
                                 Forms\Components\TextInput::make('incubator_hero_badge_bottom_value')
-                                    ->label('شارة أسفل — الرقم')
+                                    ->label(__('شارة أسفل — الرقم'))
                                     ->placeholder('+340'),
                                 Forms\Components\TextInput::make('incubator_hero_badge_bottom_label_ar')
-                                    ->label('التسمية (عربي)')
-                                    ->placeholder('قصة وثقت'),
+                                    ->label(__('التسمية (عربي)'))
+                                    ->placeholder(__('قصة وثقت')),
                                 Forms\Components\TextInput::make('incubator_hero_badge_bottom_label_en')
                                     ->label('Label (EN)')
                                     ->placeholder('Stories documented'),
@@ -597,42 +599,42 @@ class IncubatorSettings extends Page implements HasForms
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('2) شريط الأرقام')->schema([
+                    Forms\Components\Section::make(__('2) شريط الأرقام'))->schema([
                         Forms\Components\Repeater::make('incubator_stats')
-                            ->label('الأرقام')
+                            ->label(__('الأرقام'))
                             ->schema([
-                                Forms\Components\TextInput::make('key')->label('المفتاح')->maxLength(40),
-                                Forms\Components\TextInput::make('value')->label('القيمة')->required(),
-                                Forms\Components\TextInput::make('label_ar')->label('التسمية (عربي)'),
+                                Forms\Components\TextInput::make('key')->label(__('المفتاح'))->maxLength(40),
+                                Forms\Components\TextInput::make('value')->label(__('القيمة'))->required(),
+                                Forms\Components\TextInput::make('label_ar')->label(__('التسمية (عربي)')),
                                 Forms\Components\TextInput::make('label_en')->label('Label (EN)'),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => ($state['value'] ?? '').' '.($state['label_ar'] ?? ''))
-                            ->addActionLabel('➕ إضافة رقم')
+                            ->itemLabel(fn (array $state): ?string => trim(($state['value'] ?? '').' '.LocaleText::pick($state, 'label')))
+                            ->addActionLabel(__('➕ إضافة رقم'))
                             ->columnSpanFull(),
                     ]),
 
-                    Forms\Components\Section::make('3) لماذا حاضنة صوت؟')->schema([
-                        Forms\Components\TextInput::make('incubator_why_title_ar')->label('العنوان (عربي)'),
+                    Forms\Components\Section::make(__('3) لماذا حاضنة صوت؟'))->schema([
+                        Forms\Components\TextInput::make('incubator_why_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('incubator_why_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('incubator_why_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('incubator_why_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('incubator_why_subtitle_en')->label('Subtitle (EN)')->rows(2),
                         Forms\Components\FileUpload::make('incubator_why_image')
-                            ->label('الصورة')
+                            ->label(__('الصورة'))
                             ->image()->disk('public')->directory('incubator/why')->imageEditor()
                             ->columnSpanFull(),
                         Forms\Components\Repeater::make('incubator_why_items')
-                            ->label('المميزات')
+                            ->label(__('المميزات'))
                             ->schema([
                                 Forms\Components\FileUpload::make('icon')
-                                    ->label('أيقونة')
+                                    ->label(__('أيقونة'))
                                     ->image()->disk('public')->directory('incubator/icons')->imageEditor()
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)'),
+                                Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)')),
                                 Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
-                                Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
+                                Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                                 Forms\Components\Textarea::make('desc_en')->label('Description (EN)')->rows(2),
                             ])
                             ->columns(2)
@@ -641,128 +643,128 @@ class IncubatorSettings extends Page implements HasForms
                             ->deletable(false)
                             ->addable(false)
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'ميزة')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'ميزة') ?: null)
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('4) الدورات (قائمة فقط)')
-                        ->description('البطاقات من Courses المنشور — بدون صفحة تفاصيل هنا')
+                    Forms\Components\Section::make(__('4) الدورات (قائمة فقط)'))
+                        ->description(__('البطاقات من Courses المنشور — بدون صفحة تفاصيل هنا'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_courses_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_courses_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_courses_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_courses_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_courses_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_courses_subtitle_en')->label('Subtitle (EN)')->rows(2),
                             Forms\Components\TextInput::make('incubator_courses_limit')
-                                ->label('عدد الدورات المعروضة')
+                                ->label(__('عدد الدورات المعروضة'))
                                 ->numeric()->minValue(1)->maxValue(24)
                                 ->columnSpanFull(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('5) ساعد طلاب في الانضمام للحاضنة')
-                        ->description('قسم التكفّل / رعاية المقاعد + الطلاب المنتظرون + أثر البرنامج')
+                    Forms\Components\Section::make(__('5) ساعد طلاب في الانضمام للحاضنة'))
+                        ->description(__('قسم التكفّل / رعاية المقاعد + الطلاب المنتظرون + أثر البرنامج'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_sponsor_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_sponsor_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_sponsor_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_sponsor_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_sponsor_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_sponsor_subtitle_en')->label('Subtitle (EN)')->rows(2),
 
                             Forms\Components\Repeater::make('incubator_sponsor_packages')
-                                ->label('بطاقات التكفّل')
+                                ->label(__('بطاقات التكفّل'))
                                 ->schema([
-                                    Forms\Components\TextInput::make('title_ar')->label('عنوان الدورة (عربي)')->required(),
+                                    Forms\Components\TextInput::make('title_ar')->label(__('عنوان الدورة (عربي)'))->required(),
                                     Forms\Components\TextInput::make('title_en')->label('Course title (EN)'),
-                                    Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
+                                    Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                                     Forms\Components\Textarea::make('desc_en')->label('Description (EN)')->rows(2),
-                                    Forms\Components\TextInput::make('duration_ar')->label('المدة (عربي)')->placeholder('8 أسابيع'),
+                                    Forms\Components\TextInput::make('duration_ar')->label(__('المدة (عربي)'))->placeholder(__('8 أسابيع')),
                                     Forms\Components\TextInput::make('duration_en')->label('Duration (EN)')->placeholder('8 weeks'),
-                                    Forms\Components\TextInput::make('seats_ar')->label('المقاعد (عربي)')->placeholder('6 مقاعد'),
+                                    Forms\Components\TextInput::make('seats_ar')->label(__('المقاعد (عربي)'))->placeholder(__('6 مقاعد')),
                                     Forms\Components\TextInput::make('seats_en')->label('Seats (EN)')->placeholder('6 seats'),
-                                    Forms\Components\TextInput::make('price')->label('المبلغ')->placeholder('120'),
-                                    Forms\Components\TextInput::make('currency')->label('العملة')->placeholder('$')->default('$'),
-                                    Forms\Components\TextInput::make('cta_ar')->label('نص الزر (عربي)'),
+                                    Forms\Components\TextInput::make('price')->label(__('المبلغ'))->placeholder('120'),
+                                    Forms\Components\TextInput::make('currency')->label(__('العملة'))->placeholder('$')->default('$'),
+                                    Forms\Components\TextInput::make('cta_ar')->label(__('نص الزر (عربي)')),
                                     Forms\Components\TextInput::make('cta_en')->label('Button (EN)'),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'بطاقة')
-                                ->addActionLabel('➕ إضافة بطاقة تكفّل')
+                                ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'بطاقة') ?: null)
+                                ->addActionLabel(__('➕ إضافة بطاقة تكفّل'))
                                 ->columnSpanFull(),
 
-                            Forms\Components\TextInput::make('incubator_sponsor_waiting_title_ar')->label('عنوان قائمة الانتظار (عربي)'),
+                            Forms\Components\TextInput::make('incubator_sponsor_waiting_title_ar')->label(__('عنوان قائمة الانتظار (عربي)')),
                             Forms\Components\TextInput::make('incubator_sponsor_waiting_title_en')->label('Waiting list title (EN)'),
-                            Forms\Components\TextInput::make('incubator_sponsor_waiting_more_ar')->label('نص «المزيد» (عربي)')->placeholder('+28 طالباً آخرين'),
+                            Forms\Components\TextInput::make('incubator_sponsor_waiting_more_ar')->label(__('نص «المزيد» (عربي)'))->placeholder(__('+28 طالباً آخرين')),
                             Forms\Components\TextInput::make('incubator_sponsor_waiting_more_en')->label('More label (EN)'),
                             Forms\Components\Repeater::make('incubator_sponsor_waiting_students')
-                                ->label('الطلاب المنتظرون')
+                                ->label(__('الطلاب المنتظرون'))
                                 ->schema([
                                     Forms\Components\FileUpload::make('avatar')
-                                        ->label('الصورة')
+                                        ->label(__('الصورة'))
                                         ->image()->disk('public')->directory('incubator/sponsor/students')->imageEditor()
                                         ->columnSpanFull(),
-                                    Forms\Components\TextInput::make('name')->label('الاسم')->required()->columnSpanFull(),
-                                    Forms\Components\TextInput::make('meta_ar')->label('التخصص/المكان (عربي)'),
+                                    Forms\Components\TextInput::make('name')->label(__('الاسم'))->required()->columnSpanFull(),
+                                    Forms\Components\TextInput::make('meta_ar')->label(__('التخصص/المكان (عربي)')),
                                     Forms\Components\TextInput::make('meta_en')->label('Specialty/location (EN)'),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'طالب')
-                                ->addActionLabel('➕ إضافة طالب')
+                                ->itemLabel(fn (array $state): ?string => $state['name'] ?? __('طالب'))
+                                ->addActionLabel(__('➕ إضافة طالب'))
                                 ->columnSpanFull(),
 
-                            Forms\Components\TextInput::make('incubator_sponsor_impact_title_ar')->label('عنوان الأثر (عربي)'),
+                            Forms\Components\TextInput::make('incubator_sponsor_impact_title_ar')->label(__('عنوان الأثر (عربي)')),
                             Forms\Components\TextInput::make('incubator_sponsor_impact_title_en')->label('Impact title (EN)'),
                             Forms\Components\Repeater::make('incubator_sponsor_impact_stats')
-                                ->label('أرقام الأثر')
+                                ->label(__('أرقام الأثر'))
                                 ->schema([
-                                    Forms\Components\TextInput::make('value')->label('القيمة')->required(),
-                                    Forms\Components\TextInput::make('label_ar')->label('التسمية (عربي)'),
+                                    Forms\Components\TextInput::make('value')->label(__('القيمة'))->required(),
+                                    Forms\Components\TextInput::make('label_ar')->label(__('التسمية (عربي)')),
                                     Forms\Components\TextInput::make('label_en')->label('Label (EN)'),
                                 ])
                                 ->columns(3)
                                 ->reorderable()
-                                ->itemLabel(fn (array $state): ?string => ($state['value'] ?? '').' '.($state['label_ar'] ?? ''))
-                                ->addActionLabel('➕ رقم')
+                                ->itemLabel(fn (array $state): ?string => trim(($state['value'] ?? '').' '.LocaleText::pick($state, 'label')))
+                                ->addActionLabel(__('➕ رقم'))
                                 ->columnSpanFull(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('6) استكشف أحدث فعالياتنا')
-                        ->description('الورشات / الندوات مع فلاتر التصنيف')
+                    Forms\Components\Section::make(__('6) استكشف أحدث فعالياتنا'))
+                        ->description(__('الورشات / الندوات مع فلاتر التصنيف'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_events_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_events_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_events_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_events_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_events_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_events_subtitle_en')->label('Subtitle (EN)')->rows(2),
-                            Forms\Components\TextInput::make('incubator_events_all_label_ar')->label('تسمية «الكل» (عربي)'),
+                            Forms\Components\TextInput::make('incubator_events_all_label_ar')->label(__('تسمية «الكل» (عربي)')),
                             Forms\Components\TextInput::make('incubator_events_all_label_en')->label('“All” label (EN)'),
 
                             Forms\Components\Repeater::make('incubator_events_categories')
-                                ->label('فلاتر التصنيف')
+                                ->label(__('فلاتر التصنيف'))
                                 ->schema([
                                     Forms\Components\TextInput::make('key')
-                                        ->label('المفتاح')
+                                        ->label(__('المفتاح'))
                                         ->required()
-                                        ->helperText('مثل: economy'),
-                                    Forms\Components\TextInput::make('label_ar')->label('الاسم (عربي)')->required(),
+                                        ->helperText(__('مثل: economy')),
+                                    Forms\Components\TextInput::make('label_ar')->label(__('الاسم (عربي)'))->required(),
                                     Forms\Components\TextInput::make('label_en')->label('Name (EN)'),
                                 ])
                                 ->columns(3)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? $state['key'] ?? 'تصنيف')
-                                ->addActionLabel('➕ تصنيف')
+                                ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'تصنيف') ?: (string) ($state['key'] ?? '') ?: null)
+                                ->addActionLabel(__('➕ تصنيف'))
                                 ->columnSpanFull(),
 
                             Forms\Components\Repeater::make('incubator_events_items')
-                                ->label('الفعاليات')
+                                ->label(__('الفعاليات'))
                                 ->schema([
                                     Forms\Components\FileUpload::make('image')
-                                        ->label('الصورة')
+                                        ->label(__('الصورة'))
                                         ->image()->disk('public')->directory('incubator/events')->imageEditor()
                                         ->columnSpanFull(),
                                     Forms\Components\Select::make('category_key')
-                                        ->label('التصنيف')
+                                        ->label(__('التصنيف'))
                                         ->options(function (): array {
                                             $cats = $this->data['incubator_events_categories'] ?? [];
                                             if (! is_array($cats)) {
@@ -781,23 +783,23 @@ class IncubatorSettings extends Page implements HasForms
                                         })
                                         ->searchable()
                                         ->columnSpanFull(),
-                                    Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
+                                    Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)'))->required(),
                                     Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
-                                    Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
+                                    Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                                     Forms\Components\Textarea::make('desc_en')->label('Description (EN)')->rows(2),
                                     // Filament DateTimePicker has no AM/PM UI — use 12h selects instead.
                                     Forms\Components\Grid::make(4)
                                         ->schema([
                                             Forms\Components\DatePicker::make('starts_date')
-                                                ->label('التاريخ')
+                                                ->label(__('التاريخ'))
                                                 ->native(false)
                                                 ->displayFormat('Y-m-d'),
                                             Forms\Components\Select::make('time_hour')
-                                                ->label('الساعة')
+                                                ->label(__('الساعة'))
                                                 ->options(collect(range(1, 12))->mapWithKeys(fn (int $h) => [(string) $h => sprintf('%02d', $h)])->all())
                                                 ->native(false),
                                             Forms\Components\Select::make('time_minute')
-                                                ->label('الدقيقة')
+                                                ->label(__('الدقيقة'))
                                                 ->options(collect(range(0, 59))->mapWithKeys(fn (int $m) => [(string) $m => sprintf('%02d', $m)])->all())
                                                 ->native(false),
                                             Forms\Components\Select::make('time_period')
@@ -810,14 +812,14 @@ class IncubatorSettings extends Page implements HasForms
                                         ])
                                         ->columnSpanFull(),
                                     Forms\Components\Select::make('delivery')
-                                        ->label('الحضور')
+                                        ->label(__('الحضور'))
                                         ->options([
                                             'in_person' => 'وجاهي',
                                             'online' => 'أونلاين',
                                         ])
                                         ->required(),
                                     Forms\Components\Select::make('format')
-                                        ->label('النوع')
+                                        ->label(__('النوع'))
                                         ->options([
                                             'workshop' => 'ورشة عمل',
                                             'seminar' => 'ندوة',
@@ -827,160 +829,160 @@ class IncubatorSettings extends Page implements HasForms
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'فعالية')
-                                ->addActionLabel('➕ إضافة فعالية')
+                                ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'فعالية') ?: null)
+                                ->addActionLabel(__('➕ إضافة فعالية'))
                                 ->columnSpanFull(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('7) البوم الحاضنة')
-                        ->description('عنوان القسم + صور/فيديو المعرض (الترتيب = ترتيب العرض)')
+                    Forms\Components\Section::make(__('7) البوم الحاضنة'))
+                        ->description(__('عنوان القسم + صور/فيديو المعرض (الترتيب = ترتيب العرض)'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_gallery_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_gallery_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_gallery_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_gallery_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_gallery_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_gallery_subtitle_en')->label('Subtitle (EN)')->rows(2),
 
                             Forms\Components\Repeater::make('incubator_gallery_items')
-                                ->label('عناصر المعرض')
+                                ->label(__('عناصر المعرض'))
                                 ->schema([
                                     Forms\Components\FileUpload::make('image')
-                                        ->label('الصورة / بوستر الفيديو')
+                                        ->label(__('الصورة / بوستر الفيديو'))
                                         ->image()->disk('public')->directory('incubator/gallery')->imageEditor()
                                         ->columnSpanFull(),
                                     // Optional: if filled, API marks the item as type=video
                                     Forms\Components\TextInput::make('video_url')
-                                        ->label('رابط الفيديو (اختياري)')
+                                        ->label(__('رابط الفيديو (اختياري)'))
                                         ->url()
                                         ->placeholder('https://…')
                                         ->columnSpanFull(),
-                                    Forms\Components\TextInput::make('caption_ar')->label('التعليق (عربي)'),
+                                    Forms\Components\TextInput::make('caption_ar')->label(__('التعليق (عربي)')),
                                     Forms\Components\TextInput::make('caption_en')->label('Caption (EN)'),
-                                    Forms\Components\TextInput::make('subtitle_ar')->label('سطر إضافي (عربي)'),
+                                    Forms\Components\TextInput::make('subtitle_ar')->label(__('سطر إضافي (عربي)')),
                                     Forms\Components\TextInput::make('subtitle_en')->label('Extra line (EN)'),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['caption_ar'] ?? 'عنصر')
-                                ->addActionLabel('➕ إضافة عنصر')
+                                ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'caption', 'عنصر') ?: null)
+                                ->addActionLabel(__('➕ إضافة عنصر'))
                                 ->columnSpanFull(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('8) فريق خبراء متخصص')
-                        ->description('العنوان من هنا — البطاقات من «مدربو الدورات» (النشطون فقط)')
+                    Forms\Components\Section::make(__('8) فريق خبراء متخصص'))
+                        ->description(__('العنوان من هنا — البطاقات من «مدربو الدورات» (النشطون فقط)'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_experts_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_experts_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_experts_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_experts_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_experts_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_experts_subtitle_en')->label('Subtitle (EN)')->rows(2),
                             Forms\Components\TextInput::make('incubator_experts_limit')
-                                ->label('عدد المدربين المعروضين')
+                                ->label(__('عدد المدربين المعروضين'))
                                 ->numeric()->minValue(1)->maxValue(24)
-                                ->helperText('أدِر الأسماء والصور والخبرة من: الدورات → مدربو الدورات')
+                                ->helperText(__('أدِر الأسماء والصور والخبرة من: الدورات → مدربو الدورات'))
                                 ->columnSpanFull(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('9) الأسئلة الشائعة')
-                        ->description('عنوان القسم + الصورة الجانبية + أسئلة وأجوبة الأكورديون')
+                    Forms\Components\Section::make(__('9) الأسئلة الشائعة'))
+                        ->description(__('عنوان القسم + الصورة الجانبية + أسئلة وأجوبة الأكورديون'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_faq_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_faq_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_faq_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_faq_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_faq_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_faq_subtitle_en')->label('Subtitle (EN)')->rows(2),
                             Forms\Components\FileUpload::make('incubator_faq_image')
-                                ->label('الصورة الجانبية')
+                                ->label(__('الصورة الجانبية'))
                                 ->image()->disk('public')->directory('incubator/faq')->imageEditor()
                                 ->columnSpanFull(),
 
                             Forms\Components\Repeater::make('incubator_faq_items')
-                                ->label('الأسئلة والأجوبة')
+                                ->label(__('الأسئلة والأجوبة'))
                                 ->schema([
-                                    Forms\Components\TextInput::make('question_ar')->label('السؤال (عربي)')->required(),
+                                    Forms\Components\TextInput::make('question_ar')->label(__('السؤال (عربي)'))->required(),
                                     Forms\Components\TextInput::make('question_en')->label('Question (EN)'),
-                                    Forms\Components\Textarea::make('answer_ar')->label('الجواب (عربي)')->rows(3)->required(),
+                                    Forms\Components\Textarea::make('answer_ar')->label(__('الجواب (عربي)'))->rows(3)->required(),
                                     Forms\Components\Textarea::make('answer_en')->label('Answer (EN)')->rows(3),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['question_ar'] ?? 'سؤال')
-                                ->addActionLabel('➕ إضافة سؤال')
+                                ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'question', 'سؤال') ?: null)
+                                ->addActionLabel(__('➕ إضافة سؤال'))
                                 ->columnSpanFull(),
 
-                            Forms\Components\TextInput::make('incubator_faq_more_title_ar')->label('عنوان «سؤال آخر» (عربي)'),
+                            Forms\Components\TextInput::make('incubator_faq_more_title_ar')->label(__('عنوان «سؤال آخر» (عربي)')),
                             Forms\Components\TextInput::make('incubator_faq_more_title_en')->label('More questions title (EN)'),
-                            Forms\Components\Textarea::make('incubator_faq_more_desc_ar')->label('وصف «سؤال آخر» (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_faq_more_desc_ar')->label(__('وصف «سؤال آخر» (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_faq_more_desc_en')->label('More questions desc (EN)')->rows(2),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('10) يعمل خريجونا لدى جهات موثوقة')
-                        ->description('عنوان القسم + شعارات الجهات / الشركات')
+                    Forms\Components\Section::make(__('10) يعمل خريجونا لدى جهات موثوقة'))
+                        ->description(__('عنوان القسم + شعارات الجهات / الشركات'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_employers_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_employers_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_employers_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_employers_subtitle_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('incubator_employers_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('incubator_employers_subtitle_en')->label('Subtitle (EN)')->rows(2),
                             Forms\Components\Repeater::make('incubator_employers_logos')
-                                ->label('الشعارات')
+                                ->label(__('الشعارات'))
                                 ->schema([
                                     Forms\Components\FileUpload::make('logo')
-                                        ->label('الشعار')
+                                        ->label(__('الشعار'))
                                         ->image()->disk('public')->directory('incubator/employers')->imageEditor()
                                         ->columnSpanFull(),
-                                    Forms\Components\TextInput::make('name')->label('الاسم (اختياري)'),
-                                    Forms\Components\TextInput::make('url')->label('الرابط (اختياري)')->url(),
+                                    Forms\Components\TextInput::make('name')->label(__('الاسم (اختياري)')),
+                                    Forms\Components\TextInput::make('url')->label(__('الرابط (اختياري)'))->url(),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'شعار')
-                                ->addActionLabel('➕ إضافة شعار')
+                                ->itemLabel(fn (array $state): ?string => $state['name'] ?? __('شعار'))
+                                ->addActionLabel(__('➕ إضافة شعار'))
                                 ->columnSpanFull(),
                         ])->columns(2),
 
-                    Forms\Components\Section::make('11) دعوة الانضمام')->schema([
+                    Forms\Components\Section::make(__('11) دعوة الانضمام'))->schema([
                         Forms\Components\FileUpload::make('incubator_join_cta_bg')
-                            ->label('خلفية البنر')
+                            ->label(__('خلفية البنر'))
                             ->image()->disk('public')->directory('incubator/cta')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('incubator_join_cta_title_ar')->label('العنوان (عربي)'),
+                        Forms\Components\TextInput::make('incubator_join_cta_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('incubator_join_cta_title_en')->label('Title (EN)'),
-                        Forms\Components\Textarea::make('incubator_join_cta_desc_ar')->label('الوصف (عربي)')->rows(2),
+                        Forms\Components\Textarea::make('incubator_join_cta_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('incubator_join_cta_desc_en')->label('Description (EN)')->rows(2),
-                        Forms\Components\TextInput::make('incubator_join_cta_button_ar')->label('نص الزر (عربي)'),
+                        Forms\Components\TextInput::make('incubator_join_cta_button_ar')->label(__('نص الزر (عربي)')),
                         Forms\Components\TextInput::make('incubator_join_cta_button_en')->label('Button (EN)'),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('12) شهادات وتجارب خريجينا')
-                        ->description('آخر قسم في الصفحة — شريط شهادات الخريجين')
+                    Forms\Components\Section::make(__('12) شهادات وتجارب خريجينا'))
+                        ->description(__('آخر قسم في الصفحة — شريط شهادات الخريجين'))
                         ->schema([
-                            Forms\Components\TextInput::make('incubator_testimonials_title_ar')->label('العنوان (عربي)'),
+                            Forms\Components\TextInput::make('incubator_testimonials_title_ar')->label(__('العنوان (عربي)')),
                             Forms\Components\TextInput::make('incubator_testimonials_title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('incubator_testimonials_subtitle_ar')->label('الوصف (عربي)')->rows(3),
+                            Forms\Components\Textarea::make('incubator_testimonials_subtitle_ar')->label(__('الوصف (عربي)'))->rows(3),
                             Forms\Components\Textarea::make('incubator_testimonials_subtitle_en')->label('Subtitle (EN)')->rows(3),
 
                             Forms\Components\Repeater::make('incubator_testimonials_items')
-                                ->label('الشهادات')
+                                ->label(__('الشهادات'))
                                 ->schema([
                                     Forms\Components\FileUpload::make('avatar')
-                                        ->label('الصورة')
+                                        ->label(__('الصورة'))
                                         ->image()->disk('public')->directory('incubator/testimonials')->imageEditor()
                                         ->columnSpanFull(),
-                                    Forms\Components\TextInput::make('name')->label('الاسم')->required()->columnSpanFull(),
-                                    Forms\Components\TextInput::make('role_ar')->label('المسمى / المجال (عربي)'),
+                                    Forms\Components\TextInput::make('name')->label(__('الاسم'))->required()->columnSpanFull(),
+                                    Forms\Components\TextInput::make('role_ar')->label(__('المسمى / المجال (عربي)')),
                                     Forms\Components\TextInput::make('role_en')->label('Role / field (EN)'),
-                                    Forms\Components\Textarea::make('quote_ar')->label('الشهادة (عربي)')->rows(3)->required(),
+                                    Forms\Components\Textarea::make('quote_ar')->label(__('الشهادة (عربي)'))->rows(3)->required(),
                                     Forms\Components\Textarea::make('quote_en')->label('Quote (EN)')->rows(3),
                                     Forms\Components\TextInput::make('rating')
-                                        ->label('التقييم (1–5)')
+                                        ->label(__('التقييم (1–5)'))
                                         ->numeric()->minValue(1)->maxValue(5)->default(5)
                                         ->columnSpanFull(),
                                 ])
                                 ->columns(2)
                                 ->reorderable()
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'شهادة')
-                                ->addActionLabel('➕ إضافة شهادة')
+                                ->itemLabel(fn (array $state): ?string => $state['name'] ?? __('شهادة'))
+                                ->addActionLabel(__('➕ إضافة شهادة'))
                                 ->columnSpanFull(),
                         ])->columns(2),
                 ]),
@@ -1015,7 +1017,7 @@ class IncubatorSettings extends Page implements HasForms
         }
 
         Notification::make()
-            ->title('تم حفظ إعدادات الحاضنة بنجاح')
+            ->title(__('تم حفظ إعدادات الحاضنة بنجاح'))
             ->success()
             ->send();
     }

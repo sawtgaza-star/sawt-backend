@@ -3,7 +3,7 @@
 namespace App\Support;
 
 /**
- * Fixed page-key → URL maps for platform + incubator chrome.
+ * Fixed page-key → URL maps for platform + incubator + media chrome.
  * Admin edits labels/visibility only; the front owns routing via these keys.
  */
 class LayoutLinks
@@ -154,6 +154,55 @@ class LayoutLinks
         }
 
         return self::incubatorPathForKey($item['key'] ?? null);
+    }
+
+    /** Keys for Sawt Media site navbar (hash anchors on /media). */
+    public const MEDIA_PAGE_PATHS = [
+        'methodology' => '/media#methodology',
+        'services' => '/media#services',
+        'works' => '/media#works',
+        'about' => '/media#about',
+        'packages' => '/media#packages',
+        'consultation' => '/media#consultation',
+        // Navbar / hero «ابدأ مشروعك» → dedicated contact page (not landing #consultation)
+        'start_project' => '/media/contact',
+        'contact' => '/media/contact',
+        // Service detail: /media/services/{slug} — resolved per item in MediaService (not a fixed key)
+        'platform' => '/',
+        'home' => '/',
+        'team' => '/team',
+        'creators' => '/creators',
+        'content' => '/content',
+        'incubator' => '/incubator',
+        'media' => '/media',
+    ];
+
+    /** Resolve media nav key → hash path (falls back to main PAGE_PATHS). */
+    public static function mediaPathForKey(?string $key): string
+    {
+        $key = trim((string) $key);
+
+        return self::MEDIA_PAGE_PATHS[$key] ?? self::pathForKey($key);
+    }
+
+    /**
+     * Prefer explicit item url when absolute/path; otherwise map by media key.
+     *
+     * @param  array<string, mixed>  $item
+     */
+    public static function mediaPathForItem(array $item): string
+    {
+        $url = trim((string) ($item['url'] ?? ''));
+
+        if ($url !== '' && $url !== '#') {
+            if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, 'mailto:') || str_starts_with($url, 'tel:') || str_starts_with($url, '/')) {
+                return $url;
+            }
+
+            return '/'.ltrim($url, '/');
+        }
+
+        return self::mediaPathForKey($item['key'] ?? null);
     }
 
     public static function pathForItem(array $item): string

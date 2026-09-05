@@ -31,17 +31,17 @@ class CollaborationJoinRequestResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'طلبات التعاون';
+        return __('Collaboration Requests');
     }
 
     public static function getModelLabel(): string
     {
-        return 'طلب تعاون';
+        return __('Collaboration Request');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'طلبات التعاون';
+        return __('Collaboration Requests');
     }
 
     public static function canCreate(): bool

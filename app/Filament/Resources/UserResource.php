@@ -63,45 +63,45 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('مستخدم الموقع / API')->schema([
-                Forms\Components\TextInput::make('name')->label('الاسم')->required(),
-                Forms\Components\TextInput::make('email')->label('البريد الإلكتروني')->email()->required()->unique(ignoreRecord: true),
-                Forms\Components\TextInput::make('phone')->label('الهاتف'),
-                Forms\Components\TextInput::make('country_code')->label('مفتاح الدولة')->default('+970'),
+            Forms\Components\Section::make(__('مستخدم الموقع / API'))->schema([
+                Forms\Components\TextInput::make('name')->label(__('الاسم'))->required(),
+                Forms\Components\TextInput::make('email')->label(__('البريد الإلكتروني'))->email()->required()->unique(ignoreRecord: true),
+                Forms\Components\TextInput::make('phone')->label(__('الهاتف')),
+                Forms\Components\TextInput::make('country_code')->label(__('مفتاح الدولة'))->default('+970'),
 
                 Forms\Components\TextInput::make('password')
-                    ->label('كلمة المرور')
+                    ->label(__('كلمة المرور'))
                     ->password()
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $operation) => $operation === 'create'),
 
                 Forms\Components\FileUpload::make('avatar')
-                    ->label('الصورة الشخصية')
+                    ->label(__('الصورة الشخصية'))
                     ->image()
                     ->disk('public')
                     ->directory('users/avatars')
                     ->visibility('public'),
 
                 Forms\Components\Select::make('status')
-                    ->label('الحالة')
-                    ->options(['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور'])
+                    ->label(__('الحالة'))
+                    ->options(['active' => __('نشط'), 'inactive' => __('غير نشط'), 'banned' => 'محظور'])
                     ->default('active')
                     ->required(),
 
                 Forms\Components\Select::make('type')
-                    ->label('النوع')
+                    ->label(__('النوع'))
                     ->options([
-                        User::TYPE_USER => 'مستخدم',
-                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                        User::TYPE_USER => __('مستخدم'),
+                        User::TYPE_CONTENT_CREATOR => __('صانع محتوى'),
                     ])
                     ->default(User::TYPE_USER)
                     ->disabled()
                     ->dehydrated()
-                    ->helperText('يُحدَّث تلقائياً عند قبول طلب الانضمام كصانع محتوى.'),
+                    ->helperText(__('يُحدَّث تلقائياً عند قبول طلب الانضمام كصانع محتوى.')),
 
                 Forms\Components\Placeholder::make('role_hint')
-                    ->label('الدور')
-                    ->content('يُعيَّن تلقائياً دور user أو content_creator حسب النوع — بدون دخول Filament.')
+                    ->label(__('الدور'))
+                    ->content(__('يُعيَّن تلقائياً دور user أو content_creator حسب النوع — بدون دخول Filament.'))
                     ->columnSpanFull(),
             ])->columns(2),
         ]);
@@ -112,34 +112,34 @@ class UserResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('avatar', '')->circular()->height(40),
-                Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('البريد')->searchable(),
-                Tables\Columns\TextColumn::make('phone')->label('الهاتف')->toggleable(),
-                Tables\Columns\TextColumn::make('roles.name')->label('الأدوار')->badge()->default(User::ROLE_USER),
-                Tables\Columns\BadgeColumn::make('type')->label('النوع')
+                Tables\Columns\TextColumn::make('name')->label(__('الاسم'))->searchable(),
+                Tables\Columns\TextColumn::make('email')->label(__('البريد'))->searchable(),
+                Tables\Columns\TextColumn::make('phone')->label(__('الهاتف'))->toggleable(),
+                Tables\Columns\TextColumn::make('roles.name')->label(__('الأدوار'))->badge()->default(User::ROLE_USER),
+                Tables\Columns\BadgeColumn::make('type')->label(__('النوع'))
                     ->colors([
                         'gray' => User::TYPE_USER,
                         'success' => User::TYPE_CONTENT_CREATOR,
                     ])
                     ->formatStateUsing(fn (?string $state) => match ($state) {
-                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
-                        default => 'مستخدم',
+                        User::TYPE_CONTENT_CREATOR => __('صانع محتوى'),
+                        default => __('مستخدم'),
                     }),
-                Tables\Columns\BadgeColumn::make('status')->label('الحالة')
+                Tables\Columns\BadgeColumn::make('status')->label(__('الحالة'))
                     ->colors(['success' => 'active', 'gray' => 'inactive', 'danger' => 'banned'])
-                    ->formatStateUsing(fn (string $state) => ['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور'][$state] ?? $state),
-                Tables\Columns\TextColumn::make('created_at')->label('انضم في')->dateTime('Y-m-d')->sortable(),
+                    ->formatStateUsing(fn (string $state) => ['active' => __('نشط'), 'inactive' => __('غير نشط'), 'banned' => 'محظور'][$state] ?? $state),
+                Tables\Columns\TextColumn::make('created_at')->label(__('انضم في'))->dateTime('Y-m-d')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('الحالة')
-                    ->options(['active' => 'نشط', 'inactive' => 'غير نشط', 'banned' => 'محظور']),
+                    ->label(__('الحالة'))
+                    ->options(['active' => __('نشط'), 'inactive' => __('غير نشط'), 'banned' => 'محظور']),
                 Tables\Filters\SelectFilter::make('type')
-                    ->label('النوع')
+                    ->label(__('النوع'))
                     ->options([
-                        User::TYPE_USER => 'مستخدم',
-                        User::TYPE_CONTENT_CREATOR => 'صانع محتوى',
+                        User::TYPE_USER => __('مستخدم'),
+                        User::TYPE_CONTENT_CREATOR => __('صانع محتوى'),
                     ]),
             ])
             ->actions([

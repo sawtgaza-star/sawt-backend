@@ -7,8 +7,8 @@ use App\Services\LayoutService;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Public layout endpoints for main site + incubator chrome.
- * Settings: الإعدادات العامة / إعدادات الحاضنة.
+ * Public layout endpoints for main site + incubator + Sawt Media chrome.
+ * Settings: الإعدادات العامة / إعدادات الحاضنة / إعدادات ميديا.
  */
 class LayoutController extends Controller
 {
@@ -73,6 +73,36 @@ class LayoutController extends Controller
     {
         return response()->json([
             'data' => $this->layout->incubatorFooter(),
+        ]);
+    }
+
+    /**
+     * Sawt Media navbar + footer (الإعدادات → إعدادات ميديا).
+     */
+    public function media(): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->layout->mediaPage(),
+        ]);
+    }
+
+    /**
+     * Media navbar only.
+     */
+    public function mediaNavbar(): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->layout->mediaNavbar(),
+        ]);
+    }
+
+    /**
+     * Media footer only.
+     */
+    public function mediaFooter(): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->layout->mediaFooter(),
         ]);
     }
 }

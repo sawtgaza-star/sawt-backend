@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Support\LocaleText;
+
 use App\Filament\Resources\SupportMethodResource\Pages;
 use App\Models\SupportMethod;
 use App\Support\MediaUrl;
@@ -62,67 +64,67 @@ class SupportMethodResource extends Resource
         return $form->schema([
             Forms\Components\Tabs::make('method')->columnSpanFull()->tabs([
 
-                Forms\Components\Tabs\Tab::make('البطاقة')->icon('heroicon-o-identification')->schema([
+                Forms\Components\Tabs\Tab::make(__('البطاقة'))->icon('heroicon-o-identification')->schema([
                     Forms\Components\Select::make('category')
-                        ->label('القسم')
+                        ->label(__('القسم'))
                         ->options(SupportOptions::categories())
-                        ->helperText('يحدّد تحت أي بطاقة تظهر الوسيلة بصفحة «اختر طريقة الدعم»')
+                        ->helperText(__('يحدّد تحت أي بطاقة تظهر الوسيلة بصفحة «اختر طريقة الدعم»'))
                         ->default('transfer')
                         ->required()
                         ->live(),
 
                     Forms\Components\TextInput::make('provider')
-                        ->label('المعرّف التقني')
-                        ->helperText('حروف إنجليزية صغيرة بدون مسافات — مثل: paypal, vodafone_cash, usdt')
+                        ->label(__('المعرّف التقني'))
+                        ->helperText(__('حروف إنجليزية صغيرة بدون مسافات — مثل: paypal, vodafone_cash, usdt'))
                         ->required()
                         ->maxLength(60)
                         ->rules(['regex:/^[a-z0-9_]+$/']),
 
                     Forms\Components\TextInput::make('name')
-                        ->label('اسم الوسيلة')
+                        ->label(__('اسم الوسيلة'))
                         ->required()
                         ->maxLength(255),
 
-                    Forms\Components\Toggle::make('is_active')->label('مفعّل')->default(true),
+                    Forms\Components\Toggle::make('is_active')->label(__('مفعّل'))->default(true),
 
                     Forms\Components\Textarea::make('description')
-                        ->label('وصف مختصر')
+                        ->label(__('وصف مختصر'))
                         ->rows(3)
                         ->columnSpanFull(),
 
                     Forms\Components\FileUpload::make('logo')
-                        ->label('شعار الوسيلة')
+                        ->label(__('شعار الوسيلة'))
                         ->image()->disk('public')->directory('support/methods')->visibility('public')
                         ->imageEditor()
                         ->imagePreviewHeight('120'),
 
                     Forms\Components\TextInput::make('sort_order')
-                        ->label('الترتيب')->numeric()->default(0),
+                        ->label(__('الترتيب'))->numeric()->default(0),
                 ])->columns(2),
 
-                Forms\Components\Tabs\Tab::make('بيانات الحساب')->icon('heroicon-o-banknotes')->schema([
+                Forms\Components\Tabs\Tab::make(__('بيانات الحساب'))->icon('heroicon-o-banknotes')->schema([
                     Forms\Components\TextInput::make('account_identifier')
                         ->label(fn (Get $get) => $get('category') === 'crypto' ? 'عنوان المحفظة' : 'رقم الحساب / الآيبان / رقم المحفظة')
-                        ->helperText('القيمة الأساسية التي ينسخها المتبرع')
+                        ->helperText(__('القيمة الأساسية التي ينسخها المتبرع'))
                         ->columnSpanFull(),
 
                     Forms\Components\TextInput::make('account_holder')
-                        ->label('اسم صاحب الحساب'),
+                        ->label(__('اسم صاحب الحساب')),
 
                     Forms\Components\TextInput::make('currency')
-                        ->label('العملة')
+                        ->label(__('العملة'))
                         ->maxLength(3)
                         ->placeholder('USD'),
 
                     Forms\Components\Select::make('network')
-                        ->label('الشبكة (للعملات الرقمية)')
+                        ->label(__('الشبكة (للعملات الرقمية)'))
                         ->options(SupportOptions::networks())
                         ->searchable()
                         ->visible(fn (Get $get) => $get('category') === 'crypto'),
 
                     Forms\Components\FileUpload::make('qr_image')
-                        ->label('صورة QR للمحفظة')
-                        ->helperText('ارفع QR محفظة بايننس أو أي محفظة أخرى ليمسحها المتبرع')
+                        ->label(__('صورة QR للمحفظة'))
+                        ->helperText(__('ارفع QR محفظة بايننس أو أي محفظة أخرى ليمسحها المتبرع'))
                         ->image()->disk('public')->directory('support/qr')->visibility('public')
                         ->imageEditor()
                         ->imagePreviewHeight('200')
@@ -130,31 +132,31 @@ class SupportMethodResource extends Resource
                         ->columnSpanFull(),
 
                     Forms\Components\Repeater::make('fields')
-                        ->label('حقول إضافية تظهر للمتبرع')
-                        ->helperText('مثل: اسم البنك، رمز السويفت، اسم الفرع، رقم الهاتف…')
+                        ->label(__('حقول إضافية تظهر للمتبرع'))
+                        ->helperText(__('مثل: اسم البنك، رمز السويفت، اسم الفرع، رقم الهاتف…'))
                         ->schema([
-                            Forms\Components\TextInput::make('label_ar')->label('التسمية (عربي)')->required(),
+                            Forms\Components\TextInput::make('label_ar')->label(__('التسمية (عربي)'))->required(),
                             Forms\Components\TextInput::make('label_en')->label('Label (English)'),
-                            Forms\Components\TextInput::make('value')->label('القيمة')->required()->columnSpanFull(),
-                            Forms\Components\Toggle::make('is_copyable')->label('قابل للنسخ')->default(true)->columnSpanFull(),
+                            Forms\Components\TextInput::make('value')->label(__('القيمة'))->required()->columnSpanFull(),
+                            Forms\Components\Toggle::make('is_copyable')->label(__('قابل للنسخ'))->default(true)->columnSpanFull(),
                         ])
                         ->columns(2)
                         ->reorderable()
                         ->collapsible()
-                        ->itemLabel(fn (array $state): ?string => $state['label_ar'] ?? 'حقل')
+                        ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'label', 'حقل') ?: null)
                         ->columnSpanFull(),
                 ])->columns(2),
 
-                Forms\Components\Tabs\Tab::make('التعليمات والإثبات')->icon('heroicon-o-document-check')->schema([
+                Forms\Components\Tabs\Tab::make(__('التعليمات والإثبات'))->icon('heroicon-o-document-check')->schema([
                     Forms\Components\Textarea::make('instructions')
-                        ->label('خطوات التحويل')
-                        ->helperText('تظهر للمتبرع بخطوة إثبات التحويل')
+                        ->label(__('خطوات التحويل'))
+                        ->helperText(__('تظهر للمتبرع بخطوة إثبات التحويل'))
                         ->rows(6)
                         ->columnSpanFull(),
 
                     Forms\Components\Toggle::make('requires_proof')
-                        ->label('يتطلب رفع إثبات تحويل')
-                        ->helperText('أطفئه لوسائل الدفع الفوري مثل PayPal — تُعتمد آلياً بعد نجاح الدفع')
+                        ->label(__('يتطلب رفع إثبات تحويل'))
+                        ->helperText(__('أطفئه لوسائل الدفع الفوري مثل PayPal — تُعتمد آلياً بعد نجاح الدفع'))
                         ->default(true),
                 ]),
             ]),
@@ -166,9 +168,9 @@ class SupportMethodResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('logo', 'الشعار')->height(40),
-                Tables\Columns\TextColumn::make('name')->label('الوسيلة')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('name')->label(__('الوسيلة'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('category')
-                    ->label('القسم')
+                    ->label(__('القسم'))
                     ->badge()
                     ->formatStateUsing(fn (string $state) => SupportOptions::categories()[$state] ?? $state)
                     ->colors([
@@ -176,18 +178,18 @@ class SupportMethodResource extends Resource
                         'success' => 'transfer',
                         'info' => 'crypto',
                     ]),
-                Tables\Columns\TextColumn::make('provider')->label('المعرّف')->badge()->color('gray'),
-                Tables\Columns\TextColumn::make('account_identifier')->label('الحساب')->limit(28)->copyable()->placeholder('—'),
-                Tables\Columns\IconColumn::make('requires_proof')->label('يطلب إثبات')->boolean(),
-                Tables\Columns\ToggleColumn::make('is_active')->label('مفعّل'),
+                Tables\Columns\TextColumn::make('provider')->label(__('المعرّف'))->badge()->color('gray'),
+                Tables\Columns\TextColumn::make('account_identifier')->label(__('الحساب'))->limit(28)->copyable()->placeholder('—'),
+                Tables\Columns\IconColumn::make('requires_proof')->label(__('يطلب إثبات'))->boolean(),
+                Tables\Columns\ToggleColumn::make('is_active')->label(__('مفعّل')),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
-                    ->label('القسم')
+                    ->label(__('القسم'))
                     ->options(SupportOptions::categories()),
-                Tables\Filters\TernaryFilter::make('is_active')->label('الحالة'),
+                Tables\Filters\TernaryFilter::make('is_active')->label(__('الحالة')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

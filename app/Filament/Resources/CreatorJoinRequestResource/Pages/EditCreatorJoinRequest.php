@@ -15,8 +15,8 @@ class EditCreatorJoinRequest extends EditRecord
         return [
             Actions\ViewAction::make(),
             Actions\DeleteAction::make()
-                ->modalHeading('حذف طلب الانضمام')
-                ->modalDescription('سيُحذف الطلب وحساب المستخدم وملف صانع المحتوى المرتبطين به.'),
+                ->modalHeading(__('حذف طلب الانضمام'))
+                ->modalDescription(__('سيُحذف الطلب وحساب المستخدم وملف صانع المحتوى المرتبطين به.')),
         ];
     }
 }

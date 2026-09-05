@@ -18,7 +18,7 @@ class ViewCollaborationJoinRequest extends ViewRecord
         return [
             Actions\EditAction::make(),
             Actions\Action::make('approve')
-                ->label('قبول')
+                ->label(__('Accept'))
                 ->color('success')
                 ->icon('heroicon-o-check')
                 ->visible(fn () => $this->record->status === 'pending')
@@ -29,7 +29,7 @@ class ViewCollaborationJoinRequest extends ViewRecord
 
                     if ($service->lastEmailError) {
                         Notification::make()
-                            ->title('تم قبول الطلب، لكن تعذر إرسال البريد')
+                            ->title(__('Request accepted, but email could not be sent'))
                             ->body($service->lastEmailError)
                             ->warning()
                             ->send();
@@ -38,16 +38,16 @@ class ViewCollaborationJoinRequest extends ViewRecord
                         return;
                     }
 
-                    Notification::make()->title('تم قبول الطلب وإرسال البريد للجهة')->success()->send();
+                    Notification::make()->title(__('Request accepted and email sent'))->success()->send();
                     $this->redirect(CollaborationJoinRequestResource::getUrl('index'));
                 }),
             Actions\Action::make('reject')
-                ->label('رفض')
+                ->label(__('Reject'))
                 ->color('danger')
                 ->icon('heroicon-o-x-mark')
                 ->visible(fn () => $this->record->status === 'pending')
                 ->form([
-                    Forms\Components\Textarea::make('admin_note')->label('سبب الرفض')->required(),
+                    Forms\Components\Textarea::make('admin_note')->label(__('Rejection reason'))->required(),
                 ])
                 ->action(function (array $data) {
                     app(CollaborationJoinRequestService::class)->reject(
@@ -55,7 +55,7 @@ class ViewCollaborationJoinRequest extends ViewRecord
                         auth()->id(),
                         $data['admin_note'] ?? null,
                     );
-                    Notification::make()->title('تم رفض الطلب')->success()->send();
+                    Notification::make()->title(__('Request rejected'))->success()->send();
                     $this->redirect(CollaborationJoinRequestResource::getUrl('index'));
                 }),
             Actions\DeleteAction::make(),

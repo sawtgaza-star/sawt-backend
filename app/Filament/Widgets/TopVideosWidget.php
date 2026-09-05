@@ -11,11 +11,17 @@ use Illuminate\Support\Facades\Schema;
 
 class TopVideosWidget extends BaseWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 6;
 
     protected int|string|array $columnSpan = 1;
 
-    protected static ?string $heading = 'الأكثر مشاهدة';
+    /**
+     * TableWidget reads getTableHeading() (not getHeading()) for the card title.
+     */
+    protected function getTableHeading(): ?string
+    {
+        return __('الأكثر مشاهدة');
+    }
 
     public static function canView(): bool
     {
@@ -27,12 +33,12 @@ class TopVideosWidget extends BaseWidget
         return $table
             ->query($this->videosQuery())
             ->columns([
-                Tables\Columns\TextColumn::make('title')->label('الفيديو')->limit(30),
-                Tables\Columns\TextColumn::make('creator.username')->label('صانع المحتوى'),
-                Tables\Columns\TextColumn::make('play_count')->label('المشاهدات')->numeric()->sortable(),
+                Tables\Columns\TextColumn::make('title')->label(__('الفيديو'))->limit(30),
+                Tables\Columns\TextColumn::make('creator.username')->label(__('صانع المحتوى')),
+                Tables\Columns\TextColumn::make('play_count')->label(__('المشاهدات'))->numeric()->sortable(),
             ])
             ->paginated(false)
-            ->emptyStateHeading('لا توجد videos')
+            ->emptyStateHeading(__('لا توجد فيديوهات'))
             ->emptyStateIcon('heroicon-o-film');
     }
 

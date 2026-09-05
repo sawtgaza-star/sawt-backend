@@ -70,11 +70,11 @@ class SupportOptions
     public static function requestStatuses(): array
     {
         return [
-            'draft' => 'غير مكتمل',
-            'pending' => 'بانتظار المراجعة',
-            'under_review' => 'قيد المراجعة',
-            'approved' => 'معتمَد',
-            'rejected' => 'مرفوض',
+            'draft' => __('Incomplete'),
+            'pending' => __('Pending review'),
+            'under_review' => __('Under review'),
+            'approved' => __('Approved'),
+            'rejected' => __('Rejected'),
         ];
     }
 

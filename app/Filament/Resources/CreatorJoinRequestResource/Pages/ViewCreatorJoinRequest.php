@@ -20,7 +20,7 @@ class ViewCreatorJoinRequest extends ViewRecord
         return [
             Actions\EditAction::make(),
             Actions\Action::make('approve')
-                ->label('قبول')
+                ->label(__('قبول'))
                 ->color('success')
                 ->icon('heroicon-o-check')
                 ->visible(fn () => $this->record->status === 'pending')
@@ -40,7 +40,7 @@ class ViewCreatorJoinRequest extends ViewRecord
 
                     if ($service->lastEmailError) {
                         Notification::make()
-                            ->title('تم قبول الطلب وإنشاء الحساب، لكن تعذر إرسال البريد')
+                            ->title(__('تم قبول الطلب وإنشاء الحساب، لكن تعذر إرسال البريد'))
                             ->body($service->lastEmailError)
                             ->warning()
                             ->send();
@@ -50,18 +50,18 @@ class ViewCreatorJoinRequest extends ViewRecord
                     }
 
                     Notification::make()
-                        ->title('تم قبول الطلب — أكمل الملف (الصورة، روابط التواصل…)')
+                        ->title(__('تم قبول الطلب — أكمل الملف (الصورة، روابط التواصل…)'))
                         ->success()
                         ->send();
                     $this->redirect(CreatorResource::getUrl('edit', ['record' => $creator]));
                 }),
             Actions\Action::make('reject')
-                ->label('رفض')
+                ->label(__('رفض'))
                 ->color('danger')
                 ->icon('heroicon-o-x-mark')
                 ->visible(fn () => $this->record->status === 'pending')
                 ->form([
-                    Forms\Components\Textarea::make('admin_note')->label('سبب الرفض')->required(),
+                    Forms\Components\Textarea::make('admin_note')->label(__('سبب الرفض'))->required(),
                 ])
                 ->action(function (array $data) {
                     $this->record->update([
@@ -70,12 +70,12 @@ class ViewCreatorJoinRequest extends ViewRecord
                         'reviewed_by' => auth()->id(),
                         'reviewed_at' => now(),
                     ]);
-                    Notification::make()->title('تم رفض الطلب')->success()->send();
+                    Notification::make()->title(__('تم رفض الطلب'))->success()->send();
                     $this->redirect(CreatorJoinRequestResource::getUrl('index'));
                 }),
             Actions\DeleteAction::make()
-                ->modalHeading('حذف طلب الانضمام')
-                ->modalDescription('سيُحذف الطلب وحساب المستخدم وملف صانع المحتوى المرتبطين به.'),
+                ->modalHeading(__('حذف طلب الانضمام'))
+                ->modalDescription(__('سيُحذف الطلب وحساب المستخدم وملف صانع المحتوى المرتبطين به.')),
         ];
     }
 }

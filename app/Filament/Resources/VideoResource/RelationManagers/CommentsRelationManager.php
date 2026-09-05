@@ -28,7 +28,7 @@ class CommentsRelationManager extends RelationManager
     {
         return $form->schema([
             Forms\Components\Textarea::make('comment')
-                ->label('التعليق')
+                ->label(__('التعليق'))
                 ->required()
                 ->rows(3)
                 ->columnSpanFull(),
@@ -40,16 +40,16 @@ class CommentsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('comment')
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('المستخدم'),
-                Tables\Columns\TextColumn::make('comment')->label('التعليق')->limit(60)->wrap(),
-                Tables\Columns\TextColumn::make('parent.comment')->label('رد على')->limit(30)->placeholder('—'),
-                Tables\Columns\TextColumn::make('created_at')->label('التاريخ')->dateTime('Y-m-d H:i')->sortable(),
+                Tables\Columns\TextColumn::make('user.name')->label(__('المستخدم')),
+                Tables\Columns\TextColumn::make('comment')->label(__('التعليق'))->limit(60)->wrap(),
+                Tables\Columns\TextColumn::make('parent.comment')->label(__('رد على'))->limit(30)->placeholder('—'),
+                Tables\Columns\TextColumn::make('created_at')->label(__('التاريخ'))->dateTime('Y-m-d H:i')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->headerActions([])
             ->actions([
-                Tables\Actions\EditAction::make()->label('تعديل النص'),
-                Tables\Actions\DeleteAction::make()->label('حذف (مراقبة)'),
+                Tables\Actions\EditAction::make()->label(__('تعديل النص')),
+                Tables\Actions\DeleteAction::make()->label(__('حذف (مراقبة)')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CourseResource\Pages;
 use App\Models\Course;
+use App\Support\LocaleText;
 use App\Support\MediaUrl;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -29,55 +30,60 @@ class CourseResource extends Resource
         return __('Courses');
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Courses');
+    }
+
     public static function getModelLabel(): string
     {
-        return 'كورس';
+        return __('Course');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'الكورسات';
+        return __('Courses');
     }
 
     public static function form(Form $form): Form
     {
         return $form->schema([
             Forms\Components\Tabs::make('Course')->columnSpanFull()->tabs([
-                Forms\Components\Tabs\Tab::make('أساسي')->icon('heroicon-o-information-circle')->schema([
-                    Forms\Components\Section::make('معلومات الكورس')->schema([
+                Forms\Components\Tabs\Tab::make(__('أساسي'))->icon('heroicon-o-information-circle')->schema([
+                    Forms\Components\Section::make(__('معلومات الكورس'))->schema([
                         Forms\Components\TextInput::make('title')
-                            ->label('العنوان')->required()->maxLength(255)
+                            ->label(__('العنوان'))->required()->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', Str::slug($state)))
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('slug')
-                            ->label('الرابط (slug)')->required()->maxLength(255)->unique(ignoreRecord: true)
-                            ->helperText('مثال: graphic-design → /courses/graphic-design'),
+                            ->label(__('الرابط (slug)'))->required()->maxLength(255)->unique(ignoreRecord: true)
+                            ->helperText(__('مثال: graphic-design → /courses/graphic-design')),
                         Forms\Components\Textarea::make('description')
-                            ->label('الوصف')->rows(4)->columnSpanFull(),
+                            ->label(__('الوصف'))->rows(4)->columnSpanFull(),
                         Forms\Components\FileUpload::make('image')
-                            ->label('صورة بطاقة الحاضنة')
-                            ->helperText('تظهر فقط في بطاقات «دوراتنا الأكثر شهرة» — ليست لصورة صفحة التفاصيل')
+                            ->label(__('صورة بطاقة الحاضنة'))
+                            ->helperText(__('تظهر فقط في بطاقات «دوراتنا الأكثر شهرة» — ليست لصورة صفحة التفاصيل'))
                             ->image()->directory('courses')->imageEditor()
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('تصنيف الدورة والمدرب')->schema([
+                    Forms\Components\Section::make(__('تصنيف الدورة والمدرب'))->schema([
                         Forms\Components\Select::make('trainer_id')
-                            ->label('مدرب الدورة')
+                            ->label(__('مدرب الدورة'))
                             ->relationship(
                                 name: 'trainer',
                                 titleAttribute: 'name',
                                 modifyQueryUsing: fn ($query) => $query->where('is_active', true)->orderBy('sort_order'),
                             )
-                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->getTranslation('name', 'ar') ?: $record->getTranslation('name', 'en') ?: (string) $record->uuid)
+                            ->getOptionLabelFromRecordUsing(fn ($record) => LocaleText::translation($record, 'name') ?: (string) $record->uuid)
                             ->searchable()
                             ->preload()
-                            ->helperText('من قائمة مدربي الدورات — وليس صنّاع المحتوى')
+                            ->helperText(__('من قائمة مدربي الدورات — وليس صنّاع المحتوى'))
                             ->createOptionForm([
-                                Forms\Components\TextInput::make('name')->label('الاسم')->required(),
-                                Forms\Components\TextInput::make('title')->label('المسمى'),
-                                Forms\Components\Toggle::make('is_active')->label('نشط')->default(true),
+                                Forms\Components\TextInput::make('name')->label(__('الاسم'))->required(),
+                                Forms\Components\TextInput::make('title')->label(__('المسمى')),
+                                Forms\Components\Toggle::make('is_active')->label(__('نشط'))->default(true),
                             ])
                             ->createOptionUsing(function (array $data): int {
                                 $name = (string) ($data['name'] ?? '');
@@ -91,20 +97,20 @@ class CourseResource extends Resource
                                 return $trainer->id;
                             }),
                         Forms\Components\Select::make('course_category_id')
-                            ->label('تصنيف الدورة')
+                            ->label(__('تصنيف الدورة'))
                             ->relationship(
                                 name: 'courseCategory',
                                 titleAttribute: 'name',
                                 modifyQueryUsing: fn ($query) => $query->where('is_active', true)->orderBy('sort_order'),
                             )
-                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->getTranslation('name', 'ar') ?: $record->slug)
+                            ->getOptionLabelFromRecordUsing(fn ($record) => LocaleText::translation($record, 'name') ?: $record->slug)
                             ->searchable()
                             ->preload()
-                            ->helperText('تصنيفات الدورات فقط — منفصلة عن فئات المحتوى')
+                            ->helperText(__('تصنيفات الدورات فقط — منفصلة عن فئات المحتوى'))
                             ->createOptionForm([
-                                Forms\Components\TextInput::make('name')->label('الاسم')->required(),
+                                Forms\Components\TextInput::make('name')->label(__('الاسم'))->required(),
                                 Forms\Components\TextInput::make('slug')->label('Slug')->required(),
-                                Forms\Components\Toggle::make('is_active')->label('مفعّل')->default(true),
+                                Forms\Components\Toggle::make('is_active')->label(__('مفعّل'))->default(true),
                             ])
                             ->createOptionUsing(function (array $data): int {
                                 $category = \App\Models\CourseCategory::query()->create([
@@ -119,185 +125,185 @@ class CourseResource extends Resource
                                 return $category->id;
                             }),
                         Forms\Components\Select::make('level')
-                            ->label('المستوى')
-                            ->options(['beginner' => 'مبتدئ', 'intermediate' => 'متوسط', 'advanced' => 'متقدم'])
+                            ->label(__('المستوى'))
+                            ->options(['beginner' => __('مبتدئ'), 'intermediate' => __('متوسط'), 'advanced' => 'متقدم'])
                             ->default('beginner')->required(),
                         Forms\Components\Select::make('status')
-                            ->label('الحالة')
-                            ->options(['draft' => 'مسودة', 'published' => 'منشور'])
+                            ->label(__('الحالة'))
+                            ->options(['draft' => __('مسودة'), 'published' => 'منشور'])
                             ->default('draft')->required(),
                         Forms\Components\Hidden::make('delivery_mode')->default('offline'),
                         Forms\Components\Placeholder::make('delivery_hint')
-                            ->label('نوع الحضور')
-                            ->content('جميع الكورسات حضورية (أوفلاين) فقط.')
+                            ->label(__('نوع الحضور'))
+                            ->content(__('جميع الكورسات حضورية (أوفلاين) فقط.'))
                             ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('الجدول والمقاعد')->icon('heroicon-o-calendar')->schema([
-                    Forms\Components\Section::make('الحضور والمواعيد')->schema([
+                Forms\Components\Tabs\Tab::make(__('الجدول والمقاعد'))->icon('heroicon-o-calendar')->schema([
+                    Forms\Components\Section::make(__('الحضور والمواعيد'))->schema([
                         Forms\Components\TextInput::make('location')
-                            ->label('المكان')->maxLength(255),
+                            ->label(__('المكان'))->maxLength(255),
                         Forms\Components\TextInput::make('location_details')
-                            ->label('تفاصيل المكان')->maxLength(255),
+                            ->label(__('تفاصيل المكان'))->maxLength(255),
                         Forms\Components\DateTimePicker::make('starts_at')
-                            ->label('تاريخ البدء'),
+                            ->label(__('تاريخ البدء')),
                         Forms\Components\DateTimePicker::make('ends_at')
-                            ->label('تاريخ الانتهاء'),
+                            ->label(__('تاريخ الانتهاء')),
                         Forms\Components\DateTimePicker::make('registration_ends_at')
-                            ->label('ينتهي التسجيل في')
-                            ->helperText('يُستخدم للعدّ التنازلي في صفحة التفاصيل'),
+                            ->label(__('ينتهي التسجيل في'))
+                            ->helperText(__('يُستخدم للعدّ التنازلي في صفحة التفاصيل')),
                         Forms\Components\TextInput::make('duration_weeks')
-                            ->label('المدة (أسابيع)')
+                            ->label(__('المدة (أسابيع)'))
                             ->numeric()->minValue(1),
                         Forms\Components\TextInput::make('max_seats')
-                            ->label('عدد المقاعد')
+                            ->label(__('عدد المقاعد'))
                             ->numeric()->minValue(1)
-                            ->helperText('اتركه فارغاً إذا لم يكن هناك حد'),
+                            ->helperText(__('اتركه فارغاً إذا لم يكن هناك حد')),
                     ])->columns(2),
 
-                    Forms\Components\Section::make('بطاقة القائمة')->schema([
+                    Forms\Components\Section::make(__('بطاقة القائمة'))->schema([
                         Forms\Components\TextInput::make('duration_hours')
-                            ->label('ساعات البرنامج')
-                            ->placeholder('15 ساعة'),
+                            ->label(__('ساعات البرنامج'))
+                            ->placeholder(__('15 ساعة')),
                         Forms\Components\TextInput::make('sessions_hours')
-                            ->label('ساعات الجلسات')
-                            ->placeholder('4 ساعات'),
+                            ->label(__('ساعات الجلسات'))
+                            ->placeholder(__('4 ساعات')),
                         Forms\Components\TextInput::make('rating')
-                            ->label('التقييم (من 5)')
+                            ->label(__('التقييم (من 5)'))
                             ->numeric()->minValue(0)->maxValue(5)->step(0.1),
                         Forms\Components\Toggle::make('is_coming_soon')
-                            ->label('قريباً (قائمة انتظار)')
-                            ->helperText('يظهر شارة «قريباً» وزر قائمة الانتظار بدل تفاصيل الكورس')
+                            ->label(__('قريباً (قائمة انتظار)'))
+                            ->helperText(__('يظهر شارة «قريباً» وزر قائمة الانتظار بدل تفاصيل الكورس'))
                             ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('أهداف البرنامج')->icon('heroicon-o-flag')->schema([
+                Forms\Components\Tabs\Tab::make(__('أهداف البرنامج'))->icon('heroicon-o-flag')->schema([
                     Forms\Components\Repeater::make('objectives')
-                        ->label('الأهداف')
+                        ->label(__('الأهداف'))
                         ->schema([
                             Forms\Components\FileUpload::make('icon')
-                                ->label('الأيقونة')
+                                ->label(__('الأيقونة'))
                                 ->image()->disk('public')->directory('courses/icons')->imageEditor()
                                 ->columnSpanFull(),
-                            Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
+                            Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)'))->required(),
                             Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
-                            Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
+                            Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                             Forms\Components\Textarea::make('desc_en')->label('Description (EN)')->rows(2),
                         ])
                         ->columns(2)
                         ->reorderable()
                         ->collapsible()
-                        ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'هدف')
-                        ->addActionLabel('➕ إضافة هدف')
+                        ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'هدف') ?: null)
+                        ->addActionLabel(__('➕ إضافة هدف'))
                         ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('محاور البرنامج')->icon('heroicon-o-list-bullet')->schema([
+                Forms\Components\Tabs\Tab::make(__('محاور البرنامج'))->icon('heroicon-o-list-bullet')->schema([
                     Forms\Components\Repeater::make('modules')
-                        ->label('المحاور')
+                        ->label(__('المحاور'))
                         ->schema([
-                            Forms\Components\TextInput::make('title_ar')->label('عنوان المحور (عربي)')->required(),
+                            Forms\Components\TextInput::make('title_ar')->label(__('عنوان المحور (عربي)'))->required(),
                             Forms\Components\TextInput::make('title_en')->label('Module title (EN)'),
                             Forms\Components\Repeater::make('lessons')
-                                ->label('الدروس (اختياري)')
+                                ->label(__('الدروس (اختياري)'))
                                 ->schema([
-                                    Forms\Components\TextInput::make('title_ar')->label('الدرس (عربي)')->required(),
+                                    Forms\Components\TextInput::make('title_ar')->label(__('الدرس (عربي)'))->required(),
                                     Forms\Components\TextInput::make('title_en')->label('Lesson (EN)'),
-                                    Forms\Components\TextInput::make('duration')->label('المدة')->placeholder('15 دقيقة'),
+                                    Forms\Components\TextInput::make('duration')->label(__('المدة'))->placeholder(__('15 دقيقة')),
                                 ])
                                 ->columns(3)
                                 ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'درس')
-                                ->addActionLabel('➕ درس')
+                                ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'درس') ?: null)
+                                ->addActionLabel(__('➕ درس'))
                                 ->columnSpanFull(),
                         ])
                         ->columns(2)
                         ->reorderable()
                         ->collapsible()
-                        ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'محور')
-                        ->addActionLabel('➕ إضافة محور')
+                        ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'محور') ?: null)
+                        ->addActionLabel(__('➕ إضافة محور'))
                         ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('المخرجات والمزايا')->icon('heroicon-o-sparkles')->schema([
-                    Forms\Components\Section::make('قبل البرنامج')->schema([
+                Forms\Components\Tabs\Tab::make(__('المخرجات والمزايا'))->icon('heroicon-o-sparkles')->schema([
+                    Forms\Components\Section::make(__('قبل البرنامج'))->schema([
                         Forms\Components\Repeater::make('outcomes_before')
-                            ->label('النقاط')
+                            ->label(__('النقاط'))
                             ->schema([
-                                Forms\Components\TextInput::make('ar')->label('عربي')->required(),
+                                Forms\Components\TextInput::make('ar')->label(__('عربي'))->required(),
                                 Forms\Components\TextInput::make('en')->label('English'),
                             ])
                             ->columns(2)
                             ->reorderable()
-                            ->addActionLabel('➕ نقطة')
+                            ->addActionLabel(__('➕ نقطة'))
                             ->columnSpanFull(),
                     ]),
-                    Forms\Components\Section::make('بعد البرنامج')->schema([
+                    Forms\Components\Section::make(__('بعد البرنامج'))->schema([
                         Forms\Components\Repeater::make('outcomes_after')
-                            ->label('النقاط')
+                            ->label(__('النقاط'))
                             ->schema([
-                                Forms\Components\TextInput::make('ar')->label('عربي')->required(),
+                                Forms\Components\TextInput::make('ar')->label(__('عربي'))->required(),
                                 Forms\Components\TextInput::make('en')->label('English'),
                             ])
                             ->columns(2)
                             ->reorderable()
-                            ->addActionLabel('➕ نقطة')
+                            ->addActionLabel(__('➕ نقطة'))
                             ->columnSpanFull(),
                     ]),
-                    Forms\Components\Section::make('ماذا ستحصل عند انضمامك')->schema([
+                    Forms\Components\Section::make(__('ماذا ستحصل عند انضمامك'))->schema([
                         Forms\Components\Repeater::make('benefits')
-                            ->label('المزايا')
+                            ->label(__('المزايا'))
                             ->schema([
                                 Forms\Components\FileUpload::make('icon')
-                                    ->label('الأيقونة')
+                                    ->label(__('الأيقونة'))
                                     ->image()->disk('public')->directory('courses/icons')->imageEditor()
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('ar')->label('عربي')->required(),
+                                Forms\Components\TextInput::make('ar')->label(__('عربي'))->required(),
                                 Forms\Components\TextInput::make('en')->label('English'),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['ar'] ?? 'ميزة')
-                            ->addActionLabel('➕ ميزة')
+                            ->itemLabel(fn (array $state): ?string => (app()->getLocale() === 'en' ? ($state['en'] ?? $state['ar'] ?? null) : ($state['ar'] ?? $state['en'] ?? null)) ?: __('ميزة'))
+                            ->addActionLabel(__('➕ ميزة'))
                             ->columnSpanFull(),
                     ]),
                 ]),
 
-                Forms\Components\Tabs\Tab::make('التسجيل والقبول')->icon('heroicon-o-clipboard-document-check')->schema([
-                    Forms\Components\Section::make('شروط التسجيل')->schema([
+                Forms\Components\Tabs\Tab::make(__('التسجيل والقبول'))->icon('heroicon-o-clipboard-document-check')->schema([
+                    Forms\Components\Section::make(__('شروط التسجيل'))->schema([
                         Forms\Components\Repeater::make('requirements')
-                            ->label('الشروط')
+                            ->label(__('الشروط'))
                             ->schema([
-                                Forms\Components\TextInput::make('ar')->label('عربي')->required(),
+                                Forms\Components\TextInput::make('ar')->label(__('عربي'))->required(),
                                 Forms\Components\TextInput::make('en')->label('English'),
                             ])
                             ->columns(2)
                             ->reorderable()
-                            ->addActionLabel('➕ شرط')
+                            ->addActionLabel(__('➕ شرط'))
                             ->columnSpanFull()
-                            ->helperText('إن كانت البيانات القديمة نصاً بسيطاً، أعد حفظ الشروط بهذا الشكل'),
+                            ->helperText(__('إن كانت البيانات القديمة نصاً بسيطاً، أعد حفظ الشروط بهذا الشكل')),
                     ]),
-                    Forms\Components\Section::make('آلية اختيار المشاركين')->schema([
+                    Forms\Components\Section::make(__('آلية اختيار المشاركين'))->schema([
                         Forms\Components\Repeater::make('selection_steps')
-                            ->label('الخطوات')
+                            ->label(__('الخطوات'))
                             ->schema([
                                 Forms\Components\FileUpload::make('icon')
-                                    ->label('الأيقونة')
+                                    ->label(__('الأيقونة'))
                                     ->image()->disk('public')->directory('courses/icons')->imageEditor()
                                     ->columnSpanFull(),
-                                Forms\Components\TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
+                                Forms\Components\TextInput::make('title_ar')->label(__('العنوان (عربي)'))->required(),
                                 Forms\Components\TextInput::make('title_en')->label('Title (EN)'),
-                                Forms\Components\Textarea::make('desc_ar')->label('الوصف (عربي)')->rows(2),
+                                Forms\Components\Textarea::make('desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                                 Forms\Components\Textarea::make('desc_en')->label('Description (EN)')->rows(2),
                             ])
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['title_ar'] ?? 'خطوة')
-                            ->addActionLabel('➕ خطوة')
+                            ->itemLabel(fn (array $state): ?string => LocaleText::pick($state, 'title', 'خطوة') ?: null)
+                            ->addActionLabel(__('➕ خطوة'))
                             ->columnSpanFull(),
                     ]),
                 ]),
@@ -310,26 +316,26 @@ class CourseResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('image', '')->circular(),
-                Tables\Columns\TextColumn::make('title')->label('العنوان')->searchable()->limit(40),
+                Tables\Columns\TextColumn::make('title')->label(__('العنوان'))->searchable()->limit(40),
                 Tables\Columns\TextColumn::make('slug')->label('Slug')->toggleable()->limit(20),
-                Tables\Columns\TextColumn::make('location')->label('المكان')->toggleable()->limit(25),
-                Tables\Columns\TextColumn::make('starts_at')->label('البدء')->dateTime('Y-m-d')->toggleable(),
-                Tables\Columns\IconColumn::make('is_coming_soon')->label('قريباً')->boolean()->toggleable(),
-                Tables\Columns\TextColumn::make('trainer.name')->label('المدرب')->toggleable(),
-                Tables\Columns\TextColumn::make('courseCategory.name')->label('التصنيف')->toggleable(),
-                Tables\Columns\TextColumn::make('students_count')->label('المقبولون')->numeric()->sortable(),
+                Tables\Columns\TextColumn::make('location')->label(__('المكان'))->toggleable()->limit(25),
+                Tables\Columns\TextColumn::make('starts_at')->label(__('البدء'))->dateTime('Y-m-d')->toggleable(),
+                Tables\Columns\IconColumn::make('is_coming_soon')->label(__('قريباً'))->boolean()->toggleable(),
+                Tables\Columns\TextColumn::make('trainer.name')->label(__('المدرب'))->toggleable(),
+                Tables\Columns\TextColumn::make('courseCategory.name')->label(__('التصنيف'))->toggleable(),
+                Tables\Columns\TextColumn::make('students_count')->label(__('المقبولون'))->numeric()->sortable(),
                 Tables\Columns\TextColumn::make('join_requests_count')
                     ->counts('joinRequests')
-                    ->label('الطلبات')
+                    ->label(__('الطلبات'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')->label('الحالة')->badge()
+                Tables\Columns\TextColumn::make('status')->label(__('الحالة'))->badge()
                     ->colors(['gray' => 'draft', 'success' => 'published'])
                     ->formatStateUsing(fn ($state) => $state === 'published' ? 'منشور' : 'مسودة'),
-                Tables\Columns\TextColumn::make('created_at')->label('أُنشئ')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('created_at')->label(__('أُنشئ'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')->label('الحالة')
-                    ->options(['draft' => 'مسودة', 'published' => 'منشور']),
+                Tables\Filters\SelectFilter::make('status')->label(__('الحالة'))
+                    ->options(['draft' => __('مسودة'), 'published' => 'منشور']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

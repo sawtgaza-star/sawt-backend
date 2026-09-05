@@ -34,17 +34,17 @@ class CourseTrainerResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'مدربو الدورات';
+        return __('Course Trainers');
     }
 
     public static function getModelLabel(): string
     {
-        return 'مدرب';
+        return __('Course Trainer');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'مدربو الدورات';
+        return __('Course Trainers');
     }
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -52,46 +52,46 @@ class CourseTrainerResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('بيانات المدرب')->schema([
+            Forms\Components\Section::make(__('بيانات المدرب'))->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('الاسم')->required()->maxLength(255),
+                    ->label(__('الاسم'))->required()->maxLength(255),
                 Forms\Components\FileUpload::make('avatar')
-                    ->label('الصورة')
+                    ->label(__('الصورة'))
                     ->image()->disk('public')->directory('courses/trainers')->imageEditor()
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('title')
-                    ->label('المسمى / التخصص')
+                    ->label(__('المسمى / التخصص'))
                     ->maxLength(255)
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('bio')
-                    ->label('نبذة')->rows(4)
+                    ->label(__('نبذة'))->rows(4)
                     ->columnSpanFull(),
                 // Badge on incubator experts cards (e.g. «7 سنوات» / «7 years»)
                 Forms\Components\TextInput::make('experience')
-                    ->label('شارة الخبرة')
-                    ->placeholder('7 سنوات')
+                    ->label(__('شارة الخبرة'))
+                    ->placeholder(__('7 سنوات'))
                     ->maxLength(100)
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('phone')->label('هاتف')->tel(),
-                Forms\Components\TextInput::make('email')->label('بريد')->email(),
-                Forms\Components\Toggle::make('is_active')->label('نشط')->default(true),
-                Forms\Components\TextInput::make('sort_order')->label('الترتيب')->numeric()->default(0),
+                Forms\Components\TextInput::make('phone')->label(__('هاتف'))->tel(),
+                Forms\Components\TextInput::make('email')->label(__('بريد'))->email(),
+                Forms\Components\Toggle::make('is_active')->label(__('نشط'))->default(true),
+                Forms\Components\TextInput::make('sort_order')->label(__('الترتيب'))->numeric()->default(0),
             ])->columns(2),
 
-            Forms\Components\Section::make('وسائل التواصل')->schema([
+            Forms\Components\Section::make(__('وسائل التواصل'))->schema([
                 Forms\Components\Repeater::make('socials')
-                    ->label('الحسابات')
+                    ->label(__('الحسابات'))
                     ->schema([
                         Forms\Components\Select::make('platform')
-                            ->label('المنصة')
+                            ->label(__('المنصة'))
                             ->options(CreatorResource::socialPlatformOptions())
                             ->required(),
                         Forms\Components\TextInput::make('url')
-                            ->label('الرابط')->url()->required(),
+                            ->label(__('الرابط'))->url()->required(),
                     ])
                     ->columns(2)
                     ->reorderable()
-                    ->addActionLabel('➕ إضافة حساب')
+                    ->addActionLabel(__('➕ إضافة حساب'))
                     ->columnSpanFull(),
             ]),
         ]);
@@ -102,11 +102,11 @@ class CourseTrainerResource extends Resource
         return $table
             ->columns([
                 MediaUrl::tableImageColumn('avatar', '')->circular(),
-                Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('البريد')->toggleable(),
-                Tables\Columns\TextColumn::make('courses_count')->counts('courses')->label('الكورسات'),
-                Tables\Columns\IconColumn::make('is_active')->label('نشط')->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')->label('الترتيب')->sortable(),
+                Tables\Columns\TextColumn::make('name')->label(__('الاسم'))->searchable(),
+                Tables\Columns\TextColumn::make('email')->label(__('البريد'))->toggleable(),
+                Tables\Columns\TextColumn::make('courses_count')->counts('courses')->label(__('الكورسات')),
+                Tables\Columns\IconColumn::make('is_active')->label(__('نشط'))->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')->label(__('الترتيب'))->sortable(),
             ])
             ->defaultSort('sort_order')
             ->actions([

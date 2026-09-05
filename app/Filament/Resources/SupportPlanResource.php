@@ -53,39 +53,39 @@ class SupportPlanResource extends Resource
     {
         return $form->schema([
             Forms\Components\Select::make('interval')
-                ->label('الدورية')
+                ->label(__('الدورية'))
                 ->options(SupportOptions::intervals())
                 ->default('monthly')
                 ->required()
                 ->live(),
 
             Forms\Components\TextInput::make('amount')
-                ->label('المبلغ')
+                ->label(__('المبلغ'))
                 ->numeric()->minValue(1)->prefix('$')
                 ->required(),
 
             Forms\Components\TextInput::make('currency')
-                ->label('العملة')->default('USD')->maxLength(3)->required(),
+                ->label(__('العملة'))->default('USD')->maxLength(3)->required(),
 
             Forms\Components\TextInput::make('sort_order')
-                ->label('الترتيب')->numeric()->default(0),
+                ->label(__('الترتيب'))->numeric()->default(0),
 
             Forms\Components\TextInput::make('label')
-                ->label('نص بديل للمبلغ (اختياري)')
-                ->placeholder('مثال: باقة الداعم الذهبي'),
+                ->label(__('نص بديل للمبلغ (اختياري)'))
+                ->placeholder(__('مثال: باقة الداعم الذهبي')),
 
             Forms\Components\Toggle::make('is_featured')
-                ->label('باقة مميّزة')
-                ->helperText('تظهر مُبرَزة بالواجهة'),
+                ->label(__('باقة مميّزة'))
+                ->helperText(__('تظهر مُبرَزة بالواجهة')),
 
-            Forms\Components\Toggle::make('is_active')->label('مفعّلة')->default(true),
+            Forms\Components\Toggle::make('is_active')->label(__('مفعّلة'))->default(true),
 
             Forms\Components\Textarea::make('description')
-                ->label('وصف الباقة')->rows(3)->columnSpanFull(),
+                ->label(__('وصف الباقة'))->rows(3)->columnSpanFull(),
 
             Forms\Components\TextInput::make('paypal_plan_id')
-                ->label('معرّف خطة PayPal')
-                ->helperText('اتركه فارغاً ليُنشأ آلياً عند أول اشتراك — أو ألصق معرّف خطة جاهزة')
+                ->label(__('معرّف خطة PayPal'))
+                ->helperText(__('اتركه فارغاً ليُنشأ آلياً عند أول اشتراك — أو ألصق معرّف خطة جاهزة'))
                 ->visible(fn (Get $get) => in_array($get('interval'), ['monthly', 'yearly'], true))
                 ->columnSpanFull(),
         ])->columns(2);
@@ -96,7 +96,7 @@ class SupportPlanResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('interval')
-                    ->label('الدورية')
+                    ->label(__('الدورية'))
                     ->badge()
                     ->formatStateUsing(fn (string $state) => SupportOptions::intervals()[$state] ?? $state)
                     ->colors([
@@ -105,21 +105,21 @@ class SupportPlanResource extends Resource
                         'warning' => 'yearly',
                     ]),
                 Tables\Columns\TextColumn::make('amount')
-                    ->label('المبلغ')
+                    ->label(__('المبلغ'))
                     ->money(fn ($record) => $record->currency ?? 'USD')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('label')->label('التسمية')->placeholder('—')->limit(30),
-                Tables\Columns\TextColumn::make('paypal_plan_id')->label('خطة PayPal')->placeholder('—')->limit(24)->copyable(),
-                Tables\Columns\IconColumn::make('is_featured')->label('مميّزة')->boolean(),
-                Tables\Columns\ToggleColumn::make('is_active')->label('مفعّلة'),
+                Tables\Columns\TextColumn::make('label')->label(__('التسمية'))->placeholder('—')->limit(30),
+                Tables\Columns\TextColumn::make('paypal_plan_id')->label(__('خطة PayPal'))->placeholder('—')->limit(24)->copyable(),
+                Tables\Columns\IconColumn::make('is_featured')->label(__('مميّزة'))->boolean(),
+                Tables\Columns\ToggleColumn::make('is_active')->label(__('مفعّلة')),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->filters([
                 Tables\Filters\SelectFilter::make('interval')
-                    ->label('الدورية')
+                    ->label(__('الدورية'))
                     ->options(SupportOptions::intervals()),
-                Tables\Filters\TernaryFilter::make('is_active')->label('الحالة'),
+                Tables\Filters\TernaryFilter::make('is_active')->label(__('الحالة')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -55,7 +55,7 @@ class TagResource extends Resource
     {
         return $form->schema([
             Forms\Components\TextInput::make('name')
-                ->label('الاسم')
+                ->label(__('الاسم'))
                 ->required()
                 ->live(onBlur: true)
                 ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) =>
@@ -63,7 +63,7 @@ class TagResource extends Resource
                 ->maxLength(255),
 
             Forms\Components\TextInput::make('slug')
-                ->label('الرابط (Slug)')
+                ->label(__('الرابط (Slug)'))
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->maxLength(255),
@@ -74,10 +74,10 @@ class TagResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('الاسم')->searchable(),
+                Tables\Columns\TextColumn::make('name')->label(__('الاسم'))->searchable(),
                 Tables\Columns\TextColumn::make('slug')->label('Slug')->searchable(),
-                Tables\Columns\TextColumn::make('videos_count')->label('عدد الفيديوهات')->counts('videos'),
-                Tables\Columns\TextColumn::make('created_at')->label('أُنشئ')->dateTime('Y-m-d')->sortable(),
+                Tables\Columns\TextColumn::make('videos_count')->label(__('عدد الفيديوهات'))->counts('videos'),
+                Tables\Columns\TextColumn::make('created_at')->label(__('أُنشئ'))->dateTime('Y-m-d')->sortable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

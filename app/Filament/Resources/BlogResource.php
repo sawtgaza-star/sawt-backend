@@ -32,17 +32,17 @@ class BlogResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'الأخبار / المدونة';
+        return __('News / Blog');
     }
 
     public static function getModelLabel(): string
     {
-        return 'خبر';
+        return __('Article');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'الأخبار';
+        return __('News');
     }
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -51,9 +51,9 @@ class BlogResource extends Resource
     {
         return $form->schema([
             Forms\Components\Group::make()->columnSpan(2)->schema([
-                Forms\Components\Section::make('1) بطاقة القائمة (آخر أخبارنا)')->schema([
+                Forms\Components\Section::make(__('1) بطاقة القائمة (آخر أخبارنا)'))->schema([
                     Forms\Components\TextInput::make('title')
-                        ->label('العنوان')
+                        ->label(__('العنوان'))
                         ->required()
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) =>
@@ -62,12 +62,12 @@ class BlogResource extends Resource
                         ->columnSpanFull(),
 
                     Forms\Components\Textarea::make('excerpt')
-                        ->label('المقتطف (يظهر في البطاقة وتحت العنوان في صفحة التفاصيل)')
+                        ->label(__('المقتطف (يظهر في البطاقة وتحت العنوان في صفحة التفاصيل)'))
                         ->rows(3)
                         ->columnSpanFull(),
 
                     Forms\Components\FileUpload::make('cover_image')
-                        ->label('صورة البطاقة')
+                        ->label(__('صورة البطاقة'))
                         ->image()
                         ->disk('public')
                         ->directory('blogs/covers')
@@ -77,10 +77,10 @@ class BlogResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Section::make('2) صفحة التفاصيل — الهيرو والمحتوى')->schema([
+                Forms\Components\Section::make(__('2) صفحة التفاصيل — الهيرو والمحتوى'))->schema([
                     Forms\Components\FileUpload::make('hero_image')
-                        ->label('صورة الهيرو (اختياري)')
-                        ->helperText('إن تُركت فارغة تُستخدم صورة البطاقة')
+                        ->label(__('صورة الهيرو (اختياري)'))
+                        ->helperText(__('إن تُركت فارغة تُستخدم صورة البطاقة'))
                         ->image()
                         ->disk('public')
                         ->directory('blogs/hero')
@@ -89,7 +89,7 @@ class BlogResource extends Resource
                         ->columnSpanFull(),
 
                     Forms\Components\RichEditor::make('content')
-                        ->label('محتوى الخبر')
+                        ->label(__('محتوى الخبر'))
                         ->toolbarButtons([
                             'bold', 'italic', 'underline', 'strike',
                             'h2', 'h3',
@@ -100,21 +100,21 @@ class BlogResource extends Resource
                         ->columnSpanFull(),
 
                     Forms\Components\Textarea::make('quote_text')
-                        ->label('نص الاقتباس المميز')
+                        ->label(__('نص الاقتباس المميز'))
                         ->rows(3)
                         ->columnSpanFull(),
 
                     Forms\Components\TextInput::make('quote_author')
-                        ->label('مصدر الاقتباس')
-                        ->placeholder('— أحد صانعي المحتوى في منصة صوت')
+                        ->label(__('مصدر الاقتباس'))
+                        ->placeholder(__('— أحد صانعي المحتوى في منصة صوت'))
                         ->columnSpanFull(),
 
                     Forms\Components\Repeater::make('images')
-                        ->label('صور الخبر (معرض)')
+                        ->label(__('صور الخبر (معرض)'))
                         ->relationship('images')
                         ->schema([
                             Forms\Components\FileUpload::make('image')
-                                ->label('الصورة')
+                                ->label(__('الصورة'))
                                 ->image()
                                 ->required()
                                 ->disk('public')
@@ -133,16 +133,16 @@ class BlogResource extends Resource
 
                             return filled($state['image'] ?? null) ? 'صورة' : 'صورة جديدة';
                         })
-                        ->addActionLabel('➕ إضافة صورة')
+                        ->addActionLabel(__('➕ إضافة صورة'))
                         ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Section::make('3) التصنيفات (داخل الخبر)')->schema([
+                Forms\Components\Section::make(__('3) التصنيفات (داخل الخبر)'))->schema([
                     Forms\Components\Repeater::make('categories')
-                        ->label('تصنيفات الخبر')
+                        ->label(__('تصنيفات الخبر'))
                         ->schema([
                             Forms\Components\TextInput::make('name_ar')
-                                ->label('الاسم (عربي)')
+                                ->label(__('الاسم (عربي)'))
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
                                     if (blank($get('slug'))) {
@@ -169,13 +169,13 @@ class BlogResource extends Resource
 
                             return $state['name_ar'] ?? $state['name_en'] ?? 'تصنيف';
                         })
-                        ->addActionLabel('➕ إضافة تصنيف')
+                        ->addActionLabel(__('➕ إضافة تصنيف'))
                         ->columnSpanFull(),
                 ]),
             ]),
 
             Forms\Components\Group::make()->columnSpan(1)->schema([
-                Forms\Components\Section::make('النشر')->schema([
+                Forms\Components\Section::make(__('النشر'))->schema([
                     Forms\Components\TextInput::make('slug')
                         ->label('Slug')
                         ->required()
@@ -183,45 +183,45 @@ class BlogResource extends Resource
                         ->maxLength(255),
 
                     Forms\Components\Select::make('status')
-                        ->label('الحالة')
+                        ->label(__('الحالة'))
                         ->options([
-                            'draft' => 'مسودة',
-                            'published' => 'منشور',
+                            'draft' => __('مسودة'),
+                            'published' => __('منشور'),
                         ])
                         ->default('draft')
                         ->required(),
 
                     Forms\Components\DateTimePicker::make('published_at')
-                        ->label('تاريخ النشر')
+                        ->label(__('تاريخ النشر'))
                         ->seconds(false)
                         ->default(fn () => now()),
 
                     Forms\Components\Toggle::make('is_featured')
-                        ->label('إبراز في الرئيسية')
-                        ->helperText('يُفضَّل إبراز 3 أخبار لقسم «آخر أخبارنا»'),
+                        ->label(__('إبراز في الرئيسية'))
+                        ->helperText(__('يُفضَّل إبراز 3 أخبار لقسم «آخر أخبارنا»')),
 
                     Forms\Components\TextInput::make('sort_order')
-                        ->label('الترتيب')
+                        ->label(__('الترتيب'))
                         ->numeric()
                         ->default(0),
                 ]),
 
-                Forms\Components\Section::make('البيانات الوصفية')->schema([
+                Forms\Components\Section::make(__('البيانات الوصفية'))->schema([
                     Forms\Components\TextInput::make('author_name')
-                        ->label('الكاتب')
-                        ->placeholder('فريق منصة صوت'),
+                        ->label(__('الكاتب'))
+                        ->placeholder(__('فريق منصة صوت')),
 
                     Forms\Components\TextInput::make('read_time_minutes')
-                        ->label('وقت القراءة (دقائق)')
+                        ->label(__('وقت القراءة (دقائق)'))
                         ->numeric()
                         ->minValue(1)
                         ->maxValue(120)
-                        ->helperText('اختياري — يُحسب تلقائياً من المحتوى إذا تُرك فارغاً'),
+                        ->helperText(__('اختياري — يُحسب تلقائياً من المحتوى إذا تُرك فارغاً')),
 
                     Forms\Components\Placeholder::make('views_count_info')
-                        ->label('عدد المشاهدات')
+                        ->label(__('عدد المشاهدات'))
                         ->content(fn (?Blog $record): string => number_format((int) ($record?->views_count ?? 0)))
-                        ->helperText('يُزاد تلقائياً عند فتح الخبر عبر API (صفحة التفاصيل)')
+                        ->helperText(__('يُزاد تلقائياً عند فتح الخبر عبر API (صفحة التفاصيل)'))
                         ->visibleOn('edit'),
                 ]),
             ]),
@@ -234,45 +234,45 @@ class BlogResource extends Resource
             ->columns([
                 MediaUrl::tableImageColumn('cover_image', 'الصورة'),
                 Tables\Columns\TextColumn::make('title')
-                    ->label('العنوان')
+                    ->label(__('العنوان'))
                     ->searchable()
                     ->limit(50),
                 Tables\Columns\TextColumn::make('category_labels')
-                    ->label('التصنيفات')
+                    ->label(__('التصنيفات'))
                     ->getStateUsing(fn (Blog $record): array => $record->categoryLabels('ar'))
                     ->badge()
                     ->placeholder('—'),
                 Tables\Columns\TextColumn::make('images_count')
-                    ->label('الصور')
+                    ->label(__('الصور'))
                     ->counts('images'),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'published' => 'success',
                         default => 'gray',
                     }),
                 Tables\Columns\IconColumn::make('is_featured')
-                    ->label('مميز')
+                    ->label(__('مميز'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('published_at')
-                    ->label('تاريخ النشر')
+                    ->label(__('تاريخ النشر'))
                     ->dateTime('Y-m-d H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('views_count')
-                    ->label('المشاهدات')
+                    ->label(__('المشاهدات'))
                     ->sortable(),
             ])
             ->defaultSort('published_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('الحالة')
+                    ->label(__('الحالة'))
                     ->options([
-                        'draft' => 'مسودة',
-                        'published' => 'منشور',
+                        'draft' => __('مسودة'),
+                        'published' => __('منشور'),
                     ]),
                 Tables\Filters\TernaryFilter::make('is_featured')
-                    ->label('مميز في الرئيسية'),
+                    ->label(__('مميز في الرئيسية')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
