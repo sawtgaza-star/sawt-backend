@@ -4,6 +4,8 @@ Offline incubator courses. Edited in Filament **الكورسات**.
 
 All courses are **offline only** (`delivery.mode` is always `offline`).
 
+DB: `2026_07_11_100001_create_courses_table.php` creates `courses` with the Filament offline/detail columns (`location`, schedule, `duration_*`, `rating`, `is_coming_soon`, `objectives`, `modules`, `outcomes_*`, `benefits`, `selection_steps`, …).
+
 ## Filament
 
 **Sidebar → الكورسات**
