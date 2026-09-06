@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * Platform team member — card + profile photo.
+ */
 class TeamMember extends Model
 {
     use HasTranslations, HasUuid, PrunesStoredUploads;

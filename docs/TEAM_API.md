@@ -47,6 +47,7 @@ Category tabs with counts on the listing API.
 |--------|--------|
 | `years_of_experience` | int, nullable |
 | `bio` | JSON translatable |
+| `photo` | Upload under `team/members/` |
 | `facebook_url`, `linkedin_url`, `twitter_url`, `instagram_url` | nullable strings |
 
 Migration: `2026_08_05_153600_add_profile_fields_to_team_members_table.php`
@@ -103,6 +104,9 @@ Returns: `hero`, `filters`, `majors`, `members`
 }
 ```
 
+- `image` — member `photo_url` for listing cards.  
+- Homepage `GET /api/v1/pages/home` → `team` section uses the same card fields.
+
 Use `majors` for filter tabs; filter members with `?major=design` or `?major_uuid=…`.
 
 ### Member detail (this page)
@@ -116,11 +120,7 @@ GET /api/v1/pages/team/{uuid}
 ```json
 {
   "data": {
-    "hero": {
-      "image_url": "…",
-      "title": { "ar": "صناع الأثر.. الفريق خلف منصة صوت", "en": "…" },
-      "description": { "ar": "", "en": "" }
-    },
+    "hero": { "…": "…" },
     "member": {
       "uuid": "…",
       "name": { "ar": "سمير البطل", "en": "…" },

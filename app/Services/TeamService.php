@@ -8,6 +8,9 @@ use App\Repositories\Contracts\TeamRepositoryInterface;
 use App\Support\MediaUrl;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * Team listing + member detail pages (settings chrome + repository data).
+ */
 class TeamService
 {
     public function __construct(
