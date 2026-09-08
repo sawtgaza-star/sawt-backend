@@ -20,7 +20,7 @@ Navbar/footer are **separate** from the main platform and from incubator layout.
 |-----|------------------|
 | الهيدر | Logo, back-to-platform, nav links, start-project / book-consultation CTAs |
 | الفوتر | Logo, about, main links, Sawt section links, newsletter, copyright |
-| الصفحة الأولى | Landing section chrome (hero, about, …). Service **cards** are managed under صوت ميديا → خدمات ميديا |
+| الصفحة الأولى | Landing section chrome (hero **collage images** + phrases ticker, about, …). Service **cards** are managed under صوت ميديا → خدمات ميديا |
 | تفاصيل الخدمة | Shared hero banner + bottom CTA on `/media/services/{slug}` (images + copy) |
 | صفحة التواصل | Contact page (`/media/contact`) — target of ابدأ مشروعك |
 
@@ -341,6 +341,10 @@ Landing `services.items[]` also include `slug` + `path` so the front can link ca
   "data": {
     "hero": {
       "eyebrow": {},
+      "images": [
+        { "url": "…", "sort_order": 0 },
+        { "url": "…", "sort_order": 1 }
+      ],
       "phrases": [{ "label": { "ar": "إنتاج الفيديوهات", "en": "Video production" }, "sort_order": 0 }],
       "description": {},
       "cta": {

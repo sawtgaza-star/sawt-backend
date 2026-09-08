@@ -59,20 +59,34 @@ class MediaService
     }
 
     /**
-     * Hero + phrases (شريط «عبارة» تحت الهيرو).
+     * Hero collage images (free list) + phrases ticker (شريط «عبارة» تحت الهيرو).
      *
      * @return array<string, mixed>
      */
     protected function hero(): array
     {
-        // Phrases from إعدادات ميديا → عبارات (media_hero_rotating)
+        // Phrases from إعدادات ميديا → عبارات (media_hero_rotating) — text strip only
         $phrases = $this->settings->get('media_hero_rotating', []);
         if (! is_array($phrases)) {
             $phrases = [];
         }
 
+        // Free-form hero collage — admin adds any number of images
+        $images = $this->settings->get('media_hero_images', []);
+        if (! is_array($images)) {
+            $images = [];
+        }
+
         return [
             'eyebrow' => $this->settings->i18n('media_hero_eyebrow', 'صوت ميديا تقدم', 'Sawt Media presents'),
+            'images' => collect(array_values($images))
+                ->filter(fn ($item) => is_array($item) && filled($item['image'] ?? null))
+                ->values()
+                ->map(fn (array $item, int $i) => [
+                    'url' => MediaUrl::make($item['image'] ?? null),
+                    'sort_order' => $i,
+                ])
+                ->all(),
             'phrases' => collect(array_values($phrases))
                 ->filter(fn ($item) => is_array($item) && filled($item['label_ar'] ?? null))
                 ->values()

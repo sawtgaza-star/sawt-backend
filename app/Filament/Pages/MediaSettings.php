@@ -122,6 +122,8 @@ class MediaSettings extends Page implements HasForms
             'media_hero_badge_value' => ['media', 'string', '98%'],
             'media_hero_badge_label_ar' => ['media', 'string', 'رضا العملاء'],
             'media_hero_badge_label_en' => ['media', 'string', 'Client satisfaction'],
+            // Hero collage images — free-form list (admin adds as many as needed)
+            'media_hero_images' => ['media', 'json', []],
 
             // —— About ——
             'media_about_eyebrow_ar' => ['media', 'string', 'من نحن'],
@@ -483,9 +485,23 @@ class MediaSettings extends Page implements HasForms
                     Forms\Components\Section::make(__('1) الهيرو'))->schema([
                         Forms\Components\TextInput::make('media_hero_eyebrow_ar')->label(__('فوق العنوان (عربي)')),
                         Forms\Components\TextInput::make('media_hero_eyebrow_en')->label('Eyebrow (EN)'),
+                        // Free-form collage images (not tied to left/center/right)
+                        Forms\Components\Repeater::make('media_hero_images')
+                            ->label(__('صور الهيرو'))
+                            ->helperText(__('أضف صوراً لكولاج الهيرو بالعدد والترتيب الذي تريده — ليست شريط العبارات.'))
+                            ->schema([
+                                Forms\Components\FileUpload::make('image')
+                                    ->label(__('الصورة'))
+                                    ->image()->disk('public')->directory('media/hero')->imageEditor()
+                                    ->required()
+                                    ->columnSpanFull(),
+                            ])
+                            ->reorderable()
+                            ->addActionLabel(__('➕ صورة'))
+                            ->columnSpanFull(),
                         Forms\Components\Repeater::make('media_hero_rotating')
                             ->label(__('عبارات (شريط الخدمات تحت الهيرو)'))
-                            ->helperText(__('تُرجع في API ضمن hero.phrases — نفس الشريط الأفقي في التصميم.'))
+                            ->helperText(__('نصوص الشريط الأفقي فقط (بدون صور). صور الكولاج أعلى في «صور الهيرو».'))
                             ->schema([
                                 Forms\Components\TextInput::make('label_ar')->label(__('عبارة (عربي)'))->required(),
                                 Forms\Components\TextInput::make('label_en')->label('Phrase (EN)'),
