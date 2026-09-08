@@ -25,6 +25,7 @@ class MediaWork extends Model
         'title',
         'category',
         'tag',
+        // Legacy JSON date kept for old rows; new works use work_date
         'date',
         'summary',
         'about',
@@ -43,6 +44,7 @@ class MediaWork extends Model
         'title',
         'category',
         'tag',
+        'work_date',
         'date',
         'summary',
         'cover_image',
@@ -65,6 +67,7 @@ class MediaWork extends Model
     protected function casts(): array
     {
         return [
+            'work_date' => 'date',
             'highlights' => 'array',
             'stages' => 'array',
             'results' => 'array',

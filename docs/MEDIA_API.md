@@ -212,6 +212,10 @@ GET /api/v1/pages/media/works/{slugOrUuid}
 Public. Example: [sawtgaza.com/media/works/film](https://sawtgaza.com/media/works/film).  
 Accepts **slug** or **uuid**. Managed in **صوت ميديا → أعمال ميديا** (link to a service for the service-detail samples section).
 
+- **category** — free text above the title (e.g. «تصميم التطبيقات»), not a dropdown  
+- **tag** — orange badge next to the date  
+- **date** — from Filament datepicker (`work_date`); API returns `{ ar, en }` month/year labels  
+
 Hero + bottom CTA chrome = same shared settings as service detail (**إعدادات ميديا → تفاصيل الخدمة**).
 
 ### Services list

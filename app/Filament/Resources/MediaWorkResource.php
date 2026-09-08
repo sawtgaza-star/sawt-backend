@@ -90,12 +90,22 @@ class MediaWorkResource extends Resource
                             ->label(__('صورة الغلاف / البطاقة'))
                             ->image()->disk('public')->directory('media/works')->imageEditor()
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('category.ar')->label(__('التصنيف (عربي)')),
+                        Forms\Components\TextInput::make('category.ar')
+                            ->label(__('التصنيف (عربي)'))
+                            ->helperText(__('نص يظهر فوق العنوان في صفحة العمل (مثل: تصميم التطبيقات) — ليس قائمة منسدلة.')),
                         Forms\Components\TextInput::make('category.en')->label('Category (EN)'),
-                        Forms\Components\TextInput::make('tag.ar')->label(__('وسم (عربي)')),
+                        Forms\Components\TextInput::make('tag.ar')
+                            ->label(__('وسم (عربي)'))
+                            ->helperText(__('الشارة البرتقالية بجانب التاريخ (مثل: إنتاج).')),
                         Forms\Components\TextInput::make('tag.en')->label('Tag (EN)'),
-                        Forms\Components\TextInput::make('date.ar')->label(__('التاريخ (عربي)')),
-                        Forms\Components\TextInput::make('date.en')->label('Date (EN)'),
+                        // Real date — API formats as month/year labels (أبريل 2026)
+                        Forms\Components\DatePicker::make('work_date')
+                            ->label(__('التاريخ'))
+                            ->helperText(__('اختر الشهر/اليوم — يُعرض على الموقع كشهر وسنة (مثل أبريل 2026).'))
+                            ->native(false)
+                            ->displayFormat('F Y')
+                            ->closeOnDateSelection()
+                            ->columnSpanFull(),
                         Forms\Components\Textarea::make('summary.ar')->label(__('الملخص (عربي)'))->rows(3),
                         Forms\Components\Textarea::make('summary.en')->label('Summary (EN)')->rows(3),
                     ])->columns(2),

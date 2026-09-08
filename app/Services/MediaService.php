@@ -420,7 +420,7 @@ class MediaService
             'slug' => $work->slug,
             'path' => '/media/works/'.$work->slug,
             'category' => $this->t($work, 'category'),
-            'date' => $this->t($work, 'date'),
+            'date' => $this->workDateLabels($work),
             'title' => $this->t($work, 'title'),
             'description' => $this->t($work, 'summary'),
             'image_url' => MediaUrl::make($work->cover_image),
@@ -610,6 +610,24 @@ class MediaService
     }
 
     /**
+     * Display date as month/year labels for the front (datepicker stores work_date).
+     * Falls back to legacy JSON `date` when work_date is empty.
+     *
+     * @return array{ar: string, en: string}
+     */
+    protected function workDateLabels(MediaWork $work): array
+    {
+        if ($work->work_date) {
+            return [
+                'ar' => $work->work_date->copy()->locale('ar')->translatedFormat('F Y'),
+                'en' => $work->work_date->copy()->locale('en')->translatedFormat('F Y'),
+            ];
+        }
+
+        return $this->t($work, 'date');
+    }
+
+    /**
      * Work detail — /media/works/{slug|uuid} (e.g. film).
      *
      * @return array<string, mixed>|null
@@ -663,7 +681,7 @@ class MediaService
                 ],
             ],
             'work' => [
-                'date' => $this->t($work, 'date'),
+                'date' => $this->workDateLabels($work),
                 'category' => $this->t($work, 'category'),
                 'title' => $this->t($work, 'title'),
                 'tag' => $this->t($work, 'tag'),

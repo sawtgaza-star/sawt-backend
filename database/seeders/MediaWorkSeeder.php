@@ -22,7 +22,7 @@ class MediaWorkSeeder extends Seeder
                 'title' => ['ar' => 'فيلم تعريفي لشركة أفق', 'en' => 'Intro film for Ufuq company'],
                 'category' => ['ar' => 'إنتاج', 'en' => 'Production'],
                 'tag' => ['ar' => 'تصميم التطبيقات', 'en' => 'App design'],
-                'date' => ['ar' => '2026 أبريل', 'en' => 'April 2026'],
+                'work_date' => '2026-04-01',
                 'summary' => [
                     'ar' => 'بناء هوية متكاملة لمؤسسة الشباب، تعكس طموح الجيل الجديد وقيم العمل المؤسسي الاحترافي.',
                     'en' => 'A complete identity for a youth institution — ambition and professional values.',
