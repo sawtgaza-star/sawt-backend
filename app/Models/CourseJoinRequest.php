@@ -5,6 +5,10 @@ namespace App\Models;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Course join / waitlist request submitted by a website user.
+ * Reviewed in Filament (accept / reject); accept notifies the user.
+ */
 class CourseJoinRequest extends Model
 {
     use HasUuid;

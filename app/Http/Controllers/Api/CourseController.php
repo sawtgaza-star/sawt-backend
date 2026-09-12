@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\StoreCourseJoinRequest;
+use App\Http\Resources\CourseJoinRequestResource;
 use App\Http\Resources\IncubatorCourseCardResource;
 use App\Models\Course;
+use App\Services\CourseJoinService;
 use App\Services\CourseService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -12,12 +15,13 @@ use Illuminate\Http\Request;
 
 /**
  * Public courses API under /api/v1/pages/courses.
- * Index = lean cards; show = full detail via CourseService (slug or uuid).
+ * Index = lean cards; show = full detail; join = authenticated waitlist/enroll.
  */
 class CourseController extends Controller
 {
     public function __construct(
         protected CourseService $courses,
+        protected CourseJoinService $joins,
     ) {}
 
     /**
@@ -67,5 +71,36 @@ class CourseController extends Controller
         return response()->json([
             'data' => $data,
         ]);
+    }
+
+    /**
+     * Join waitlist or request enrollment (requires JWT auth:api).
+     * Front should send users to login/register on 401, then retry this endpoint.
+     */
+    public function join(StoreCourseJoinRequest $request, string $slug): JsonResponse
+    {
+        $course = Course::query()
+            ->published()
+            ->where(function ($query) use ($slug) {
+                $query->where('slug', $slug)->orWhere('uuid', $slug);
+            })
+            ->first();
+
+        if (! $course) {
+            return response()->json([
+                'message' => 'الكورس غير موجود.',
+                'error' => 'course_not_found',
+            ], 404);
+        }
+
+        $joinRequest = $this->joins->submit($course, $request->user(), $request->validated());
+        $joinRequest->loadMissing(['course', 'user']);
+
+        $payload = (new CourseJoinRequestResource($joinRequest))->resolve();
+
+        return response()->json([
+            'message' => $payload['confirmation']['title'] ?? 'تم بنجاح',
+            'data' => $payload,
+        ], 201);
     }
 }

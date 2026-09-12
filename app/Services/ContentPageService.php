@@ -63,7 +63,7 @@ class ContentPageService
         $items = [];
 
         if ($this->instagram->isConfigured()) {
-            $fetched = $this->instagram->reels($limit, bypassCache: true);
+            $fetched = $this->instagram->reels($limit, bypassCache: false);
 
             $items = collect($fetched)
                 ->map(fn (array $reel, int $index) => [

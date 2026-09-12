@@ -126,6 +126,9 @@ class CourseService
             'cta' => $course->is_coming_soon
                 ? [
                     'key' => 'waitlist',
+                    'requires_auth' => true,
+                    'method' => 'POST',
+                    'path' => '/api/v1/pages/courses/'.$course->slug.'/join',
                     'label' => [
                         'ar' => 'انضم لقائمة الانتظار',
                         'en' => 'Join the waitlist',
@@ -133,6 +136,9 @@ class CourseService
                 ]
                 : [
                     'key' => 'enroll',
+                    'requires_auth' => true,
+                    'method' => 'POST',
+                    'path' => '/api/v1/pages/courses/'.$course->slug.'/join',
                     'label' => [
                         'ar' => 'اشترك الآن',
                         'en' => 'Enroll now',

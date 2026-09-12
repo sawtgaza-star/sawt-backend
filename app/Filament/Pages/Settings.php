@@ -610,7 +610,8 @@ class Settings extends Page implements HasForms
             return [];
         }
 
-        return app(\App\Services\InstagramService::class)->reels(12);
+        // Lite fetch only — extras cause 60s timeouts on the Settings page
+        return app(\App\Services\InstagramService::class)->reels(12, bypassCache: false, withExtras: false);
     }
 
     /**
@@ -618,7 +619,7 @@ class Settings extends Page implements HasForms
      */
     public function refreshReels(): void
     {
-        app(\App\Services\InstagramService::class)->reels(12, bypassCache: true);
+        app(\App\Services\InstagramService::class)->reels(12, bypassCache: true, withExtras: false);
 
         Notification::make()->title(__('تم تحديث الريلز'))->success()->send();
     }

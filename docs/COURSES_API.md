@@ -10,6 +10,11 @@ DB: `2026_07_11_100001_create_courses_table.php` creates `courses` with the Fila
 
 **Sidebar → الكورسات**
 
+| Item | Content |
+|------|---------|
+| **الكورسات** | Course CRUD (tabs below) |
+| **طلبات الانضمام** | Waitlist / enroll requests — accept or reject |
+
 | Tab | Content |
 |-----|---------|
 | أساسي | Title, slug, description, **incubator card image**, **course trainer**, **course category**, level, status |
@@ -21,14 +26,61 @@ DB: `2026_07_11_100001_create_courses_table.php` creates `courses` with the Fila
 
 ## Endpoints
 
-| Method | Endpoint | Notes |
-|--------|----------|-------|
-| `GET` | `/api/v1/pages/courses` | Published listing (paginated) |
-| `GET` | `/api/v1/pages/courses/{slugOrUuid}` | Full detail — **slug** (`graphic-design`) or **uuid** (`z56aj`) |
+| Method | Endpoint | Auth | Notes |
+|--------|----------|------|-------|
+| `GET` | `/api/v1/pages/courses` | Public | Published listing (paginated) |
+| `GET` | `/api/v1/pages/courses/{slugOrUuid}` | Public | Full detail — **slug** or **uuid** |
+| `POST` | `/api/v1/pages/courses/{slugOrUuid}/join` | **JWT** (`Authorization: Bearer …`) | Waitlist / enroll request → Filament **طلبات الانضمام** |
 
 Also listed (cards only) inside `GET /api/v1/pages/incubator` → `courses.items`.
 
-Public. No auth.
+### Join / waitlist (`POST …/join`)
+
+1. Front sees CTA `key: waitlist` or `enroll` with `requires_auth: true`.
+2. If guest → open login/register (`POST /api/v1/auth/login` or `/register`), then retry.
+3. Authenticated → `POST` with optional body (defaults to profile):
+
+```json
+{
+  "full_name": "أحمد",
+  "phone": "+970…",
+  "email": "a@example.com",
+  "message": "أرغب بالانضمام"
+}
+```
+
+**201** returns the pending request plus a `confirmation` object for the success modal:
+
+```json
+{
+  "message": "مرحباً محمد، تم تسجيلك بقائمة الانتظار بنجاح",
+  "data": {
+    "uuid": "…",
+    "status": "pending",
+    "email_masked": "m***@example.com",
+    "course": { "uuid": "…", "slug": "…", "title": {}, "is_coming_soon": true },
+    "confirmation": {
+      "title": "مرحباً محمد، تم تسجيلك بقائمة الانتظار بنجاح",
+      "subtitle": "الكورس حالياً قيد الإعداد، تم إضافتك إلى قائمة الانتظار وسنتواصل معك فور توفره.",
+      "user_name": "محمد …",
+      "course_name": { "ar": "…", "en": "…" },
+      "course_status": { "key": "preparing", "label": { "ar": "قيد الإعداد", "en": "Under preparation" } },
+      "email_notice": "سيصلك إشعار على بريدك: m***@example.com",
+      "email_masked": "m***@example.com",
+      "cta": {
+        "key": "browse_courses",
+        "label": { "ar": "تصفح كورسات ثانية", "en": "Browse other courses" },
+        "path": "/api/v1/pages/courses",
+        "url": "/incubator"
+      }
+    }
+  }
+}
+```
+
+Coming-soon courses (`is_coming_soon`) skip seat limits so waitlist stays open.
+
+Admin **قبول** / **رفض** emails the applicant (`CourseJoinAcceptedNotification` / `CourseJoinRejectedNotification`).
 
 ### Card shape (listing / incubator)
 
@@ -48,11 +100,24 @@ Card-only fields (full detail: `GET /pages/courses/{slugOrUuid}`).
   "sessions_hours": "4 ساعات",
   "rating": 5,
   "is_coming_soon": false,
-  "cta": { "key": "details", "label": { "ar": "تفاصيل الكورس", "en": "Course details" } }
+  "cta": {
+    "key": "details",
+    "label": { "ar": "تفاصيل الكورس", "en": "Course details" }
+  }
 }
 ```
 
-When `is_coming_soon` is true, CTA becomes `waitlist` / «انضم لقائمة الانتظار».
+When `is_coming_soon` is true, CTA becomes:
+
+```json
+{
+  "key": "waitlist",
+  "requires_auth": true,
+  "method": "POST",
+  "path": "/api/v1/pages/courses/digital-content-marketing/join",
+  "label": { "ar": "انضم لقائمة الانتظار", "en": "Join the waitlist" }
+}
+```
 
 ### Detail shape
 
@@ -102,7 +167,13 @@ When `is_coming_soon` is true, CTA becomes `waitlist` / «انضم لقائمة 
       "email": null,
       "socials": [{ "platform": "instagram", "url": "…" }]
     },
-    "cta": { "key": "enroll", "label": { "ar": "اشترك الآن", "en": "Enroll now" } }
+    "cta": {
+      "key": "enroll",
+      "requires_auth": true,
+      "method": "POST",
+      "path": "/api/v1/pages/courses/graphic-design/join",
+      "label": { "ar": "اشترك الآن", "en": "Enroll now" }
+    }
   }
 }
 ```

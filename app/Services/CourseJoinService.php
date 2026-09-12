@@ -6,12 +6,23 @@ use App\Models\Course;
 use App\Models\CourseJoinRequest;
 use App\Models\User;
 use App\Notifications\CourseJoinAcceptedNotification;
+use App\Notifications\CourseJoinRejectedNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use RuntimeException;
 
+/**
+ * Handles course join / waitlist requests (pending → accept/reject).
+ * Coming-soon courses skip the seats check so waitlist signups stay open.
+ */
 class CourseJoinService
 {
+    /**
+     * Create or re-open a pending join/waitlist request for the authenticated user.
+     *
+     * @param  array{full_name?: string, phone?: string|null, email?: string|null, message?: string|null}  $data
+     */
     public function submit(Course $course, User $user, array $data): CourseJoinRequest
     {
         if ($course->status !== 'published') {
@@ -36,7 +47,8 @@ class CourseJoinService
             ]);
         }
 
-        if (! $course->hasAvailableSeats()) {
+        // Waitlist (coming soon) ignores seat capacity; open enrollment still enforces it
+        if (! $course->is_coming_soon && ! $course->hasAvailableSeats()) {
             throw ValidationException::withMessages([
                 'course' => 'اكتملت المقاعد المتاحة لهذا الكورس.',
             ]);
@@ -66,6 +78,10 @@ class CourseJoinService
         ])->load(['course', 'user']);
     }
 
+
+    /**
+     * Accept a pending request (increments students_count + notifies the user).
+     */
     public function accept(CourseJoinRequest $request, User $admin, ?string $adminNotes = null): CourseJoinRequest
     {
         if (! $request->isPending()) {
@@ -83,12 +99,15 @@ class CourseJoinService
             $request->course()->increment('students_count');
 
             $request->load(['course', 'user']);
-            $request->user->notify(new CourseJoinAcceptedNotification($request));
+            $this->notifyApplicant($request, new CourseJoinAcceptedNotification($request));
 
             return $request;
         });
     }
 
+    /**
+     * Reject a pending request with optional admin notes + email the applicant.
+     */
     public function reject(CourseJoinRequest $request, User $admin, ?string $adminNotes = null): CourseJoinRequest
     {
         if (! $request->isPending()) {
@@ -102,6 +121,26 @@ class CourseJoinService
             'reviewed_at' => now(),
         ]);
 
-        return $request->fresh(['course', 'user']);
+        $request = $request->fresh(['course', 'user']);
+        $this->notifyApplicant($request, new CourseJoinRejectedNotification($request));
+
+        return $request;
+    }
+
+    /**
+     * Prefer the linked user account; fall back to the email on the join request.
+     */
+    protected function notifyApplicant(CourseJoinRequest $request, object $notification): void
+    {
+        if ($request->user) {
+            $request->user->notify($notification);
+
+            return;
+        }
+
+        $email = trim((string) ($request->email ?? ''));
+        if ($email !== '') {
+            Notification::route('mail', $email)->notify($notification);
+        }
     }
 }

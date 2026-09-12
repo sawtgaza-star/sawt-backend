@@ -77,6 +77,9 @@ Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/courses', [CourseController::class, 'index'])->name('courses');
     Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
 
+    // Waitlist / enroll — JWT required (401 → front shows login/register)
+    Route::middleware('auth:api')->post('/courses/{slug}/join', [CourseController::class, 'join'])->name('courses.join');
+
     Route::get('/team', [TeamController::class, 'index'])->name('team');
     Route::get('/team/{uuid}', [TeamController::class, 'show'])->name('team.show');
 

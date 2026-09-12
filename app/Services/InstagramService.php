@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Fetches Instagram Reels via the Instagram Graph API for Settings, home, and content APIs.
+ * Credentials come from dashboard Settings first, then fall back to .env config.
+ */
 class InstagramService
 {
     public const STATUS_OK = 'ok';
@@ -25,11 +29,11 @@ class InstagramService
 
     /**
      * Fetch the latest Reels from the configured Instagram Business/Creator account.
-     * Credentials come from the dashboard Settings first, then fall back to .env config.
      *
+     * @param  bool  $withExtras  Per-reel insights/collaborators (slow). Keep false for admin preview.
      * @return array<int, array<string, mixed>>
      */
-    public function reels(int $limit = 12, bool $bypassCache = false): array
+    public function reels(int $limit = 12, bool $bypassCache = false, bool $withExtras = false): array
     {
         $this->lastStatus = self::STATUS_MISSING_CREDENTIALS;
         $this->lastMessage = null;
@@ -41,9 +45,10 @@ class InstagramService
         }
 
         $ttl = (int) $this->config('cache_ttl', config('services.instagram.cache_ttl', 300));
-        $cacheKey = "instagram.reels.v3.{$limit}";
+        // Separate lite/full caches so admin preview stays fast
+        $cacheKey = 'instagram.reels.v3.'.$limit.'.'.($withExtras ? 'full' : 'lite');
 
-        $fetch = fn () => $this->request($limit);
+        $fetch = fn () => $this->request($limit, $withExtras);
 
         if ($ttl <= 0 || $bypassCache) {
             Cache::forget($cacheKey);
@@ -117,9 +122,11 @@ class InstagramService
     }
 
     /**
+     * Call Graph media edge and map REELS into the app shape.
+     *
      * @return array<int, array<string, mixed>>
      */
-    protected function request(int $limit): array
+    protected function request(int $limit, bool $withExtras = false): array
     {
         $version = config('services.instagram.version', 'v21.0');
         $userId = $this->userId();
@@ -130,7 +137,8 @@ class InstagramService
             $raw = [];
             $url = "https://graph.facebook.com/{$version}/{$userId}/media";
             $params = [
-                'fields' => 'id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(30){text,username,timestamp,like_count}',
+                // Nested comments keep the list call lighter (avoid comments.limit(30))
+                'fields' => 'id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(5){text,username,timestamp,like_count}',
                 'limit' => 50,
                 'access_token' => $token,
             ];
@@ -177,11 +185,16 @@ class InstagramService
                 ->sortByDesc(fn ($item) => $item['timestamp'] ?? '')
                 ->take($limit)
                 ->values()
-                ->map(function (array $item) use ($version, $token) {
+                ->map(function (array $item) use ($version, $token, $withExtras) {
                     $id = $item['id'] ?? null;
-                    $insights = $id
-                        ? $this->insights((string) $id, (string) $version, (string) $token)
-                        : ['views' => null, 'reach' => null];
+
+                    // Extra Graph calls per reel — skip on admin/list to avoid 60s timeouts
+                    $insights = ['views' => null, 'reach' => null];
+                    $collaborators = [];
+                    if ($withExtras && $id) {
+                        $insights = $this->insights((string) $id, (string) $version, (string) $token);
+                        $collaborators = $this->collaborators((string) $id, (string) $version, (string) $token);
+                    }
 
                     return [
                         'id' => $id,
@@ -202,9 +215,7 @@ class InstagramService
                                 'time' => $c['timestamp'] ?? null,
                             ])
                             ->all(),
-                        'collaborators' => $id
-                            ? $this->collaborators((string) $id, (string) $version, (string) $token)
-                            : [],
+                        'collaborators' => $collaborators,
                         'posted_at' => $item['timestamp'] ?? null,
                     ];
                 })
@@ -279,7 +290,7 @@ class InstagramService
         $result = ['views' => null, 'reach' => null];
 
         try {
-            $response = Http::timeout(10)
+            $response = Http::timeout(4)
                 ->get("https://graph.facebook.com/{$version}/{$mediaId}/insights", [
                     'metric' => 'views,reach',
                     'access_token' => $token,
@@ -329,7 +340,7 @@ class InstagramService
     protected function collaborators(string $mediaId, string $version, string $token): array
     {
         try {
-            $response = Http::timeout(10)
+            $response = Http::timeout(4)
                 ->get("https://graph.facebook.com/{$version}/{$mediaId}/collaborators", [
                     'fields' => 'id,username,invite_status',
                     'access_token' => $token,

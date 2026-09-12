@@ -48,6 +48,9 @@ class IncubatorCourseCardResource extends JsonResource
             'cta' => $comingSoon
                 ? [
                     'key' => 'waitlist',
+                    'requires_auth' => true,
+                    'method' => 'POST',
+                    'path' => '/api/v1/pages/courses/'.$this->slug.'/join',
                     'label' => [
                         'ar' => 'انضم لقائمة الانتظار',
                         'en' => 'Join the waitlist',

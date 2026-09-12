@@ -8,6 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Email when admin accepts a course join / waitlist request.
+ */
 class CourseJoinAcceptedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -26,9 +29,13 @@ class CourseJoinAcceptedNotification extends Notification implements ShouldQueue
             ? ($course->getTranslation('title', 'ar') ?: $course->getTranslation('title', 'en') ?: $course->slug)
             : (string) ($course->title ?? $course->slug);
 
+        $name = $notifiable->name
+            ?? $this->joinRequest->full_name
+            ?? '';
+
         $mail = (new MailMessage)
             ->subject('تم قبول طلب انضمامك للكورس — '.$title)
-            ->greeting('مرحباً '.($notifiable->name ?? ''))
+            ->greeting('مرحباً '.$name)
             ->line('تم قبول طلب انضمامك إلى الكورس: '.$title)
             ->line('يمكنك التواصل مع فريق صوت لمعرفة تفاصيل الحضور والمواعيد.');
 

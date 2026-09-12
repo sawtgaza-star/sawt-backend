@@ -338,7 +338,8 @@ class HomePageService
             if (! $this->instagram->isConfigured()) {
                 $status = 'missing_credentials';
             } else {
-                $fetched = $this->instagram->reels(3, bypassCache: true);
+                // Small set + extras; use cache so home does not timeout
+                $fetched = $this->instagram->reels(3, bypassCache: false, withExtras: true);
 
                 $reels = collect($fetched)
                     ->map(fn (array $reel, int $index) => [
