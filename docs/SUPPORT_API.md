@@ -1,14 +1,93 @@
 # Support API — «ادعم صوت»
 
-وحدة الدعم تتبع نفس نمط صفحتَي **About** و**Team**: النصوص الثابتة في جدول `settings`
-(تبويب «صفحة الدعم» بصفحة الإعدادات)، والبيانات المتكررة (الوسائل، الباقات، الطلبات،
-الاشتراكات) لها جداولها وموارد Filament الخاصة. كل الـ endpoints عامة بدون هيدر/فوتر.
+وحدة الدعم مثل **Incubator / Home**: صفحة هبوط تسويقية من الإعدادات + ويزارد تبرع/PayPal من جداول CRUD.
 
-الأساس: `/api/v1/support` — كل الردود بصيغة `{"data": …}` أو `{"message": …, "data": …}`.
+| سطح | المسار / اللوحة |
+|-----|-----------------|
+| **Landing API** | `GET /api/v1/pages/support` |
+| **Dashboard (landing)** | Settings → **صفحة الدعم** (أقسام 1–10 بنفس ترتيب الموقع) |
+| **Dashboard (wizard copy)** | نفس التاب — الأقسام 11 و 12 |
+| **CRUD** | Finance → وسائل / باقات / طلبات / اشتراكات |
+| **Wizard + PayPal** | `/api/v1/support/*` (بدون تغيير) |
+
+كل الردود: `{"data": …}` أو `{"message": …, "data": …}`.
 
 ---
 
-## 1. الأقسام الثلاثة
+## Landing — `GET /api/v1/pages/support`
+
+Single payload for [sawtgaza.com/support](https://sawtgaza.com/support/). Front should prefer this over hardcoding.
+
+| Key | Source |
+|-----|--------|
+| `hero` | Top banner only: title/desc + `support_header_bg` (`heroSectionImg.jpeg`) |
+| `plans` | Same shape as `GET /support/plans` |
+| `impact` | Bullets + quote |
+| `invite` | Mid card: `support_invite_image` + caption (`قصص إنسانية من غزة`) + badges + CTAs + trust |
+| `trust` | Payment trust chips (also nested under `invite`) |
+| `community_goal` | Manual amounts **or** linked Campaign |
+| `fund_allocation` | Card copy + each card’s own `pct` + transparency |
+| `partners` | Logos (falls back to home partners) |
+| `sponsor` | Incubator sponsor packages (`support_show_sponsor`) |
+| `stories` | Published stories + CTA (per-item `badge` from each Story) |
+| `faq` | Accordion + contact CTA + optional decorative images |
+| `contact_cta` | email / phone / whatsapp |
+| `methods` | Category teaser (no full method details) |
+
+### Example shape (abridged)
+
+```json
+{
+  "data": {
+    "hero": {
+      "image_url": null,
+      "title": { "ar": "ادعم المنصة التي توصل أصواتهم", "en": "…" },
+      "description": { "ar": "…", "en": "…" }
+    },
+    "plans": { "title": {}, "intervals": [], "custom_amount": {}, "currency": "USD", "paypal": {} },
+    "impact": { "title": {}, "items": [{ "text": {}, "sort_order": 0 }], "quote": {} },
+    "invite": {
+      "image_url": null,
+      "image_label": { "ar": "قصص إنسانية من غزة", "en": "…" },
+      "title": { "ar": "ادعم المنصة التي توصل أصواتهم", "en": "…" },
+      "badges": {
+        "donors": { "value": "1,247", "label": { "ar": "متبرع هذا الشهر", "en": "…" } },
+        "stories": { "value": "340+", "label": { "ar": "قصة وثقت", "en": "…" } }
+      },
+      "cta": { "primary": { "ar": "تبرع الآن", "en": "…" }, "secondary": { "ar": "أين تذهب تبرعاتي؟", "en": "…" } },
+      "trust": { "items": [] }
+    },
+    "trust": { "items": [{ "label": {}, "sort_order": 0 }] },
+    "community_goal": {
+      "mode": "manual",
+      "currency": "USD",
+      "target": 50000,
+      "raised": 32450,
+      "remaining": 17550,
+      "progress_percent": 64.9,
+      "labels": {},
+      "message": {},
+      "cta": {}
+    },
+    "fund_allocation": {
+      "title": {},
+      "subtitle": {},
+      "items": [{ "key": "creators", "pct": 40, "title": {}, "description": {}, "bullets": [], "sort_order": 0 }],
+      "transparency": {}
+    },
+    "partners": { "title": {}, "subtitle": {}, "cta": {}, "items": [] },
+    "sponsor": { "enabled": true, "title": {}, "packages": [] },
+    "stories": { "title": {}, "subtitle": {}, "cta": {}, "items": [] },
+    "faq": { "title": {}, "image_url": null, "cta": { "title": {}, "body": {}, "label": {}, "image_url": null }, "items": [{ "question": {}, "answer": {}, "sort_order": 0 }] },
+    "contact_cta": { "email": "", "phone": "", "whatsapp": "" },
+    "methods": { "title": {}, "description": {}, "categories": [] }
+  }
+}
+```
+
+---
+
+## 1. الأقسام الثلاثة (وسائل الدفع)
 
 | القسم | `category` | الوصف |
 |---|---|---|
@@ -20,7 +99,13 @@
 
 ## 2. Endpoints
 
-### المحتوى العام
+### Landing
+
+| الطريقة | المسار | الوصف |
+|---|---|---|
+| `GET` | `/api/v1/pages/support` | **صفحة الهبوط الكاملة** (تسويق + plans + FAQ…) |
+
+### المحتوى العام (ويزارد)
 
 | الطريقة | المسار | الوصف |
 |---|---|---|

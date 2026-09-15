@@ -3,18 +3,16 @@
 namespace App\Notifications;
 
 use App\Models\CourseJoinRequest;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Support\FrontendUrl;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Email when admin accepts a course join / waitlist request.
+ * Email body for an accepted course join / waitlist request.
+ * Sent from SendCourseJoinStatusEmailJob — CTA links use FRONTEND_URL (production site).
  */
-class CourseJoinAcceptedNotification extends Notification implements ShouldQueue
+class CourseJoinAcceptedNotification extends Notification
 {
-    use Queueable;
-
     public function __construct(public CourseJoinRequest $joinRequest) {}
 
     public function via(object $notifiable): array
@@ -31,24 +29,27 @@ class CourseJoinAcceptedNotification extends Notification implements ShouldQueue
 
         $name = $notifiable->name
             ?? $this->joinRequest->full_name
-            ?? '';
+            ?? 'عزيزي';
 
-        $mail = (new MailMessage)
+        $location = $course->location
+            ? $course->location.($course->location_details ? ' — '.$course->location_details : '')
+            : null;
+
+        $startsAt = $course->starts_at
+            ? $course->starts_at->timezone(config('app.timezone'))->format('Y-m-d H:i')
+            : null;
+
+        $slug = (string) ($course->slug ?: $course->uuid);
+
+        return (new MailMessage)
             ->subject('تم قبول طلب انضمامك للكورس — '.$title)
-            ->greeting('مرحباً '.$name)
-            ->line('تم قبول طلب انضمامك إلى الكورس: '.$title)
-            ->line('يمكنك التواصل مع فريق صوت لمعرفة تفاصيل الحضور والمواعيد.');
-
-        if ($course->location) {
-            $mail->line('المكان: '.$course->location.($course->location_details ? ' — '.$course->location_details : ''));
-        }
-
-        if ($course->starts_at) {
-            $mail->line('تاريخ البدء: '.$course->starts_at->format('Y-m-d H:i'));
-        }
-
-        return $mail
-            ->action('عرض الكورس', url('/courses/'.$course->uuid))
-            ->line('شكراً لانضمامك إلى منصة صوت.');
+            ->view('emails.course-join-accepted', [
+                'name' => $name,
+                'courseTitle' => $title,
+                'location' => $location,
+                'startsAt' => $startsAt,
+                'courseUrl' => FrontendUrl::course($slug),
+                'incubatorUrl' => FrontendUrl::incubator(),
+            ]);
     }
 }

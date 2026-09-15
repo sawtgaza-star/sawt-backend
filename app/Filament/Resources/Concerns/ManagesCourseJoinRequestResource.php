@@ -156,14 +156,25 @@ trait ManagesCourseJoinRequestResource
                 ->requiresConfirmation()
                 ->action(function (CourseJoinRequest $record) {
                     try {
-                        app(CourseJoinService::class)->accept($record, auth()->user());
+                        $service = app(CourseJoinService::class);
+                        $service->accept($record, auth()->user());
                     } catch (RuntimeException $e) {
                         Notification::make()->title($e->getMessage())->danger()->send();
 
                         return;
                     }
 
-                    Notification::make()->title(__('تم قبول الطلب وإرسال بريد للمستخدم'))->success()->send();
+                    if ($service->lastEmailError) {
+                        Notification::make()
+                            ->title(__('تم قبول الطلب، لكن تعذر جدولة البريد'))
+                            ->body($service->lastEmailError)
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()->title(__('تم قبول الطلب — البريد في قائمة الانتظار'))->success()->send();
                 }),
             Tables\Actions\Action::make('reject')
                 ->label(__('رفض'))
@@ -175,7 +186,8 @@ trait ManagesCourseJoinRequestResource
                 ])
                 ->action(function (CourseJoinRequest $record, array $data) {
                     try {
-                        app(CourseJoinService::class)->reject(
+                        $service = app(CourseJoinService::class);
+                        $service->reject(
                             $record,
                             auth()->user(),
                             $data['admin_notes'] ?? null,
@@ -186,7 +198,17 @@ trait ManagesCourseJoinRequestResource
                         return;
                     }
 
-                    Notification::make()->title(__('تم رفض الطلب وإرسال بريد للمستخدم'))->success()->send();
+                    if ($service->lastEmailError) {
+                        Notification::make()
+                            ->title(__('تم رفض الطلب، لكن تعذر جدولة البريد'))
+                            ->body($service->lastEmailError)
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()->title(__('تم رفض الطلب — البريد في قائمة الانتظار'))->success()->send();
                 }),
             Tables\Actions\DeleteAction::make(),
         ];

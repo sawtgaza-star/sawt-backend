@@ -5,6 +5,12 @@ APP_DEBUG=true
 APP_TIMEZONE=UTC
 APP_URL=http://localhost
 
+# Public website URL used in email CTAs (not the API host)
+FRONTEND_URL=https://sawtgaza.com
+FRONTEND_COURSE_PATH=/courses/{slug}
+FRONTEND_INCUBATOR_PATH=/incubator
+FRONTEND_LOGIN_PATH=/login
+
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
 APP_FAKER_LOCALE=en_US
@@ -64,3 +70,7 @@ AWS_BUCKET=
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="${APP_NAME}"
+
+# Filament /admin login — failed attempts only (IP + email)
+ADMIN_LOGIN_MAX_ATTEMPTS=5
+ADMIN_LOGIN_DECAY_SECONDS=60

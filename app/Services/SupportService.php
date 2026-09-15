@@ -212,11 +212,15 @@ class SupportService
     {
         return [
             'image_url' => MediaUrl::make($this->settings->get('support_header_bg')),
-            'title' => $this->settings->i18n('support_hero_title', 'ادعم صوت', 'Support Sawt'),
+            'title' => $this->settings->i18n(
+                'support_hero_title',
+                'ادعم المنصة التي توصل أصواتهم',
+                'Support the platform that carries their voices'
+            ),
             'description' => $this->settings->i18n(
                 'support_hero_desc',
-                'اختر الطريقة الأنسب لك لإتمام تبرعك، وكل مساهمة تتحول إلى قصة تُروى من قلب غزة',
-                'Choose the way that suits you best — every contribution becomes a story told from the heart of Gaza'
+                'كل تبرع يتحوّل إلى قصة تُروى، وصوت يصل إلى العالم من قلب غزة',
+                'Every donation becomes a story told — a voice that reaches the world from the heart of Gaza'
             ),
         ];
     }

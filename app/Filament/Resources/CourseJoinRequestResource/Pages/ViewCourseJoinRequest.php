@@ -27,14 +27,26 @@ class ViewCourseJoinRequest extends ViewRecord
                 ->requiresConfirmation()
                 ->action(function () {
                     try {
-                        app(CourseJoinService::class)->accept($this->record, auth()->user());
+                        $service = app(CourseJoinService::class);
+                        $service->accept($this->record, auth()->user());
                     } catch (RuntimeException $e) {
                         Notification::make()->title($e->getMessage())->danger()->send();
 
                         return;
                     }
 
-                    Notification::make()->title(__('تم قبول الطلب وإرسال بريد للمستخدم'))->success()->send();
+                    if ($service->lastEmailError) {
+                        Notification::make()
+                            ->title(__('تم قبول الطلب، لكن تعذر جدولة البريد'))
+                            ->body($service->lastEmailError)
+                            ->warning()
+                            ->send();
+                        $this->redirect(CourseJoinRequestResource::getUrl('index'));
+
+                        return;
+                    }
+
+                    Notification::make()->title(__('تم قبول الطلب — البريد في قائمة الانتظار'))->success()->send();
                     $this->redirect(CourseJoinRequestResource::getUrl('index'));
                 }),
             Actions\Action::make('reject')
@@ -47,7 +59,8 @@ class ViewCourseJoinRequest extends ViewRecord
                 ])
                 ->action(function (array $data) {
                     try {
-                        app(CourseJoinService::class)->reject(
+                        $service = app(CourseJoinService::class);
+                        $service->reject(
                             $this->record,
                             auth()->user(),
                             $data['admin_notes'] ?? null,
@@ -58,7 +71,18 @@ class ViewCourseJoinRequest extends ViewRecord
                         return;
                     }
 
-                    Notification::make()->title(__('تم رفض الطلب وإرسال بريد للمستخدم'))->success()->send();
+                    if ($service->lastEmailError) {
+                        Notification::make()
+                            ->title(__('تم رفض الطلب، لكن تعذر جدولة البريد'))
+                            ->body($service->lastEmailError)
+                            ->warning()
+                            ->send();
+                        $this->redirect(CourseJoinRequestResource::getUrl('index'));
+
+                        return;
+                    }
+
+                    Notification::make()->title(__('تم رفض الطلب — البريد في قائمة الانتظار'))->success()->send();
                     $this->redirect(CourseJoinRequestResource::getUrl('index'));
                 }),
             Actions\DeleteAction::make(),

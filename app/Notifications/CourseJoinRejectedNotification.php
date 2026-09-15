@@ -3,18 +3,16 @@
 namespace App\Notifications;
 
 use App\Models\CourseJoinRequest;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Support\FrontendUrl;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Email when admin rejects a course join / waitlist request.
+ * Email body for a rejected course join / waitlist request.
+ * Sent from SendCourseJoinStatusEmailJob — CTA links use FRONTEND_URL (production site).
  */
-class CourseJoinRejectedNotification extends Notification implements ShouldQueue
+class CourseJoinRejectedNotification extends Notification
 {
-    use Queueable;
-
     public function __construct(public CourseJoinRequest $joinRequest) {}
 
     public function via(object $notifiable): array
@@ -35,19 +33,13 @@ class CourseJoinRejectedNotification extends Notification implements ShouldQueue
 
         $reason = trim((string) ($this->joinRequest->admin_notes ?? ''));
 
-        $mail = (new MailMessage)
+        return (new MailMessage)
             ->subject('بخصوص طلب انضمامك للكورس — '.$title)
-            ->greeting('مرحباً '.$name)
-            ->line('نشكرك على اهتمامك بحاضنة صوت.')
-            ->line('نأسف لإبلاغك بأنه تعذّر قبول طلب انضمامك إلى الكورس في الوقت الحالي.')
-            ->line('الكورس: '.$title);
-
-        if ($reason !== '') {
-            $mail->line('السبب: '.$reason);
-        }
-
-        return $mail
-            ->line('يمكنك تصفح كورسات أخرى أو تقديم طلب جديد لاحقاً.')
-            ->line('نتمنى لك التوفيق — فريق صوت.');
+            ->view('emails.course-join-rejected', [
+                'name' => $name,
+                'courseTitle' => $title,
+                'reason' => $reason !== '' ? $reason : null,
+                'incubatorUrl' => FrontendUrl::incubator(),
+            ]);
     }
 }

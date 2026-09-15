@@ -58,6 +58,16 @@ class IncubatorService
     }
 
     /**
+     * Sponsor / «ساعد طلاب» block — also embedded on Support landing.
+     *
+     * @return array<string, mixed>
+     */
+    public function sponsorSection(): array
+    {
+        return $this->sponsor();
+    }
+
+    /**
      * Hero: background + foreground images, overlay badges, title/CTA (i18n).
      *
      * @return array<string, mixed>

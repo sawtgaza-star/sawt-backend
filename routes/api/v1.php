@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\LayoutController;
 use App\Http\Controllers\Api\PayPalController;
 use App\Http\Controllers\Api\ReelController;
 use App\Http\Controllers\Api\SupportController;
+use App\Http\Controllers\Api\SupportPageController;
 use App\Http\Controllers\Api\SupportRequestController;
 use App\Http\Controllers\Api\SupportSubscriptionController;
 use App\Http\Controllers\Api\CollaborationController;
@@ -59,6 +60,9 @@ Route::prefix('pages')->name('pages.')->group(function () {
     Route::post('/collaborate/other', [CollaborationController::class, 'submitOther'])->name('collaborate.other.submit');
 
     Route::get('/about', [AboutController::class, 'show'])->name('about');
+
+    // Support landing (marketing page) — wizard stays under /api/v1/support/*
+    Route::get('/support', [SupportPageController::class, 'show'])->name('support');
 
     // Incubator landing (settings-driven sections + published course cards)
     Route::get('/incubator', [IncubatorController::class, 'show'])->name('incubator');

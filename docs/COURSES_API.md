@@ -80,7 +80,23 @@ Also listed (cards only) inside `GET /api/v1/pages/incubator` → `courses.items
 
 Coming-soon courses (`is_coming_soon`) skip seat limits so waitlist stays open.
 
-Admin **قبول** / **رفض** emails the applicant (`CourseJoinAcceptedNotification` / `CourseJoinRejectedNotification`).
+Admin **قبول** / **رفض** queues `SendCourseJoinStatusEmailJob` (database queue). Email CTAs use `FRONTEND_URL` (not `APP_URL`).
+
+### Email / front URLs
+
+| Env | Example | Purpose |
+|-----|---------|---------|
+| `APP_URL` | `https://api.example.com` | Laravel / API |
+| `FRONTEND_URL` | `https://sawtgaza.com` | Buttons in emails |
+| `FRONTEND_COURSE_PATH` | `/courses/{slug}` | Course page path |
+| `FRONTEND_INCUBATOR_PATH` | `/incubator` | Browse courses |
+
+### Queue in production
+
+Keep `QUEUE_CONNECTION=database` and either:
+
+1. **Cron (shared hosting):** every minute run `php artisan schedule:run` — app already schedules `queue:work --stop-when-empty`.
+2. **Supervisor (VPS):** long-running `php artisan queue:work --sleep=3 --tries=3`.
 
 ### Card shape (listing / incubator)
 

@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Support\LocaleText;
 
+use App\Models\Campaign;
 use App\Models\Setting;
 use App\Support\StoredUploadCleanup;
 use Filament\Forms;
@@ -69,10 +70,16 @@ class Settings extends Page implements HasForms
 
             // صفحة «ادعم صوت» — النصوص الثابتة (الوسائل والباقات لها جداولها الخاصة)
             'support_header_bg' => ['support', 'string', ''],
-            'support_hero_title_ar' => ['support', 'string', 'ادعم صوت'],
-            'support_hero_title_en' => ['support', 'string', 'Support Sawt'],
-            'support_hero_desc_ar' => ['support', 'text', 'اختر الطريقة الأنسب لك لإتمام تبرعك، وكل مساهمة تتحول إلى قصة تُروى من قلب غزة'],
-            'support_hero_desc_en' => ['support', 'text', 'Choose the way that suits you best — every contribution becomes a story told from the heart of Gaza'],
+            'support_invite_image' => ['support', 'string', ''],
+            // Caption + title on invite card (live: «قصص إنسانية من غزة» then «ادعم المنصة…»)
+            'support_invite_label_ar' => ['support', 'string', 'قصص إنسانية من غزة'],
+            'support_invite_label_en' => ['support', 'string', 'Human stories from Gaza'],
+            'support_invite_title_ar' => ['support', 'string', 'ادعم المنصة التي توصل أصواتهم'],
+            'support_invite_title_en' => ['support', 'string', 'Support the platform that carries their voices'],
+            'support_hero_title_ar' => ['support', 'string', 'ادعم المنصة التي توصل أصواتهم'],
+            'support_hero_title_en' => ['support', 'string', 'Support the platform that carries their voices'],
+            'support_hero_desc_ar' => ['support', 'text', 'كل تبرع يتحوّل إلى قصة تُروى، وصوت يصل إلى العالم من قلب غزة'],
+            'support_hero_desc_en' => ['support', 'text', 'Every donation becomes a story told — a voice that reaches the world from the heart of Gaza'],
             'support_methods_title_ar' => ['support', 'string', 'اختر طريقة الدعم التي تناسبك'],
             'support_methods_title_en' => ['support', 'string', 'Choose the support method that suits you'],
             'support_methods_desc_ar' => ['support', 'text', ''],
@@ -121,14 +128,15 @@ class Settings extends Page implements HasForms
             // الباقات والمبالغ
             'support_plans_title_ar' => ['support', 'string', 'كيف تريد أن تدعم؟'],
             'support_plans_title_en' => ['support', 'string', 'How would you like to support?'],
-            'support_plans_desc_ar' => ['support', 'text', ''],
-            'support_plans_desc_en' => ['support', 'text', ''],
+            // Live support page subtitle under the plans heading
+            'support_plans_desc_ar' => ['support', 'text', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر'],
+            'support_plans_desc_en' => ['support', 'text', 'Our values are the foundation of Sawt — they guide how we work and grow'],
             'support_default_interval' => ['support', 'string', 'monthly'],
             'support_default_currency' => ['support', 'string', 'USD'],
             'support_min_amount' => ['support', 'number', 5],
             'support_max_amount' => ['support', 'number', 100000],
             'support_custom_amount_enabled' => ['support', 'boolean', true],
-            'support_custom_amount_label_ar' => ['support', 'string', 'أو أدخل مبلغاً'],
+            'support_custom_amount_label_ar' => ['support', 'string', 'أو أدخل مبلغ'],
             'support_custom_amount_label_en' => ['support', 'string', 'Or enter an amount'],
 
             // نصوص الأزرار والرسائل
@@ -151,10 +159,174 @@ class Settings extends Page implements HasForms
             'support_success_message_ar' => ['support', 'text', 'استلمنا طلبك وسيقوم الفريق بمراجعة الإثبات والتواصل معك قريباً.'],
             'support_success_message_en' => ['support', 'text', 'We received your request. Our team will review the proof and reach out to you soon.'],
 
-            // finance (fund split)
-            'fund_split_creators_pct' => ['finance', 'number', 40],
-            'fund_split_media_pct' => ['finance', 'number', 35],
-            'fund_split_support_pct' => ['finance', 'number', 25],
+            // Landing extras (GET /pages/support) — edited as sections under «صفحة الدعم»
+            'support_hero_donors_value' => ['support', 'string', '1,247'],
+            'support_hero_donors_label_ar' => ['support', 'string', 'متبرع هذا الشهر'],
+            'support_hero_donors_label_en' => ['support', 'string', 'Donors this month'],
+            'support_hero_stories_value' => ['support', 'string', '340+'],
+            'support_hero_stories_label_ar' => ['support', 'string', 'قصة وثقت'],
+            'support_hero_stories_label_en' => ['support', 'string', 'Stories documented'],
+            'support_hero_cta_primary_ar' => ['support', 'string', 'تبرع الآن'],
+            'support_hero_cta_primary_en' => ['support', 'string', 'Donate now'],
+            'support_hero_cta_secondary_ar' => ['support', 'string', 'أين تذهب تبرعاتي؟'],
+            'support_hero_cta_secondary_en' => ['support', 'string', 'Where do my donations go?'],
+            'support_impact_title_ar' => ['support', 'string', 'تبرعك يعني...'],
+            'support_impact_title_en' => ['support', 'string', 'Your donation means…'],
+            'support_impact_items' => ['support', 'json', [
+                ['ar' => 'قصة إنسانية جديدة تُروى للعالم', 'en' => 'A new human story told to the world'],
+                ['ar' => 'صحفي ميداني مدرَّب على الأرض', 'en' => 'A field journalist trained on the ground'],
+                ['ar' => 'تقرير مفحوص يصل للمتابعين', 'en' => 'A verified report that reaches audiences'],
+                ['ar' => 'أرشيف رقمي يحمي الذاكرة الجماعية', 'en' => 'A digital archive that protects collective memory'],
+            ]],
+            'support_impact_quote_ar' => ['support', 'text', 'كل تبرع يشجع فيه يعني قصة جديدة توصل للناس — قصة ما كانت تُسمع'],
+            'support_impact_quote_en' => ['support', 'text', 'Every donation you encourage means a new story that reaches people — a story that would not have been heard'],
+            'support_impact_quote_author_ar' => ['support', 'string', 'فريق صوت'],
+            'support_impact_quote_author_en' => ['support', 'string', 'Sawt team'],
+            'support_impact_quote_location_ar' => ['support', 'string', 'غزة، فلسطين'],
+            'support_impact_quote_location_en' => ['support', 'string', 'Gaza, Palestine'],
+            'support_trust_items' => ['support', 'json', [
+                ['ar' => 'سهولة الدفع', 'en' => 'Easy payment'],
+                ['ar' => 'وصول فوري للمستحقين', 'en' => 'Immediate reach to beneficiaries'],
+                ['ar' => 'تبرع آمن ومشفر', 'en' => 'Secure encrypted donation'],
+            ]],
+            'support_goal_mode' => ['support', 'string', 'manual'],
+            'support_goal_campaign_id' => ['support', 'number', null],
+            'support_goal_target' => ['support', 'number', 50000],
+            'support_goal_raised' => ['support', 'number', 32450],
+            'support_goal_title_ar' => ['support', 'string', 'مجتمع الدعم الحي'],
+            'support_goal_title_en' => ['support', 'string', 'Live support community'],
+            'support_goal_subtitle_ar' => ['support', 'text', 'قيمنا هي الأساس الذي نبني عليه صوت، وهي ما يقود طريقة عملنا وتطويرنا المستمر'],
+            'support_goal_subtitle_en' => ['support', 'text', 'Our values are the foundation of Sawt — they guide how we work and grow'],
+            'support_goal_message_ar' => ['support', 'string', 'نحتاج :amount$ لإتمام هدف الشهر — ساهم الآن'],
+            'support_goal_message_en' => ['support', 'string', 'We need $:amount to finish this month’s goal — contribute now'],
+            'support_goal_cta_ar' => ['support', 'string', 'أضف اسمك للقائمة — تبرع الآن'],
+            'support_goal_cta_en' => ['support', 'string', 'Add your name to the list — donate now'],
+            'support_goal_label_target_ar' => ['support', 'string', 'هدف الشهر'],
+            'support_goal_label_target_en' => ['support', 'string', 'Month goal'],
+            'support_goal_label_raised_ar' => ['support', 'string', 'تم جمعه'],
+            'support_goal_label_raised_en' => ['support', 'string', 'Raised'],
+            'support_goal_label_remaining_ar' => ['support', 'string', 'متبقي'],
+            'support_goal_label_remaining_en' => ['support', 'string', 'Remaining'],
+            'support_goal_label_progress_ar' => ['support', 'string', 'الإنجاز'],
+            'support_goal_label_progress_en' => ['support', 'string', 'Progress'],
+            'support_fund_title_ar' => ['support', 'string', 'أين تذهب تبرعاتكم؟'],
+            'support_fund_title_en' => ['support', 'string', 'Where do your donations go?'],
+            'support_fund_subtitle_ar' => ['support', 'text', 'كل دولار يُستثمر بمسؤولية — نُبلّغكم بكل تفصيلة لأن ثقتكم أمانة'],
+            'support_fund_subtitle_en' => ['support', 'text', 'Every dollar is invested responsibly — we report every detail because your trust is a responsibility'],
+            // Prefill to match live sawtgaza.com/support fund cards
+            'support_fund_cards' => ['support', 'json', [
+                [
+                    'key' => 'creators',
+                    'pct' => 40,
+                    'title_ar' => 'تمكين المبدعين',
+                    'title_en' => 'Empowering creators',
+                    'desc_ar' => 'دعم المبدعين الشباب في غزة بالأدوات والتدريب ليُنتجوا محتوى يُغيّر الرواية ويصنع أثراً حقيقياً.',
+                    'desc_en' => 'Supporting young creators in Gaza with tools and training to produce content that changes the narrative.',
+                    'bullets' => [
+                        ['ar' => 'أدوات إنتاج احترافية', 'en' => 'Professional production tools'],
+                        ['ar' => 'منح للمواهب الصاعدة', 'en' => 'Grants for rising talent'],
+                        ['ar' => 'بيئة إبداعية آمنة ومحفّزة', 'en' => 'A safe, motivating creative environment'],
+                    ],
+                ],
+                [
+                    'key' => 'media',
+                    'pct' => 35,
+                    'title_ar' => 'التوثيق والإعلام',
+                    'title_en' => 'Documentation & media',
+                    'desc_ar' => 'تمويل التوثيق الميداني والإعلام المهني لإيصال الحقيقة من غزة إلى العالم.',
+                    'desc_en' => 'Funding field documentation and professional media so truth from Gaza reaches the world.',
+                    'bullets' => [
+                        ['ar' => 'أدوات إنتاج احترافية', 'en' => 'Professional production tools'],
+                        ['ar' => 'منح للمواهب الصاعدة', 'en' => 'Grants for rising talent'],
+                        ['ar' => 'بيئة إبداعية آمنة ومحفّزة', 'en' => 'A safe, motivating creative environment'],
+                    ],
+                ],
+                [
+                    'key' => 'ops',
+                    'pct' => 25,
+                    'title_ar' => 'الدعم النفسي والتعليمي',
+                    'title_en' => 'Psychosocial & education support',
+                    'desc_ar' => 'برامج دعم نفسي وتعليمي تحمي الفريق والمجتمع وتبني قدرة طويلة الأمد.',
+                    'desc_en' => 'Psychosocial and educational programs that protect the team and community and build lasting capacity.',
+                    'bullets' => [
+                        ['ar' => 'أدوات إنتاج احترافية', 'en' => 'Professional production tools'],
+                        ['ar' => 'منح للمواهب الصاعدة', 'en' => 'Grants for rising talent'],
+                        ['ar' => 'بيئة إبداعية آمنة ومحفّزة', 'en' => 'A safe, motivating creative environment'],
+                    ],
+                ],
+            ]],
+            'support_fund_badge_ar' => ['support', 'string', '100% موزّع بشفافية'],
+            'support_fund_badge_en' => ['support', 'string', '100% allocated transparently'],
+            'support_fund_note_title_ar' => ['support', 'string', 'كل دولار له عنوان واضح'],
+            'support_fund_note_title_en' => ['support', 'string', 'Every dollar has a clear destination'],
+            'support_fund_note_body_ar' => ['support', 'text', 'نُصدر تقارير شهرية شاملة عن كيفية توزيع التبرعات — وبإمكانك طلب تقرير مفصّل في أي وقت.'],
+            'support_fund_note_body_en' => ['support', 'text', 'We publish monthly reports on how donations are distributed — and you can request a detailed report anytime.'],
+            'support_partners_title_ar' => ['support', 'string', 'شركاؤنا في نشر الصوت'],
+            'support_partners_title_en' => ['support', 'string', 'Our partners in amplifying the voice'],
+            'support_partners_subtitle_ar' => ['support', 'text', 'شكراً للمؤسسات والشركات التي تؤمن بمهمتنا وتُوصل صوت أهل غزة للعالم'],
+            'support_partners_subtitle_en' => ['support', 'text', 'Thanks to organizations that believe in our mission and carry Gaza’s voice to the world'],
+            'support_partners' => ['support', 'json', []],
+            'support_partners_cta_title_ar' => ['support', 'string', 'الحقيقة تحتاج من يمولها'],
+            'support_partners_cta_title_en' => ['support', 'string', 'Truth needs those who fund it'],
+            'support_partners_cta_body_ar' => ['support', 'text', 'شراكات مؤسسية مع صوت — للجهات التي تريد أن يكون دورها في إيصال الحقيقة للعالم. انضم وأبقِ صوت غزة حياً.'],
+            'support_partners_cta_body_en' => ['support', 'text', 'Institutional partnerships with Sawt — for organizations that want a role in delivering truth to the world. Join us and keep Gaza’s voice alive.'],
+            'support_partners_cta_label_ar' => ['support', 'string', 'تواصل معنا'],
+            'support_partners_cta_label_en' => ['support', 'string', 'Contact us'],
+            'support_show_sponsor' => ['support', 'boolean', true],
+            'support_stories_limit' => ['support', 'number', 4],
+            'support_stories_title_ar' => ['support', 'string', 'أصوات لم نقدر على توصيلها'],
+            'support_stories_title_en' => ['support', 'string', 'Voices we could not deliver'],
+            'support_stories_subtitle_ar' => ['support', 'text', 'هذه قصص حقيقية من غزة لم تصل للعالم — لأن الموارد نفدت قبل أن نكمل روايتها'],
+            'support_stories_subtitle_en' => ['support', 'text', 'Real stories from Gaza that never reached the world — resources ran out before we could finish telling them'],
+            'support_stories_cta_title_ar' => ['support', 'string', 'دعمك يمنع القصة القادمة من الضياع'],
+            'support_stories_cta_title_en' => ['support', 'string', 'Your support keeps the next story from being lost'],
+            'support_stories_cta_body_ar' => ['support', 'text', 'تبرعك اليوم يضمن أن الصوت القادم لن يضيع'],
+            'support_stories_cta_body_en' => ['support', 'text', 'Your donation today ensures the next voice will not be lost'],
+            'support_stories_cta_label_ar' => ['support', 'string', 'ادعم المنصة الآن'],
+            'support_stories_cta_label_en' => ['support', 'string', 'Support the platform now'],
+            'support_faq_title_ar' => ['support', 'string', 'الأسئلة المتكررة'],
+            'support_faq_title_en' => ['support', 'string', 'Frequently asked questions'],
+            // Optional decorative images beside FAQ (leaf / frame on live site)
+            'support_faq_image' => ['support', 'string', ''],
+            'support_faq_cta_image' => ['support', 'string', ''],
+            'support_faqs' => ['support', 'json', [
+                [
+                    'q_ar' => 'كيف يمكنني التبرع؟',
+                    'q_en' => 'How can I donate?',
+                    'a_ar' => 'عملية التبرع بسيطة جداً — اختر المبلغ وطريقة الدفع (بطاقة ائتمانية، PayPal، أو تحويل بنكي) واضغط «تبرع الآن». لن تأخذ أكثر من دقيقتين، ويصلك تأكيد فوري على بريدك الإلكتروني.',
+                    'a_en' => 'Donating is simple — choose an amount and payment method (card, PayPal, or bank transfer) and tap Donate now. It takes under two minutes, and you get instant email confirmation.',
+                ],
+                [
+                    'q_ar' => 'هل التبرع آمن؟',
+                    'q_en' => 'Is donating safe?',
+                    'a_ar' => 'نعم — المدفوعات مشفّرة عبر مزوّدي دفع موثوقين، ولا نخزّن بيانات بطاقتك.',
+                    'a_en' => 'Yes — payments are encrypted via trusted providers, and we never store your card details.',
+                ],
+                [
+                    'q_ar' => 'هل يمكنني التبرع لمرة واحدة؟',
+                    'q_en' => 'Can I donate once?',
+                    'a_ar' => 'نعم، يمكنك التبرع لمرة واحدة أو اختيار دعم شهري أو سنوي.',
+                    'a_en' => 'Yes — you can give once or choose monthly or yearly support.',
+                ],
+                [
+                    'q_ar' => 'كيف يتم استخدام التبرعات؟',
+                    'q_en' => 'How are donations used?',
+                    'a_ar' => 'تُوزَّع بنسب شفافة بين تمكين المبدعين والتوثيق والإعلام والدعم النفسي والتعليمي — انظر قسم «أين تذهب تبرعاتكم؟».',
+                    'a_en' => 'They are allocated transparently across creators, documentation & media, and psychosocial support — see Where do your donations go?',
+                ],
+                [
+                    'q_ar' => 'هل يمكنني إلغاء الاشتراك الشهري؟',
+                    'q_en' => 'Can I cancel a monthly subscription?',
+                    'a_ar' => 'نعم، يمكنك إلغاء الاشتراك في أي وقت من حسابك أو بالتواصل معنا.',
+                    'a_en' => 'Yes — cancel anytime from your account or by contacting us.',
+                ],
+            ]],
+            'support_faq_cta_title_ar' => ['support', 'string', 'لديك سؤال آخر؟'],
+            'support_faq_cta_title_en' => ['support', 'string', 'Have another question?'],
+            'support_faq_cta_body_ar' => ['support', 'text', 'فريقنا جاهز للإجابة — سنردّ عليك خلال ساعات'],
+            'support_faq_cta_body_en' => ['support', 'text', 'Our team is ready — we usually reply within hours'],
+            'support_faq_cta_label_ar' => ['support', 'string', 'تواصل معنا'],
+            'support_faq_cta_label_en' => ['support', 'string', 'Contact us'],
 
             // contact
             'contact_phone' => ['contact', 'string', ''],
@@ -1550,15 +1722,17 @@ class Settings extends Page implements HasForms
                         ->columnSpanFull(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make(__('صفحة الدعم'))->icon('heroicon-o-heart')->schema([
+                                Forms\Components\Tabs\Tab::make(__('صفحة الدعم'))->icon('heroicon-o-heart')->schema([
                     Forms\Components\Placeholder::make('support_hint')
                         ->label('')
-                        ->content(__('وسائل الدعم (البنوك، فودافون كاش، العملات الرقمية…) والباقات تُدار من «وسائل الدعم» و«باقات الدعم» بقائمة المالية. هنا نصوص الصفحة فقط.'))
+                        ->content(__('ترتيب الأقسام يطابق sawtgaza.com/support. الصور داخل كل قسم فقط. الوسائل/الباقات من قائمة المالية.'))
                         ->columnSpanFull(),
 
-                    Forms\Components\Section::make(__('الهيدر'))->schema([
+                    // 1) Hero — top banner only (title + desc + heroSectionImg.jpeg collage)
+                    Forms\Components\Section::make(__('1) الهيرو'))->schema([
                         Forms\Components\FileUpload::make('support_header_bg')
-                            ->label(__('خلفية الهيدر'))
+                            ->label(__('خلفية الهيرو'))
+                            ->helperText(__('الصورة الجانبية/الخلفية أعلى الصفحة — مثل heroSectionImg.jpeg على الموقع'))
                             ->image()->disk('public')->directory('support')->visibility('public')
                             ->imageEditor()
                             ->columnSpanFull(),
@@ -1566,43 +1740,268 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('support_hero_title_en')->label('Title (English)'),
                         Forms\Components\Textarea::make('support_hero_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('support_hero_desc_en')->label('Description (English)')->rows(2),
-                    ])->columns(2),
+                    ])->columns(2)->collapsible(),
 
-                    Forms\Components\Section::make(__('عنوان قسم الطرق'))->schema([
+                    // 2) Plans — «كيف تريد أن تدعم؟»
+                    Forms\Components\Section::make(__('2) المبالغ والباقات'))->schema([
+                        Forms\Components\Placeholder::make('support_plans_hint')
+                            ->content(__('مبالغ الباقات تُدار من «باقات الدعم» في المالية. هنا نصوص القسم فقط.'))
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_plans_title_ar')->label(__('عنوان القسم (عربي)')),
+                        Forms\Components\TextInput::make('support_plans_title_en')->label('Section title (English)'),
+                        Forms\Components\Textarea::make('support_plans_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_plans_desc_en')->label('Description (EN)')->rows(2),
+                        Forms\Components\Select::make('support_default_interval')
+                            ->label(__('الدورية الافتراضية'))
+                            ->options(\App\Support\SupportOptions::intervals()),
+                        Forms\Components\TextInput::make('support_default_currency')->label(__('العملة الافتراضية'))->maxLength(3),
+                        Forms\Components\TextInput::make('support_min_amount')->label(__('أقل مبلغ'))->numeric()->prefix('$'),
+                        Forms\Components\TextInput::make('support_max_amount')->label(__('أعلى مبلغ'))->numeric()->prefix('$'),
+                        Forms\Components\Toggle::make('support_custom_amount_enabled')
+                            ->label(__('السماح بمبلغ مخصص'))
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_custom_amount_label_ar')->label(__('نص حقل المبلغ (عربي)')),
+                        Forms\Components\TextInput::make('support_custom_amount_label_en')->label('Amount field text (English)'),
+                    ])->columns(2)->collapsible(),
+
+                    // 3) Impact — bullets + quote only (no image)
+                    Forms\Components\Section::make(__('3) الأثر'))->schema([
+                        Forms\Components\TextInput::make('support_impact_title_ar')->label(__('عنوان الأثر (عربي)')),
+                        Forms\Components\TextInput::make('support_impact_title_en')->label('Impact title (EN)'),
+                        Forms\Components\Repeater::make('support_impact_items')
+                            ->label(__('نقاط الأثر'))
+                            ->schema([
+                                Forms\Components\TextInput::make('ar')->label(__('عربي'))->required(),
+                                Forms\Components\TextInput::make('en')->label('EN'),
+                            ])->columns(2)->columnSpanFull(),
+                        Forms\Components\Textarea::make('support_impact_quote_ar')->label(__('الاقتباس (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_impact_quote_en')->label('Quote (EN)')->rows(2),
+                        Forms\Components\TextInput::make('support_impact_quote_author_ar')->label(__('الكاتب (عربي)')),
+                        Forms\Components\TextInput::make('support_impact_quote_author_en')->label('Author (EN)'),
+                        Forms\Components\TextInput::make('support_impact_quote_location_ar')->label(__('المكان (عربي)')),
+                        Forms\Components\TextInput::make('support_impact_quote_location_en')->label('Location (EN)'),
+                    ])->columns(2)->collapsible(),
+
+                    // 4) Mid invite card — tree.jpg + caption + title + badges (3 per row) + CTAs/trust
+                    Forms\Components\Section::make(__('4) بطاقة الدعوة'))->schema([
+                        Forms\Components\FileUpload::make('support_invite_image')
+                            ->label(__('صورة البطاقة'))
+                            ->helperText(__('مثل tree.jpg — بطاقة الأرقام والأزرار تحت قسم الأثر'))
+                            ->image()->disk('public')->directory('support')->visibility('public')
+                            ->imageEditor()
+                            ->columnSpanFull(),
+                        // First line on the card (eyebrow)
+                        Forms\Components\TextInput::make('support_invite_label_ar')->label(__('التعليق الأول (عربي)')),
+                        Forms\Components\TextInput::make('support_invite_label_en')->label('Caption 1 (EN)'),
+                        // Second line — the bold headline circled on the live page
+                        Forms\Components\TextInput::make('support_invite_title_ar')->label(__('التعليق الثاني / العنوان (عربي)')),
+                        Forms\Components\TextInput::make('support_invite_title_en')->label('Caption 2 / Title (EN)'),
+                        Forms\Components\Grid::make(3)->schema([
+                            Forms\Components\TextInput::make('support_hero_donors_value')->label(__('رقم المتبرعين')),
+                            Forms\Components\TextInput::make('support_hero_donors_label_ar')->label(__('تسمية المتبرعين (عربي)')),
+                            Forms\Components\TextInput::make('support_hero_donors_label_en')->label('Donors label (EN)'),
+                            Forms\Components\TextInput::make('support_hero_stories_value')->label(__('رقم القصص')),
+                            Forms\Components\TextInput::make('support_hero_stories_label_ar')->label(__('تسمية القصص (عربي)')),
+                            Forms\Components\TextInput::make('support_hero_stories_label_en')->label('Stories label (EN)'),
+                        ])->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_hero_cta_primary_ar')->label(__('الزر الأساسي (عربي)')),
+                        Forms\Components\TextInput::make('support_hero_cta_primary_en')->label('Primary CTA (EN)'),
+                        Forms\Components\TextInput::make('support_hero_cta_secondary_ar')->label(__('الزر الثانوي (عربي)')),
+                        Forms\Components\TextInput::make('support_hero_cta_secondary_en')->label('Secondary CTA (EN)'),
+                        Forms\Components\Repeater::make('support_trust_items')
+                            ->label(__('شارات الثقة'))
+                            ->schema([
+                                Forms\Components\TextInput::make('ar')->label(__('عربي'))->required(),
+                                Forms\Components\TextInput::make('en')->label('EN'),
+                            ])->columns(2)->columnSpanFull(),
+                    ])->columns(2)->collapsible(),
+
+                    // 5) Community goal
+                    Forms\Components\Section::make(__('5) هدف المجتمع'))->schema([
+                        Forms\Components\Select::make('support_goal_mode')
+                            ->label(__('مصدر الأرقام'))
+                            ->options([
+                                'manual' => __('يدوي'),
+                                'campaign' => __('من حملة (Campaigns)'),
+                            ])
+                            ->live()
+                            ->columnSpanFull(),
+                        Forms\Components\Select::make('support_goal_campaign_id')
+                            ->label(__('الحملة'))
+                            ->options(fn () => Campaign::query()
+                                ->orderByDesc('id')
+                                ->get()
+                                ->mapWithKeys(fn (Campaign $c) => [
+                                    $c->id => $c->getTranslation('title', 'ar')
+                                        ?: $c->getTranslation('title', 'en')
+                                        ?: '#'.$c->id,
+                                ])
+                                ->all())
+                            ->searchable()
+                            ->visible(fn (Forms\Get $get) => $get('support_goal_mode') === 'campaign')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_goal_target')->label(__('الهدف'))->numeric()
+                            ->visible(fn (Forms\Get $get) => $get('support_goal_mode') !== 'campaign'),
+                        Forms\Components\TextInput::make('support_goal_raised')->label(__('تم جمعه'))->numeric()
+                            ->visible(fn (Forms\Get $get) => $get('support_goal_mode') !== 'campaign'),
+                        Forms\Components\TextInput::make('support_goal_title_ar')->label(__('العنوان (عربي)')),
+                        Forms\Components\TextInput::make('support_goal_title_en')->label('Title (EN)'),
+                        Forms\Components\Textarea::make('support_goal_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_goal_subtitle_en')->label('Subtitle (EN)')->rows(2),
+                        Forms\Components\TextInput::make('support_goal_label_target_ar')->label(__('تسمية الهدف (عربي)')),
+                        Forms\Components\TextInput::make('support_goal_label_target_en')->label('Target label (EN)'),
+                        Forms\Components\TextInput::make('support_goal_label_raised_ar')->label(__('تسمية المجموع (عربي)')),
+                        Forms\Components\TextInput::make('support_goal_label_raised_en')->label('Raised label (EN)'),
+                        Forms\Components\TextInput::make('support_goal_label_remaining_ar')->label(__('تسمية المتبقي (عربي)')),
+                        Forms\Components\TextInput::make('support_goal_label_remaining_en')->label('Remaining label (EN)'),
+                        Forms\Components\TextInput::make('support_goal_label_progress_ar')->label(__('تسمية الإنجاز (عربي)')),
+                        Forms\Components\TextInput::make('support_goal_label_progress_en')->label('Progress label (EN)'),
+                        Forms\Components\TextInput::make('support_goal_message_ar')->label(__('رسالة المتبقي (عربي)'))->helperText(__('استخدم :amount')),
+                        Forms\Components\TextInput::make('support_goal_message_en')->label('Remaining message (EN)')->helperText('Use :amount'),
+                        Forms\Components\TextInput::make('support_goal_cta_ar')->label(__('نص الزر (عربي)')),
+                        Forms\Components\TextInput::make('support_goal_cta_en')->label('CTA (EN)'),
+                    ])->columns(2)->collapsible(),
+
+                    // 6) Fund allocation — percentages live on each card in البطاقات
+                    Forms\Components\Section::make(__('6) توزيع الأموال'))->schema([
+                        Forms\Components\TextInput::make('support_fund_title_ar')->label(__('العنوان (عربي)')),
+                        Forms\Components\TextInput::make('support_fund_title_en')->label('Title (EN)'),
+                        Forms\Components\Textarea::make('support_fund_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_fund_subtitle_en')->label('Subtitle (EN)')->rows(2),
+                        Forms\Components\Repeater::make('support_fund_cards')
+                            ->label(__('البطاقات'))
+                            ->helperText(__('النسبة تُحدَّد داخل كل بطاقة عبر حقل «نسبة %»'))
+                            ->schema([
+                                Forms\Components\Select::make('key')->label(__('المفتاح'))->options([
+                                    'creators' => 'creators',
+                                    'media' => 'media',
+                                    'ops' => 'ops',
+                                ])->required(),
+                                Forms\Components\TextInput::make('pct')->label(__('نسبة %'))->numeric()->suffix('%')->required(),
+                                Forms\Components\TextInput::make('title_ar')->label(__('العنوان عربي'))->required(),
+                                Forms\Components\TextInput::make('title_en')->label('Title EN'),
+                                Forms\Components\Textarea::make('desc_ar')->label(__('الوصف عربي'))->rows(2),
+                                Forms\Components\Textarea::make('desc_en')->label('Desc EN')->rows(2),
+                                Forms\Components\Repeater::make('bullets')->label(__('نقاط'))->schema([
+                                    Forms\Components\TextInput::make('ar')->label(__('عربي')),
+                                    Forms\Components\TextInput::make('en')->label('EN'),
+                                ])->columns(2)->columnSpanFull(),
+                            ])->columns(2)->collapsible()->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_fund_badge_ar')->label(__('شارة الشفافية (عربي)')),
+                        Forms\Components\TextInput::make('support_fund_badge_en')->label('Badge (EN)'),
+                        Forms\Components\TextInput::make('support_fund_note_title_ar')->label(__('عنوان الملاحظة (عربي)')),
+                        Forms\Components\TextInput::make('support_fund_note_title_en')->label('Note title (EN)'),
+                        Forms\Components\Textarea::make('support_fund_note_body_ar')->label(__('نص الملاحظة (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_fund_note_body_en')->label('Note body (EN)')->rows(2),
+                    ])->columns(2)->collapsible(),
+
+                    // 7) Partners — logos only here
+                    Forms\Components\Section::make(__('7) الشركاء'))->schema([
+                        Forms\Components\TextInput::make('support_partners_title_ar')->label(__('العنوان (عربي)')),
+                        Forms\Components\TextInput::make('support_partners_title_en')->label('Title (EN)'),
+                        Forms\Components\Textarea::make('support_partners_subtitle_ar')->label(__('الوصف (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_partners_subtitle_en')->label('Subtitle (EN)')->rows(2),
+                        Forms\Components\Repeater::make('support_partners')
+                            ->label(__('شعارات الشركاء'))
+                            ->helperText(__('إن تُرك فارغاً تُستخدم شعارات الصفحة الرئيسية'))
+                            ->schema([
+                                Forms\Components\TextInput::make('name')->label(__('الاسم')),
+                                Forms\Components\FileUpload::make('logo')
+                                    ->label(__('الشعار'))
+                                    ->image()->disk('public')->directory('support/partners')->visibility('public'),
+                            ])->columns(2)->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_partners_cta_title_ar')->label(__('عنوان CTA (عربي)')),
+                        Forms\Components\TextInput::make('support_partners_cta_title_en')->label('CTA title (EN)'),
+                        Forms\Components\Textarea::make('support_partners_cta_body_ar')->label(__('نص CTA (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_partners_cta_body_en')->label('CTA body (EN)')->rows(2),
+                        Forms\Components\TextInput::make('support_partners_cta_label_ar')->label(__('زر CTA (عربي)')),
+                        Forms\Components\TextInput::make('support_partners_cta_label_en')->label('CTA button (EN)'),
+                    ])->columns(2)->collapsible(),
+
+                    // 8) Sponsor — packages come from Incubator settings
+                    Forms\Components\Section::make(__('8) رعاية طلاب الحاضنة'))->schema([
+                        Forms\Components\Toggle::make('support_show_sponsor')
+                            ->label(__('عرض قسم «ساعد طلاب في الانضمام للحاضنة»'))
+                            ->helperText(__('العنوان والباقات والصور من إعدادات الحاضنة — لا تُخلط هنا'))
+                            ->columnSpanFull(),
+                    ])->collapsible(),
+
+                    // 9) Stories — covers + badge come from Story models
+                    Forms\Components\Section::make(__('9) القصص'))->schema([
+                        Forms\Components\Placeholder::make('support_stories_hint')
+                            ->content(__('صور القصص وشارة كل قصة من مورد «القصص» المنشور. هنا نصوص القسم فقط.'))
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_stories_limit')
+                            ->label(__('عدد القصص'))
+                            ->numeric()->minValue(1)->maxValue(12)
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_stories_title_ar')->label(__('عنوان القصص (عربي)')),
+                        Forms\Components\TextInput::make('support_stories_title_en')->label('Stories title (EN)'),
+                        Forms\Components\Textarea::make('support_stories_subtitle_ar')->label(__('وصف القصص (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_stories_subtitle_en')->label('Stories subtitle (EN)')->rows(2),
+                        Forms\Components\TextInput::make('support_stories_cta_title_ar')->label(__('عنوان CTA (عربي)')),
+                        Forms\Components\TextInput::make('support_stories_cta_title_en')->label('CTA title (EN)'),
+                        Forms\Components\Textarea::make('support_stories_cta_body_ar')->label(__('نص CTA (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_stories_cta_body_en')->label('CTA body (EN)')->rows(2),
+                        Forms\Components\TextInput::make('support_stories_cta_label_ar')->label(__('زر CTA (عربي)')),
+                        Forms\Components\TextInput::make('support_stories_cta_label_en')->label('CTA button (EN)'),
+                    ])->columns(2)->collapsible(),
+
+                    // 10) FAQ
+                    Forms\Components\Section::make(__('10) الأسئلة المتكررة'))->schema([
+                        Forms\Components\TextInput::make('support_faq_title_ar')->label(__('العنوان (عربي)')),
+                        Forms\Components\TextInput::make('support_faq_title_en')->label('Title (EN)'),
+                        Forms\Components\FileUpload::make('support_faq_image')
+                            ->label(__('صورة زخرفية للأسئلة'))
+                            ->helperText(__('اختياري — مثل leaf_cutout على الموقع'))
+                            ->image()->disk('public')->directory('support')->visibility('public'),
+                        Forms\Components\FileUpload::make('support_faq_cta_image')
+                            ->label(__('صورة بطاقة «لديك سؤال؟»'))
+                            ->helperText(__('اختياري — مثل Frame على الموقع'))
+                            ->image()->disk('public')->directory('support')->visibility('public'),
+                        Forms\Components\Repeater::make('support_faqs')
+                            ->label(__('الأسئلة'))
+                            ->schema([
+                                Forms\Components\TextInput::make('q_ar')->label(__('سؤال عربي'))->required(),
+                                Forms\Components\TextInput::make('q_en')->label('Question EN'),
+                                Forms\Components\Textarea::make('a_ar')->label(__('جواب عربي'))->rows(3)->required(),
+                                Forms\Components\Textarea::make('a_en')->label('Answer EN')->rows(3),
+                            ])->columns(2)->collapsible()->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_faq_cta_title_ar')->label(__('عنوان تواصل (عربي)')),
+                        Forms\Components\TextInput::make('support_faq_cta_title_en')->label('Contact title (EN)'),
+                        Forms\Components\Textarea::make('support_faq_cta_body_ar')->label(__('نص تواصل (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('support_faq_cta_body_en')->label('Contact body (EN)')->rows(2),
+                        Forms\Components\TextInput::make('support_faq_cta_label_ar')->label(__('زر تواصل (عربي)')),
+                        Forms\Components\TextInput::make('support_faq_cta_label_en')->label('Contact button (EN)'),
+                    ])->columns(2)->collapsible(),
+
+                    // 11–12) Donation wizard (not a marketing section on the live landing order)
+                    Forms\Components\Section::make(__('11) طرق الدفع (بطاقات الويزارد)'))->schema([
                         Forms\Components\TextInput::make('support_methods_title_ar')->label(__('العنوان (عربي)')),
                         Forms\Components\TextInput::make('support_methods_title_en')->label('Title (English)'),
                         Forms\Components\Textarea::make('support_methods_desc_ar')->label(__('الوصف (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('support_methods_desc_en')->label('Description (English)')->rows(2),
-                    ])->columns(2),
+                        Forms\Components\Toggle::make('support_cat_electronic_enabled')->label(__('دفع إلكتروني مفعّل'))->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_electronic_title_ar')->label(__('إلكتروني — عنوان عربي')),
+                        Forms\Components\TextInput::make('support_cat_electronic_title_en')->label('Electronic title EN'),
+                        Forms\Components\Textarea::make('support_cat_electronic_desc_ar')->label(__('إلكتروني — وصف عربي'))->rows(2),
+                        Forms\Components\Textarea::make('support_cat_electronic_desc_en')->label('Electronic desc EN')->rows(2),
+                        Forms\Components\ColorPicker::make('support_cat_electronic_accent')->label(__('لون إلكتروني')),
+                        Forms\Components\Toggle::make('support_cat_transfer_enabled')->label(__('تحويل مباشر مفعّل'))->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_transfer_title_ar')->label(__('تحويل — عنوان عربي')),
+                        Forms\Components\TextInput::make('support_cat_transfer_title_en')->label('Transfer title EN'),
+                        Forms\Components\Textarea::make('support_cat_transfer_desc_ar')->label(__('تحويل — وصف عربي'))->rows(2),
+                        Forms\Components\Textarea::make('support_cat_transfer_desc_en')->label('Transfer desc EN')->rows(2),
+                        Forms\Components\ColorPicker::make('support_cat_transfer_accent')->label(__('لون تحويل')),
+                        Forms\Components\Toggle::make('support_cat_crypto_enabled')->label(__('عملات رقمية مفعّلة'))->columnSpanFull(),
+                        Forms\Components\TextInput::make('support_cat_crypto_title_ar')->label(__('كريبتو — عنوان عربي')),
+                        Forms\Components\TextInput::make('support_cat_crypto_title_en')->label('Crypto title EN'),
+                        Forms\Components\Textarea::make('support_cat_crypto_desc_ar')->label(__('كريبتو — وصف عربي'))->rows(2),
+                        Forms\Components\Textarea::make('support_cat_crypto_desc_en')->label('Crypto desc EN')->rows(2),
+                        Forms\Components\ColorPicker::make('support_cat_crypto_accent')->label(__('لون كريبتو')),
+                    ])->columns(2)->collapsed(),
 
-                    Forms\Components\Section::make(__('بطاقة «دفع إلكتروني»'))->schema([
-                        Forms\Components\Toggle::make('support_cat_electronic_enabled')->label(__('مفعّلة'))->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_cat_electronic_title_ar')->label(__('العنوان (عربي)')),
-                        Forms\Components\TextInput::make('support_cat_electronic_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_cat_electronic_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
-                        Forms\Components\Textarea::make('support_cat_electronic_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\ColorPicker::make('support_cat_electronic_accent')->label(__('اللون المميّز')),
-                    ])->columns(2)->collapsible(),
-
-                    Forms\Components\Section::make(__('بطاقة «تحويل مباشر»'))->schema([
-                        Forms\Components\Toggle::make('support_cat_transfer_enabled')->label(__('مفعّلة'))->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_cat_transfer_title_ar')->label(__('العنوان (عربي)')),
-                        Forms\Components\TextInput::make('support_cat_transfer_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_cat_transfer_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
-                        Forms\Components\Textarea::make('support_cat_transfer_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\ColorPicker::make('support_cat_transfer_accent')->label(__('اللون المميّز')),
-                    ])->columns(2)->collapsible(),
-
-                    Forms\Components\Section::make(__('بطاقة «عملات رقمية»'))->schema([
-                        Forms\Components\Toggle::make('support_cat_crypto_enabled')->label(__('مفعّلة'))->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_cat_crypto_title_ar')->label(__('العنوان (عربي)')),
-                        Forms\Components\TextInput::make('support_cat_crypto_title_en')->label('Title (English)'),
-                        Forms\Components\Textarea::make('support_cat_crypto_desc_ar')->label(__('الوصف (عربي)'))->rows(3),
-                        Forms\Components\Textarea::make('support_cat_crypto_desc_en')->label('Description (English)')->rows(3),
-                        Forms\Components\ColorPicker::make('support_cat_crypto_accent')->label(__('اللون المميّز')),
-                    ])->columns(2)->collapsible(),
-
-                    Forms\Components\Section::make(__('خطوات الويزارد'))->schema([
+                    Forms\Components\Section::make(__('12) نصوص الويزارد والأزرار'))->schema([
                         Forms\Components\TextInput::make('support_step_method_label_ar')->label(__('الخطوة 1 (عربي)')),
                         Forms\Components\TextInput::make('support_step_method_label_en')->label('Step 1 (English)'),
                         Forms\Components\TextInput::make('support_step_proof_label_ar')->label(__('الخطوة 2 (عربي)')),
@@ -1619,25 +2018,6 @@ class Settings extends Page implements HasForms
                             ->label(__('نسبة الإكمال (عربي)'))->helperText(__('استخدم :percent')),
                         Forms\Components\TextInput::make('support_step_completion_label_en')
                             ->label('Completion text (English)')->helperText('Use :percent'),
-                    ])->columns(2)->collapsible(),
-
-                    Forms\Components\Section::make(__('المبالغ والباقات'))->schema([
-                        Forms\Components\TextInput::make('support_plans_title_ar')->label(__('عنوان القسم (عربي)')),
-                        Forms\Components\TextInput::make('support_plans_title_en')->label('Section title (English)'),
-                        Forms\Components\Select::make('support_default_interval')
-                            ->label(__('الدورية الافتراضية'))
-                            ->options(\App\Support\SupportOptions::intervals()),
-                        Forms\Components\TextInput::make('support_default_currency')->label(__('العملة الافتراضية'))->maxLength(3),
-                        Forms\Components\TextInput::make('support_min_amount')->label(__('أقل مبلغ'))->numeric()->prefix('$'),
-                        Forms\Components\TextInput::make('support_max_amount')->label(__('أعلى مبلغ'))->numeric()->prefix('$'),
-                        Forms\Components\Toggle::make('support_custom_amount_enabled')
-                            ->label(__('السماح بمبلغ مخصص'))
-                            ->columnSpanFull(),
-                        Forms\Components\TextInput::make('support_custom_amount_label_ar')->label(__('نص حقل المبلغ (عربي)')),
-                        Forms\Components\TextInput::make('support_custom_amount_label_en')->label('Amount field text (English)'),
-                    ])->columns(2)->collapsible(),
-
-                    Forms\Components\Section::make(__('نصوص الأزرار والرسائل'))->schema([
                         Forms\Components\TextInput::make('support_continue_label_ar')->label(__('المتابعة (عربي)')),
                         Forms\Components\TextInput::make('support_continue_label_en')->label('Continue (English)'),
                         Forms\Components\TextInput::make('support_back_label_ar')->label(__('رجوع (عربي)')),
@@ -1656,16 +2036,10 @@ class Settings extends Page implements HasForms
                         Forms\Components\TextInput::make('support_success_title_en')->label('Success title (English)'),
                         Forms\Components\Textarea::make('support_success_message_ar')->label(__('رسالة النجاح (عربي)'))->rows(2),
                         Forms\Components\Textarea::make('support_success_message_en')->label('Success message (English)')->rows(2),
-                    ])->columns(2)->collapsible(),
+                    ])->columns(2)->collapsed(),
                 ]),
 
-                Forms\Components\Tabs\Tab::make(__('توزيع الأموال'))->icon('heroicon-o-chart-pie')->schema([
-                    Forms\Components\TextInput::make('fund_split_creators_pct')->label(__('نسبة صنّاع المحتوى (%)'))->numeric()->suffix('%')->required(),
-                    Forms\Components\TextInput::make('fund_split_media_pct')->label(__('نسبة الإنتاج الإعلامي (%)'))->numeric()->suffix('%')->required(),
-                    Forms\Components\TextInput::make('fund_split_support_pct')->label(__('نسبة الدعم التشغيلي (%)'))->numeric()->suffix('%')->required(),
-                ])->columns(3),
-
-                Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope')->schema([
+Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope')->schema([
                     Forms\Components\TextInput::make('contact_email')->label(__('بريد التواصل'))->email(),
                     Forms\Components\TextInput::make('contact_phone')->label(__('هاتف التواصل')),
                     Forms\Components\TextInput::make('support_whatsapp')->label(__('واتساب الدعم')),

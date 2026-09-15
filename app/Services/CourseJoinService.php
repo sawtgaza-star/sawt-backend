@@ -2,22 +2,26 @@
 
 namespace App\Services;
 
+use App\Jobs\SendCourseJoinStatusEmailJob;
 use App\Models\Course;
 use App\Models\CourseJoinRequest;
 use App\Models\User;
-use App\Notifications\CourseJoinAcceptedNotification;
-use App\Notifications\CourseJoinRejectedNotification;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use RuntimeException;
+use Throwable;
 
 /**
  * Handles course join / waitlist requests (pending → accept/reject).
  * Coming-soon courses skip the seats check so waitlist signups stay open.
+ * Status emails are dispatched via SendCourseJoinStatusEmailJob (database queue).
  */
 class CourseJoinService
 {
+    /** Last queue-dispatch error (shown in Filament when job could not be queued). */
+    public ?string $lastEmailError = null;
+
     /**
      * Create or re-open a pending join/waitlist request for the authenticated user.
      *
@@ -78,9 +82,8 @@ class CourseJoinService
         ])->load(['course', 'user']);
     }
 
-
     /**
-     * Accept a pending request (increments students_count + notifies the user).
+     * Accept a pending request, then queue the acceptance email job.
      */
     public function accept(CourseJoinRequest $request, User $admin, ?string $adminNotes = null): CourseJoinRequest
     {
@@ -88,7 +91,9 @@ class CourseJoinService
             throw new RuntimeException('يمكن قبول الطلبات قيد الانتظار فقط.');
         }
 
-        return DB::transaction(function () use ($request, $admin, $adminNotes) {
+        $this->lastEmailError = null;
+
+        $request = DB::transaction(function () use ($request, $admin, $adminNotes) {
             $request->update([
                 'status' => 'accepted',
                 'admin_notes' => $adminNotes,
@@ -98,21 +103,24 @@ class CourseJoinService
 
             $request->course()->increment('students_count');
 
-            $request->load(['course', 'user']);
-            $this->notifyApplicant($request, new CourseJoinAcceptedNotification($request));
-
-            return $request;
+            return $request->fresh(['course', 'user']);
         });
+
+        $this->queueStatusEmail($request, 'accepted');
+
+        return $request;
     }
 
     /**
-     * Reject a pending request with optional admin notes + email the applicant.
+     * Reject a pending request, then queue the rejection email job.
      */
     public function reject(CourseJoinRequest $request, User $admin, ?string $adminNotes = null): CourseJoinRequest
     {
         if (! $request->isPending()) {
             throw new RuntimeException('يمكن رفض الطلبات قيد الانتظار فقط.');
         }
+
+        $this->lastEmailError = null;
 
         $request->update([
             'status' => 'rejected',
@@ -122,25 +130,27 @@ class CourseJoinService
         ]);
 
         $request = $request->fresh(['course', 'user']);
-        $this->notifyApplicant($request, new CourseJoinRejectedNotification($request));
+        $this->queueStatusEmail($request, 'rejected');
 
         return $request;
     }
 
     /**
-     * Prefer the linked user account; fall back to the email on the join request.
+     * Dispatch SendCourseJoinStatusEmailJob onto the database queue.
+     *
+     * @param  string  $decision  accepted|rejected
      */
-    protected function notifyApplicant(CourseJoinRequest $request, object $notification): void
+    protected function queueStatusEmail(CourseJoinRequest $request, string $decision): void
     {
-        if ($request->user) {
-            $request->user->notify($notification);
-
-            return;
-        }
-
-        $email = trim((string) ($request->email ?? ''));
-        if ($email !== '') {
-            Notification::route('mail', $email)->notify($notification);
+        try {
+            SendCourseJoinStatusEmailJob::dispatch($request->id, $decision);
+        } catch (Throwable $e) {
+            $this->lastEmailError = $e->getMessage();
+            Log::error('Failed to dispatch course join status email job', [
+                'join_request_id' => $request->id,
+                'decision' => $decision,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }

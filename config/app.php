@@ -56,6 +56,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Public frontend (website) URL
+    |--------------------------------------------------------------------------
+    |
+    | The React/Next site users open in the browser (e.g. https://sawtgaza.com).
+    | Used for email CTA buttons — do NOT use APP_URL (API / local) for those.
+    |
+    */
+    'frontend_url' => env('FRONTEND_URL', env('APP_URL', 'http://localhost')),
+
+    /** Front path pattern for a course page — must contain {slug} */
+    'frontend_course_path' => env('FRONTEND_COURSE_PATH', '/courses/{slug}'),
+
+    'frontend_incubator_path' => env('FRONTEND_INCUBATOR_PATH', '/incubator'),
+
+    'frontend_login_path' => env('FRONTEND_LOGIN_PATH', '/login'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
