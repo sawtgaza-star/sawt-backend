@@ -74,3 +74,6 @@ VITE_APP_NAME="${APP_NAME}"
 # Filament /admin login — failed attempts only (IP + email)
 ADMIN_LOGIN_MAX_ATTEMPTS=5
 ADMIN_LOGIN_DECAY_SECONDS=60
+
+# Instagram long-lived token local lifetime (days) — default 60 ≈ two months
+INSTAGRAM_TOKEN_TTL_DAYS=60

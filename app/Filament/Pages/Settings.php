@@ -2069,7 +2069,47 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
                     Forms\Components\Textarea::make('instagram_access_token')
                         ->label(__('رمز الوصول (Access Token)'))
                         ->rows(3)
-                        ->helperText(__('Long-lived token من Meta. إذا انتهت صلاحيته تظهر الريلز فارغة في /pages/content و /reels — جدّد التوكن من Graph API Explorer واحفظه هنا.'))
+                        ->helperText(__('Long-lived token من Meta (~60 يوم / شهرين). عند الحفظ نبدأ عدّاد الصلاحية؛ بعد انتهاء المدة تتوقف الريلز حتى تجدّد التوكن.'))
+                        ->columnSpanFull(),
+
+                    Forms\Components\Placeholder::make('instagram_token_expiry')
+                        ->label(__('صلاحية التوكن'))
+                        ->content(function (): \Illuminate\Support\HtmlString {
+                            $ig = app(\App\Services\InstagramService::class);
+                            $savedAt = $ig->tokenSavedAt();
+                            $expiresAt = $ig->tokenExpiresAt();
+                            $days = $ig->tokenDaysRemaining();
+                            $ttlDays = (int) config('services.instagram.token_ttl_days', 60);
+
+                            if (! filled(Setting::get('instagram_access_token'))) {
+                                $html = e(__('لا يوجد توكن محفوظ.'));
+                            } elseif (! $savedAt) {
+                                $html = e(__('التوكن محفوظ بدون تاريخ حفظ — احفظه مرة أخرى لبدء عدّاد :days يوم.', ['days' => $ttlDays]));
+                            } elseif ($ig->isTokenPastLocalExpiry()) {
+                                $html = '<span class="text-danger-600 dark:text-danger-400 font-semibold">'
+                                    .e(__('منتهي الصلاحية منذ :date — جدّد التوكن الآن.', [
+                                        'date' => $expiresAt?->toDateString() ?? '—',
+                                    ]))
+                                    .'</span>';
+                            } elseif ($days !== null && $days <= 7) {
+                                $html = '<span class="text-warning-600 dark:text-warning-400 font-semibold">'
+                                    .e(__('ينتهي خلال :days يوم (:date). يُفضّل التجديد قريباً.', [
+                                        'days' => $days,
+                                        'date' => $expiresAt?->toDateString() ?? '—',
+                                    ]))
+                                    .'</span>';
+                            } else {
+                                $html = e(__('محفوظ :saved — صالح حتى :expires (:days يوم متبقي).', [
+                                    'saved' => $savedAt->toDateString(),
+                                    'expires' => $expiresAt?->toDateString() ?? '—',
+                                    'days' => $days ?? '—',
+                                ]));
+                            }
+
+                            return new \Illuminate\Support\HtmlString(
+                                '<div class="text-sm text-gray-600 dark:text-gray-300">'.$html.'</div>'
+                            );
+                        })
                         ->columnSpanFull(),
 
                     Forms\Components\Placeholder::make('instagram_reels_preview')
@@ -2115,6 +2155,27 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
             }
 
             Setting::set($key, $value, group: $group, type: $type);
+        }
+
+        // Instagram token lifetime (~60 days / 2 months from last save)
+        $oldToken = (string) ($oldValues['instagram_access_token'] ?? '');
+        $newToken = (string) ($newValues['instagram_access_token'] ?? '');
+        if ($oldToken !== $newToken) {
+            Setting::set(
+                'instagram_access_token_saved_at',
+                filled($newToken) ? now()->toIso8601String() : '',
+                group: 'reels',
+                type: 'string',
+            );
+            app(\App\Services\InstagramService::class)->forgetReelsCache();
+        } elseif (filled($newToken) && ! filled(Setting::get('instagram_access_token_saved_at'))) {
+            // Existing token with no stamp — start the 60-day clock on next save
+            Setting::set(
+                'instagram_access_token_saved_at',
+                now()->toIso8601String(),
+                group: 'reels',
+                type: 'string',
+            );
         }
 
         Notification::make()

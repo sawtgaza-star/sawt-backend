@@ -44,6 +44,17 @@ class InstagramService
             return [];
         }
 
+        // Soft expiry: Meta long-lived tokens last ~60 days; we track save time in Settings
+        if ($this->isTokenPastLocalExpiry()) {
+            $this->lastStatus = self::STATUS_TOKEN_EXPIRED;
+            $expiresAt = $this->tokenExpiresAt();
+            $this->lastMessage = $expiresAt
+                ? 'Instagram access token expired on '.$expiresAt->toDateString().'. Save a new long-lived token in Settings.'
+                : 'Instagram access token has expired. Save a new long-lived token in Settings.';
+
+            return [];
+        }
+
         $ttl = (int) $this->config('cache_ttl', config('services.instagram.cache_ttl', 300));
         // Separate lite/full caches so admin preview stays fast
         $cacheKey = 'instagram.reels.v3.'.$limit.'.'.($withExtras ? 'full' : 'lite');
@@ -89,9 +100,79 @@ class InstagramService
         return $this->lastMessage;
     }
 
+    /**
+     * Drop known Instagram reels cache keys (after token rotate / clear).
+     */
+    public function forgetReelsCache(): void
+    {
+        foreach ([3, 6, 8, 12, 24, 50] as $limit) {
+            Cache::forget('instagram.reels.v3.'.$limit.'.lite');
+            Cache::forget('instagram.reels.v3.'.$limit.'.full');
+        }
+    }
+
     public function isConfigured(): bool
     {
         return filled($this->userId()) && filled($this->token());
+    }
+
+    /**
+     * When the dashboard token was last saved (null if unknown / .env-only).
+     */
+    public function tokenSavedAt(): ?\Carbon\CarbonInterface
+    {
+        $raw = Setting::get('instagram_access_token_saved_at');
+        if (! filled($raw)) {
+            return null;
+        }
+
+        try {
+            return \Illuminate\Support\Carbon::parse((string) $raw);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Local expiry datetime = saved_at + token_ttl_days (default 60 ≈ two months).
+     */
+    public function tokenExpiresAt(): ?\Carbon\CarbonInterface
+    {
+        $savedAt = $this->tokenSavedAt();
+        if (! $savedAt) {
+            return null;
+        }
+
+        $days = max(1, (int) config('services.instagram.token_ttl_days', 60));
+
+        return $savedAt->copy()->addDays($days);
+    }
+
+    /**
+     * True when a saved_at stamp exists and the local TTL has passed.
+     */
+    public function isTokenPastLocalExpiry(): bool
+    {
+        $expiresAt = $this->tokenExpiresAt();
+
+        return $expiresAt !== null && $expiresAt->isPast();
+    }
+
+    /**
+     * Days remaining until local expiry (null if unknown; 0 if already expired).
+     */
+    public function tokenDaysRemaining(): ?int
+    {
+        $expiresAt = $this->tokenExpiresAt();
+        if (! $expiresAt) {
+            return null;
+        }
+
+        if ($expiresAt->isPast()) {
+            return 0;
+        }
+
+        return (int) now()->diffInDays($expiresAt, false);
     }
 
     protected function userId(): ?string

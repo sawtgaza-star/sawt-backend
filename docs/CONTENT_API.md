@@ -72,11 +72,12 @@ Public. No auth. No query filters.
 | `ok` | Instagram reels returned |
 | `empty` | Credentials OK but no reels matched |
 | `missing_credentials` | Instagram user id / token not set in Settings |
-| `token_expired` | Access token expired — paste a new long-lived token in **Settings → ريلز إنستغرام** |
+| `token_expired` | Access token expired (Meta revoked **or** local 60-day / 2-month clock from last Settings save) — paste a new long-lived token in **Settings → ريلز إنستغرام** |
 | `api_error` | Graph API error (see `reels.message`) |
 
 ### Notes
 
 - Count limited by Settings `content_most_viewed_limit` (default 6).
 - Standalone list: `GET /api/v1/reels?limit=12`.
+- Dashboard-saved tokens start a **60-day** lifetime clock (`INSTAGRAM_TOKEN_TTL_DAYS`, default 60 ≈ two months) via `instagram_access_token_saved_at`. After that, APIs return `token_expired` until you save a fresh token.
 - If `status` is `token_expired` on local **and** production, both environments need a fresh Instagram access token saved in Settings (or `.env`).

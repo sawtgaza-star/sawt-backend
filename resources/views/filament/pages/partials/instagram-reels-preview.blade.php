@@ -13,7 +13,12 @@
 
         @if (empty($reels))
             <div class="text-sm text-gray-500 dark:text-gray-400 py-6 text-center">
-                {{ __('لا يوجد ريلز للعرض. تأكد من إدخال معرّف الحساب ورمز الوصول بالأعلى ثم اضغط حفظ.') }}
+                @php($ig = app(\App\Services\InstagramService::class))
+                @if ($ig->isTokenPastLocalExpiry())
+                    {{ __('انتهت صلاحية توكن إنستغرام (شهرين). جدّد رمز الوصول بالأعلى ثم احفظ.') }}
+                @else
+                    {{ __('لا يوجد ريلز للعرض. تأكد من إدخال معرّف الحساب ورمز الوصول بالأعلى ثم اضغط حفظ.') }}
+                @endif
             </div>
         @else
             <div

@@ -52,6 +52,8 @@ return [
         'version' => env('INSTAGRAM_API_VERSION', 'v21.0'),
         // Short cache (seconds) to avoid hitting IG rate limits. Set to 0 for fully live.
         'cache_ttl' => (int) env('INSTAGRAM_CACHE_TTL', 300),
+        // Local lifetime for dashboard-saved tokens (Meta long-lived ≈ 60 days / 2 months)
+        'token_ttl_days' => (int) env('INSTAGRAM_TOKEN_TTL_DAYS', 60),
     ],
 
 ];
