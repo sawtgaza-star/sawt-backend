@@ -1137,6 +1137,8 @@ class MediaService
                     'نحن متواجدون للاستماع والرد على جميع تساؤلاتكم لا تترددوا في التواصل معنا عبر الطرق المتاحة أدناه وسنكون سعداء بخدمتكم.',
                     'We are here to listen and answer your questions — reach out through the channels below.'
                 ),
+                // Side photo next to WhatsApp / email (admin: إعدادات ميديا → صفحة التواصل)
+                'image_url' => MediaUrl::make($this->settings->get('media_contact_image')),
             ],
             'channels' => [
                 'whatsapp' => [

@@ -372,6 +372,8 @@ class MediaSettings extends Page implements HasForms
             'media_contact_intro_title_en' => ['media', 'string', "Let's work together"],
             'media_contact_intro_body_ar' => ['media', 'text', 'نحن متواجدون للاستماع والرد على جميع تساؤلاتكم لا تترددوا في التواصل معنا عبر الطرق المتاحة أدناه وسنكون سعداء بخدمتكم.'],
             'media_contact_intro_body_en' => ['media', 'text', 'We are here to listen and answer your questions — reach out through the channels below.'],
+            // Side photo next to WhatsApp / email on /media/contact
+            'media_contact_image' => ['media', 'string', ''],
             'media_contact_wa_label_ar' => ['media', 'string', 'تواصل عبر واتساب'],
             'media_contact_wa_label_en' => ['media', 'string', 'Contact via WhatsApp'],
             'media_contact_wa_hint_ar' => ['media', 'string', 'رد فوري- متاح دائما'],
@@ -851,6 +853,15 @@ class MediaSettings extends Page implements HasForms
                             Forms\Components\TextInput::make('media_contact_intro_title_en')->label('Intro title (EN)'),
                             Forms\Components\Textarea::make('media_contact_intro_body_ar')->label(__('نص القسم (عربي)'))->rows(3),
                             Forms\Components\Textarea::make('media_contact_intro_body_en')->label('Intro body (EN)')->rows(3),
+                            // Photo shown beside contact channels on the live /media/contact page
+                            Forms\Components\FileUpload::make('media_contact_image')
+                                ->label(__('صورة القسم (بجانب واتساب والبريد)'))
+                                ->image()
+                                ->disk('public')
+                                ->directory('media/contact')
+                                ->imageEditor()
+                                ->helperText(__('الصورة الكبيرة في يمين قسم «لنبدأ العمل سوياً».'))
+                                ->columnSpanFull(),
                             Forms\Components\TextInput::make('media_contact_wa_label_ar')->label(__('زر واتساب (عربي)')),
                             Forms\Components\TextInput::make('media_contact_wa_label_en')->label('WhatsApp label (EN)'),
                             Forms\Components\TextInput::make('media_contact_wa_hint_ar')->label(__('تلميح واتساب (عربي)')),
@@ -866,9 +877,14 @@ class MediaSettings extends Page implements HasForms
                                 ->email()
                                 ->helperText(__('اتركه فارغاً لاستخدام بريد الإعدادات العامة.'))
                                 ->columnSpanFull(),
-                            Forms\Components\TextInput::make('media_contact_trust_value')->label(__('رقم الثقة (+150)')),
-                            Forms\Components\TextInput::make('media_contact_trust_label_ar')->label(__('نص الثقة (عربي)')),
-                            Forms\Components\TextInput::make('media_contact_trust_label_en')->label('Trust label (EN)')->columnSpanFull(),
+                            // Trust strip: number full-width, then AR|EN labels paired like other rows
+                            Forms\Components\TextInput::make('media_contact_trust_value')
+                                ->label(__('رقم الثقة (+150)'))
+                                ->columnSpanFull(),
+                            Forms\Components\TextInput::make('media_contact_trust_label_ar')
+                                ->label(__('نص الثقة (عربي)')),
+                            Forms\Components\TextInput::make('media_contact_trust_label_en')
+                                ->label('Trust label (EN)'),
                         ])->columns(2),
                 ]),
             ]),

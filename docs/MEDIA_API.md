@@ -67,7 +67,7 @@ Navbar / hero / packages CTA `key: start_project` resolves to path `/media/conta
 {
   "data": {
     "hero": { "title": {}, "subtitle": {} },
-    "intro": { "title": {}, "body": {} },
+    "intro": { "title": {}, "body": {}, "image_url": "https://…/media/…" },
     "channels": {
       "whatsapp": {
         "key": "whatsapp",
