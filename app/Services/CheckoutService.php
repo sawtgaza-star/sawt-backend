@@ -39,20 +39,21 @@ class CheckoutService
 
     /**
      * إنشاء أمر PayPal لأي كيان قابل للدفع (تبرع، طلب دعم…) — نسخة عامة من startOrder.
+     * مع return/cancel URL يرجع approval_url لتحويل المتبرع مباشرة لصفحة PayPal.
      *
-     * @return array{order_id: string, payment: Payment}
+     * @return array{order_id: string, payment: Payment, approval_url: ?string}
      */
-    public function startOrderFor(object $payable, ?int $userId, float $amount, string $currency, string $reference, string $description): array
+    public function startOrderFor(object $payable, ?int $userId, float $amount, string $currency, string $reference, string $description, ?string $returnUrl = null, ?string $cancelUrl = null): array
     {
-        return $this->startOrder($payable, $userId, $amount, $currency, $reference, $description);
+        return $this->startOrder($payable, $userId, $amount, $currency, $reference, $description, $returnUrl, $cancelUrl);
     }
 
     /**
-     * @return array{order_id: string, payment: Payment}
+     * @return array{order_id: string, payment: Payment, approval_url: ?string}
      */
-    protected function startOrder(object $payable, ?int $userId, float $amount, string $currency, string $reference, string $description): array
+    protected function startOrder(object $payable, ?int $userId, float $amount, string $currency, string $reference, string $description, ?string $returnUrl = null, ?string $cancelUrl = null): array
     {
-        return DB::transaction(function () use ($payable, $userId, $amount, $currency, $reference, $description) {
+        return DB::transaction(function () use ($payable, $userId, $amount, $currency, $reference, $description, $returnUrl, $cancelUrl) {
             $payment = $payable->payment()->updateOrCreate([], [
                 'user_id' => $userId,
                 'gateway' => 'paypal',
@@ -61,11 +62,15 @@ class CheckoutService
                 'status' => 'pending',
             ]);
 
-            $order = $this->paypal->createOrder($amount, $currency, $reference, $description, "payment:{$payment->uuid}");
+            $order = $this->paypal->createOrder($amount, $currency, $reference, $description, "payment:{$payment->uuid}", $returnUrl, $cancelUrl);
 
             $payment->update(['gateway_order_id' => $order['id']]);
 
-            return ['order_id' => $order['id'], 'payment' => $payment->refresh()];
+            return [
+                'order_id' => $order['id'],
+                'payment' => $payment->refresh(),
+                'approval_url' => $this->paypal->approvalLink($order),
+            ];
         });
     }
 

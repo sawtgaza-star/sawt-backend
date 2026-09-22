@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -57,7 +59,8 @@ class InstagramService
 
         $ttl = (int) $this->config('cache_ttl', config('services.instagram.cache_ttl', 300));
         // Separate lite/full caches so admin preview stays fast
-        $cacheKey = 'instagram.reels.v3.'.$limit.'.'.($withExtras ? 'full' : 'lite');
+        // Key includes account + token so switching accounts never serves another account's cached media
+        $cacheKey = $this->cacheKey($limit, $withExtras);
 
         $fetch = fn () => $this->request($limit, $withExtras);
 
@@ -106,8 +109,8 @@ class InstagramService
     public function forgetReelsCache(): void
     {
         foreach ([3, 6, 8, 12, 24, 50] as $limit) {
-            Cache::forget('instagram.reels.v3.'.$limit.'.lite');
-            Cache::forget('instagram.reels.v3.'.$limit.'.full');
+            Cache::forget($this->cacheKey($limit, false));
+            Cache::forget($this->cacheKey($limit, true));
         }
     }
 
@@ -119,7 +122,7 @@ class InstagramService
     /**
      * When the dashboard token was last saved (null if unknown / .env-only).
      */
-    public function tokenSavedAt(): ?\Carbon\CarbonInterface
+    public function tokenSavedAt(): ?CarbonInterface
     {
         $raw = Setting::get('instagram_access_token_saved_at');
         if (! filled($raw)) {
@@ -127,17 +130,97 @@ class InstagramService
         }
 
         try {
-            return \Illuminate\Support\Carbon::parse((string) $raw);
+            return Carbon::parse((string) $raw);
         } catch (\Throwable) {
             return null;
         }
     }
 
     /**
-     * Local expiry datetime = saved_at + token_ttl_days (default 60 ≈ two months).
+     * Ask Meta for the token's real expiry (debug_token) and store it, so a
+     * short-lived Explorer token isn't mistaken for a 60-day one.
+     * Instagram-Login tokens have no debug_token — those keep the local 60-day estimate.
+     *
+     * Returns null when Meta couldn't be asked (network / permission error).
+     *
+     * @return array{valid: bool, expires_at: ?CarbonInterface, never_expires: bool, error: ?string}|null
      */
-    public function tokenExpiresAt(): ?\Carbon\CarbonInterface
+    public function syncTokenExpiry(): ?array
     {
+        $token = $this->token();
+
+        if (! filled($token) || $this->isInstagramLoginToken()) {
+            Setting::set('instagram_access_token_expires_at', '', group: 'reels', type: 'string');
+
+            return null;
+        }
+
+        try {
+            // A token may inspect itself; an expired one fails with code 190.
+            $response = Http::timeout(8)->get('https://graph.facebook.com/'.config('services.instagram.version', 'v21.0').'/debug_token', [
+                'input_token' => $token,
+                'access_token' => $token,
+            ]);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        $data = $response->json('data');
+        $error = $response->json('error');
+
+        if (is_array($error) || ! is_array($data)) {
+            if ((int) ($error['code'] ?? 0) !== 190) {
+                return null; // network / permission problem — don't guess
+            }
+
+            $result = ['valid' => false, 'expires_at' => now(), 'never_expires' => false, 'error' => (string) ($error['message'] ?? '')];
+        } elseif (! ($data['is_valid'] ?? false)) {
+            $result = ['valid' => false, 'expires_at' => now(), 'never_expires' => false, 'error' => (string) ($data['error']['message'] ?? '')];
+        } else {
+            $expires = (int) ($data['expires_at'] ?? 0);
+            $result = [
+                'valid' => true,
+                'expires_at' => $expires > 0 ? Carbon::createFromTimestamp($expires) : null,
+                'never_expires' => $expires === 0,
+                'error' => null,
+            ];
+        }
+
+        Setting::set(
+            'instagram_access_token_expires_at',
+            $result['never_expires'] ? 'never' : $result['expires_at']->toIso8601String(),
+            group: 'reels',
+            type: 'string',
+        );
+
+        return $result;
+    }
+
+    /** Meta reported this token as non-expiring (e.g. a Page token from a long-lived user token). */
+    public function tokenNeverExpires(): bool
+    {
+        return Setting::get('instagram_access_token_expires_at') === 'never';
+    }
+
+    /**
+     * Expiry from Meta (debug_token) when known; otherwise saved_at + token_ttl_days (default 60).
+     */
+    public function tokenExpiresAt(): ?CarbonInterface
+    {
+        $real = (string) Setting::get('instagram_access_token_expires_at', '');
+
+        if ($real === 'never') {
+            return null;
+        }
+
+        if ($real !== '') {
+            try {
+                return Carbon::parse($real);
+            } catch (\Throwable) {
+                // fall through to the local estimate
+            }
+        }
+
         $savedAt = $this->tokenSavedAt();
         if (! $savedAt) {
             return null;
@@ -175,6 +258,75 @@ class InstagramService
         return (int) now()->diffInDays($expiresAt, false);
     }
 
+    /**
+     * Instagram-Login tokens (IGAA…/IGQV…) only work on graph.instagram.com;
+     * Facebook-Login tokens (EAA…) go through graph.facebook.com.
+     */
+    protected function graphBase(): string
+    {
+        return $this->isInstagramLoginToken()
+            ? 'https://graph.instagram.com'
+            : 'https://graph.facebook.com';
+    }
+
+    protected function isInstagramLoginToken(): bool
+    {
+        return str_starts_with((string) $this->token(), 'IG');
+    }
+
+    /** Show only reels that appear on the Instagram profile grid (dashboard toggle, default on). */
+    protected function profileReelsOnly(): bool
+    {
+        return (bool) Setting::get('instagram_profile_reels_only', true);
+    }
+
+    protected function cacheKey(int $limit, bool $withExtras): string
+    {
+        return 'instagram.reels.v4.'.md5($this->userId().'|'.$this->token().'|'.(int) $this->profileReelsOnly()).'.'.$limit.'.'.($withExtras ? 'full' : 'lite');
+    }
+
+    /**
+     * The id we query must be the Instagram professional account, not the Facebook Page.
+     * If a Page id was saved (a common mix-up — it returns the Page's Facebook videos
+     * or fails), follow its linked instagram_business_account instead.
+     */
+    protected function resolveInstagramAccountId(): ?string
+    {
+        $userId = $this->userId();
+
+        if ($this->isInstagramLoginToken()) {
+            return $userId ?: 'me';
+        }
+
+        if (! $userId) {
+            return null;
+        }
+
+        return Cache::remember('instagram.account_id.'.md5($userId.'|'.$this->token()), 86400, function () use ($userId) {
+            try {
+                $response = Http::timeout(8)->get(
+                    'https://graph.facebook.com/'.config('services.instagram.version', 'v21.0')."/{$userId}",
+                    ['fields' => 'instagram_business_account', 'access_token' => $this->token()],
+                );
+
+                $linked = $response->json('instagram_business_account.id');
+
+                if ($response->successful() && filled($linked)) {
+                    Log::info('Instagram user id is a Facebook Page; using its linked Instagram account', [
+                        'page_id' => $userId,
+                        'instagram_id' => $linked,
+                    ]);
+
+                    return (string) $linked;
+                }
+            } catch (\Throwable) {
+                // Not a Page (or no permission) — the saved id is already the IG account.
+            }
+
+            return $userId;
+        });
+    }
+
     protected function userId(): ?string
     {
         return $this->config('user_id', config('services.instagram.user_id')) ?: null;
@@ -210,16 +362,16 @@ class InstagramService
     protected function request(int $limit, bool $withExtras = false): array
     {
         $version = config('services.instagram.version', 'v21.0');
-        $userId = $this->userId();
+        $userId = $this->resolveInstagramAccountId();
         $token = $this->token();
         $limit = max(1, $limit);
 
         try {
             $raw = [];
-            $url = "https://graph.facebook.com/{$version}/{$userId}/media";
+            $url = $this->graphBase()."/{$version}/{$userId}/media";
             $params = [
                 // Nested comments keep the list call lighter (avoid comments.limit(30))
-                'fields' => 'id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(5){text,username,timestamp,like_count}',
+                'fields' => 'id,caption,media_type,media_product_type,is_shared_to_feed,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(10){id,text,username,timestamp,like_count}',
                 'limit' => 50,
                 'access_token' => $token,
             ];
@@ -290,6 +442,7 @@ class InstagramService
                         'reach' => $insights['reach'],
                         'comment_items' => collect($item['comments']['data'] ?? [])
                             ->map(fn ($c) => [
+                                'id' => $c['id'] ?? null,
                                 'name' => $c['username'] ?? 'مستخدم',
                                 'text' => $c['text'] ?? '',
                                 'likes' => $c['like_count'] ?? 0,
@@ -372,7 +525,7 @@ class InstagramService
 
         try {
             $response = Http::timeout(4)
-                ->get("https://graph.facebook.com/{$version}/{$mediaId}/insights", [
+                ->get($this->graphBase()."/{$version}/{$mediaId}/insights", [
                     'metric' => 'views,reach',
                     'access_token' => $token,
                 ]);
@@ -422,7 +575,7 @@ class InstagramService
     {
         try {
             $response = Http::timeout(4)
-                ->get("https://graph.facebook.com/{$version}/{$mediaId}/collaborators", [
+                ->get($this->graphBase()."/{$version}/{$mediaId}/collaborators", [
                     'fields' => 'id,username,invite_status',
                     'access_token' => $token,
                 ]);
@@ -464,6 +617,17 @@ class InstagramService
         $product = $item['media_product_type'] ?? null;
         $type = $item['media_type'] ?? null;
         $permalink = (string) ($item['permalink'] ?? '');
+
+        // Only real Instagram posts — never Facebook videos/permalinks.
+        if (! str_contains(strtolower((string) parse_url($permalink, PHP_URL_HOST)), 'instagram.com')) {
+            return false;
+        }
+
+        // Reels cross-posted from Facebook / Business Suite live only in the Reels tab
+        // (is_shared_to_feed = false) and don't show on the profile grid — skip them by default.
+        if ($this->profileReelsOnly() && ($item['is_shared_to_feed'] ?? null) === false) {
+            return false;
+        }
 
         if ($product === 'REELS') {
             return true;

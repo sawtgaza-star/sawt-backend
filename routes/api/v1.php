@@ -1,23 +1,24 @@
 <?php
 
-use App\Http\Controllers\Api\BlogController;
-use App\Http\Controllers\Api\CreatorsPageController;
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\ContentPageController;
+use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\CreatorsPageController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\IncubatorController;
 use App\Http\Controllers\Api\LayoutController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PayPalController;
 use App\Http\Controllers\Api\ReelController;
+use App\Http\Controllers\Api\StoryController;
+use App\Http\Controllers\Api\SupportCheckoutController;
 use App\Http\Controllers\Api\SupportController;
 use App\Http\Controllers\Api\SupportPageController;
 use App\Http\Controllers\Api\SupportRequestController;
 use App\Http\Controllers\Api\SupportSubscriptionController;
-use App\Http\Controllers\Api\CollaborationController;
-use App\Http\Controllers\Api\IncubatorController;
-use App\Http\Controllers\Api\MediaController;
-use App\Http\Controllers\Api\CourseController;
-use App\Http\Controllers\Api\StoryController;
 use App\Http\Controllers\Api\TeamController;
 use Illuminate\Support\Facades\Route;
 
@@ -121,6 +122,12 @@ Route::prefix('support')->name('support.')->group(function () {
     Route::get('/plans', [SupportController::class, 'plans'])->name('plans');
     Route::get('/wizard', [SupportController::class, 'wizard'])->name('wizard');
     Route::get('/team-options', [SupportController::class, 'teamOptions'])->name('team-options');
+
+    // ===== ادعم صوت السريع — مبلغ + دورية ثم تحويل مباشر لـ PayPal =====
+    Route::middleware('throttle:20,1')->group(function () {
+        Route::post('/checkout', [SupportCheckoutController::class, 'store'])->name('checkout');
+        Route::post('/checkout/confirm', [SupportCheckoutController::class, 'confirm'])->name('checkout.confirm');
+    });
 
     // ===== ويزارد الدعم — أربع خطوات، الضيف مسموح =====
     Route::prefix('requests')->name('requests.')->group(function () {

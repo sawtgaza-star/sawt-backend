@@ -72,6 +72,11 @@ return [
 
     'frontend_login_path' => env('FRONTEND_LOGIN_PATH', '/login'),
 
+    /** Where PayPal sends the donor back after paying / cancelling on the support page */
+    'frontend_support_return_path' => env('FRONTEND_SUPPORT_RETURN_PATH', '/support/thank-you'),
+
+    'frontend_support_cancel_path' => env('FRONTEND_SUPPORT_CANCEL_PATH', '/support'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
