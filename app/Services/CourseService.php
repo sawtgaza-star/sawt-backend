@@ -135,13 +135,14 @@ class CourseService
                     ],
                 ]
                 : [
-                    'key' => 'enroll',
-                    'requires_auth' => true,
+                    // "اشترك الآن" → guest subscribe modal (not authenticated join)
+                    'key' => 'subscribe',
+                    'requires_auth' => false,
                     'method' => 'POST',
-                    'path' => '/api/v1/pages/courses/'.$course->slug.'/join',
+                    'path' => '/api/v1/pages/courses/'.$course->slug.'/subscribe',
                     'label' => [
                         'ar' => 'اشترك الآن',
-                        'en' => 'Enroll now',
+                        'en' => 'Subscribe now',
                     ],
                 ],
         ];

@@ -4,24 +4,29 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreCourseJoinRequest;
+use App\Http\Requests\Api\StoreCourseSubscribeRequest;
 use App\Http\Resources\CourseJoinRequestResource;
+use App\Http\Resources\CourseSubscribeRequestResource;
 use App\Http\Resources\IncubatorCourseCardResource;
 use App\Models\Course;
 use App\Services\CourseJoinService;
 use App\Services\CourseService;
+use App\Services\CourseSubscribeService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
  * Public courses API under /api/v1/pages/courses.
- * Index = lean cards; show = full detail; join = authenticated waitlist/enroll.
+ * Index = lean cards; show = full detail;
+ * join = authenticated waitlist; subscribe = guest "اشترك الآن" 3-step modal.
  */
 class CourseController extends Controller
 {
     public function __construct(
         protected CourseService $courses,
         protected CourseJoinService $joins,
+        protected CourseSubscribeService $subscribes,
     ) {}
 
     /**
@@ -97,6 +102,37 @@ class CourseController extends Controller
         $joinRequest->loadMissing(['course', 'user']);
 
         $payload = (new CourseJoinRequestResource($joinRequest))->resolve();
+
+        return response()->json([
+            'message' => $payload['confirmation']['title'] ?? 'تم بنجاح',
+            'data' => $payload,
+        ], 201);
+    }
+
+    /**
+     * Guest subscribe (اشترك الآن) — no auth. One API call for the 3-step modal fields.
+     * Creates a pending CourseSubscribeRequest for Filament accept/reject.
+     */
+    public function subscribe(StoreCourseSubscribeRequest $request, string $slug): JsonResponse
+    {
+        $course = Course::query()
+            ->published()
+            ->where(function ($query) use ($slug) {
+                $query->where('slug', $slug)->orWhere('uuid', $slug);
+            })
+            ->first();
+
+        if (! $course) {
+            return response()->json([
+                'message' => 'الكورس غير موجود.',
+                'error' => 'course_not_found',
+            ], 404);
+        }
+
+        $subscribeRequest = $this->subscribes->submit($course, $request->validated());
+        $subscribeRequest->loadMissing(['course']);
+
+        $payload = (new CourseSubscribeRequestResource($subscribeRequest))->resolve();
 
         return response()->json([
             'message' => $payload['confirmation']['title'] ?? 'تم بنجاح',

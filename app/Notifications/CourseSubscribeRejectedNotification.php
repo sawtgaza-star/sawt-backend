@@ -2,18 +2,18 @@
 
 namespace App\Notifications;
 
-use App\Models\CourseJoinRequest;
+use App\Models\CourseSubscribeRequest;
 use App\Support\FrontendUrl;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Email body for a rejected course join / waitlist request.
- * Template: emails/courses/join/rejected.blade.php
+ * Email sent when admin rejects a guest course subscribe request.
+ * Template: emails/courses/subscribe/rejected.blade.php
  */
-class CourseJoinRejectedNotification extends Notification
+class CourseSubscribeRejectedNotification extends Notification
 {
-    public function __construct(public CourseJoinRequest $joinRequest) {}
+    public function __construct(public CourseSubscribeRequest $subscribeRequest) {}
 
     public function via(object $notifiable): array
     {
@@ -22,20 +22,17 @@ class CourseJoinRejectedNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $course = $this->joinRequest->course;
+        $course = $this->subscribeRequest->course;
         $title = method_exists($course, 'getTranslation')
             ? ($course->getTranslation('title', 'ar') ?: $course->getTranslation('title', 'en') ?: $course->slug)
             : (string) ($course->title ?? $course->slug);
 
-        $name = $notifiable->name
-            ?: $this->joinRequest->full_name
-            ?: 'عزيزي المتدرب';
-
-        $reason = trim((string) ($this->joinRequest->admin_notes ?? ''));
+        $name = $this->subscribeRequest->full_name ?: 'عزيزي المتدرب';
+        $reason = trim((string) ($this->subscribeRequest->admin_notes ?? ''));
 
         return (new MailMessage)
-            ->subject('بخصوص طلب انضمامك للكورس — '.$title)
-            ->view('emails.courses.join.rejected', [
+            ->subject('بخصوص طلب اشتراكك في الدورة — '.$title)
+            ->view('emails.courses.subscribe.rejected', [
                 'name' => $name,
                 'courseTitle' => $title,
                 'reason' => $reason !== '' ? $reason : null,

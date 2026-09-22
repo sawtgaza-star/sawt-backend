@@ -118,6 +118,12 @@ class Course extends Model
         return $this->hasMany(CourseJoinRequest::class);
     }
 
+    /** Guest "Subscribe now" applications (3-step modal). */
+    public function subscribeRequests()
+    {
+        return $this->hasMany(CourseSubscribeRequest::class);
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', 'published');

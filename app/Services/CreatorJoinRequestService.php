@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Jobs\SendCreatorJoinStatusEmailJob;
 use App\Models\Creator;
 use App\Models\CreatorJoinRequest;
 use App\Models\CreatorSocial;
 use App\Models\User;
-use App\Notifications\CreatorJoinAcceptedNotification;
 use App\Support\ContentCreatorPermissions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -110,6 +110,8 @@ class CreatorJoinRequestService
             return $request;
         }
 
+        $wasRejected = $request->status === 'rejected';
+
         $payload = [
             'status' => $status,
             'reviewed_by' => $reviewerId,
@@ -121,8 +123,15 @@ class CreatorJoinRequestService
         }
 
         $request->update($payload);
+        $request = $request->fresh();
 
-        return $request->fresh();
+        // Email only when newly rejected (not when re-saving an already-rejected row)
+        if ($status === 'rejected' && ! $wasRejected) {
+            $this->lastEmailError = null;
+            $this->sendRejectedEmail($request);
+        }
+
+        return $request;
     }
 
     public function deleteLinkedProfiles(CreatorJoinRequest $request): void
@@ -345,11 +354,36 @@ class CreatorJoinRequestService
         }
 
         try {
-            $user->notify(new CreatorJoinAcceptedNotification($request, $plainPassword));
+            // Queue before join request is deleted — job uses userId, not request id
+            SendCreatorJoinStatusEmailJob::dispatchAccepted(
+                $user,
+                (string) ($request->full_name ?: $user->name),
+                $plainPassword,
+            );
         } catch (\Throwable $e) {
             $this->lastEmailError = $e->getMessage();
-            Log::error('Failed to send creator join accepted email.', [
+            Log::error('Failed to dispatch creator join accepted email job.', [
                 'email' => $user->email,
+                'join_request_id' => $request->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /** Queue rejection email for a creator join request. */
+    protected function sendRejectedEmail(CreatorJoinRequest $request): void
+    {
+        $email = trim((string) ($request->email ?? ''));
+        if ($email === '') {
+            return;
+        }
+
+        try {
+            SendCreatorJoinStatusEmailJob::dispatchRejected($request->id);
+        } catch (\Throwable $e) {
+            $this->lastEmailError = $e->getMessage();
+            Log::error('Failed to dispatch creator join rejected email job.', [
+                'email' => $email,
                 'join_request_id' => $request->id,
                 'error' => $e->getMessage(),
             ]);

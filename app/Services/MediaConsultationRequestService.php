@@ -2,12 +2,10 @@
 
 namespace App\Services;
 
+use App\Jobs\SendMediaConsultationStatusEmailJob;
 use App\Models\MediaConsultationRequest;
 use App\Models\MediaServiceItem;
-use App\Notifications\MediaConsultationAcceptedNotification;
-use App\Notifications\MediaConsultationRejectedNotification;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 /**
@@ -99,14 +97,13 @@ class MediaConsultationRequestService
     protected function sendDecisionEmail(MediaConsultationRequest $request, bool $approved): void
     {
         try {
-            $notification = $approved
-                ? new MediaConsultationAcceptedNotification($request)
-                : new MediaConsultationRejectedNotification($request);
-
-            Notification::route('mail', $request->email)->notify($notification);
+            SendMediaConsultationStatusEmailJob::dispatch(
+                $request->id,
+                $approved ? 'accepted' : 'rejected',
+            );
         } catch (\Throwable $e) {
             $this->lastEmailError = $e->getMessage();
-            Log::error('Failed to send media consultation decision email.', [
+            Log::error('Failed to dispatch media consultation decision email job.', [
                 'email' => $request->email,
                 'request_uuid' => $request->uuid,
                 'approved' => $approved,

@@ -7,10 +7,10 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Email when admin accepts a collaboration join request.
- * Template: emails/collaboration/accepted.blade.php
+ * Email when admin rejects a collaboration join request.
+ * Template: emails/collaboration/rejected.blade.php
  */
-class CollaborationJoinAcceptedNotification extends Notification
+class CollaborationJoinRejectedNotification extends Notification
 {
     public function __construct(
         public CollaborationJoinRequest $request,
@@ -29,12 +29,15 @@ class CollaborationJoinAcceptedNotification extends Notification
             ? $this->request->type->labelAr()
             : (string) $this->request->type;
 
+        $reason = trim((string) ($this->request->admin_note ?? ''));
+
         return (new MailMessage)
-            ->subject('تم قبول طلب التعاون — منصة صوت')
-            ->view('emails.collaboration.accepted', [
+            ->subject('بخصوص طلب التعاون — منصة صوت')
+            ->view('emails.collaboration.rejected', [
                 'name' => $name,
                 'typeLabel' => $typeLabel,
                 'requestUuid' => (string) $this->request->uuid,
+                'reason' => $reason !== '' ? $reason : null,
             ]);
     }
 }

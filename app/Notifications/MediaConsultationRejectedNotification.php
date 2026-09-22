@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notification;
 
 /**
  * Email sent when admin rejects a media consultation booking.
+ * Template: emails/media/rejected.blade.php
  */
 class MediaConsultationRejectedNotification extends Notification
 {
@@ -24,20 +25,15 @@ class MediaConsultationRejectedNotification extends Notification
     {
         $name = $this->request->name ?: 'عزيزي العميل';
         $service = $this->request->service_title ?: 'الخدمة المطلوبة';
-        $reason = trim((string) $this->request->admin_note);
+        $reason = trim((string) ($this->request->admin_note ?? ''));
 
-        $mail = (new MailMessage)
+        return (new MailMessage)
             ->subject('بخصوص طلب استشارتك — صوت ميديا')
-            ->greeting('مرحباً '.$name)
-            ->line('نشكرك على اهتمامك بصوت ميديا.')
-            ->line('نأسف لإبلاغك بأنه تعذّر قبول طلب حجز الاستشارة في الوقت الحالي.')
-            ->line('الخدمة: '.$service)
-            ->line('رقم الطلب: '.$this->request->uuid);
-
-        if ($reason !== '') {
-            $mail->line('السبب: '.$reason);
-        }
-
-        return $mail->line('يمكنك التواصل معنا لاحقاً أو تقديم طلب جديد. نتمنى لك التوفيق.');
+            ->view('emails.media.rejected', [
+                'name' => $name,
+                'service' => $service,
+                'requestUuid' => (string) $this->request->uuid,
+                'reason' => $reason !== '' ? $reason : null,
+            ]);
     }
 }

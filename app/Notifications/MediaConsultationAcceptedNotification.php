@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notification;
 
 /**
  * Email sent when admin accepts a media consultation booking.
+ * Template: emails/media/accepted.blade.php
  */
 class MediaConsultationAcceptedNotification extends Notification
 {
@@ -27,11 +28,10 @@ class MediaConsultationAcceptedNotification extends Notification
 
         return (new MailMessage)
             ->subject('تم قبول طلب استشارتك — صوت ميديا')
-            ->greeting('مرحباً '.$name)
-            ->line('يسعدنا إخبارك بأنه تم قبول طلب حجز الاستشارة الخاص بك.')
-            ->line('الخدمة: '.$service)
-            ->line('رقم الطلب: '.$this->request->uuid)
-            ->line('سيتواصل معك فريق صوت ميديا قريباً لتحديد الموعد والتفاصيل.')
-            ->line('شكراً لثقتك بصوت ميديا.');
+            ->view('emails.media.accepted', [
+                'name' => $name,
+                'service' => $service,
+                'requestUuid' => (string) $this->request->uuid,
+            ]);
     }
 }

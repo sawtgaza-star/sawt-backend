@@ -2,14 +2,20 @@
 
 namespace App\Notifications;
 
-use App\Models\CreatorJoinRequest;
+use App\Support\FrontendUrl;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Email when admin accepts a creator join request.
+ * Template: emails/creators/accepted.blade.php
+ *
+ * Does not require CreatorJoinRequest — that row is deleted on approve.
+ */
 class CreatorJoinAcceptedNotification extends Notification
 {
     public function __construct(
-        public CreatorJoinRequest $joinRequest,
+        public string $applicantName,
         public ?string $temporaryPassword = null,
     ) {}
 
@@ -20,24 +26,15 @@ class CreatorJoinAcceptedNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $name = $notifiable->name ?: $this->joinRequest->full_name;
+        $name = $this->applicantName ?: ($notifiable->name ?? 'عزيزي صانع المحتوى');
 
-        $mail = (new MailMessage)
+        return (new MailMessage)
             ->subject('تم قبول طلب انضمامك كصانع محتوى — صوت')
-            ->greeting('مرحباً '.$name)
-            ->line('يسعدنا إخبارك بأنه تم قبول طلب انضمامك كصانع محتوى في منصة صوت.')
-            ->line('يمكنك الآن تسجيل الدخول إلى حسابك.');
-
-        if ($this->temporaryPassword) {
-            $mail->line('البريد الإلكتروني: '.$notifiable->email)
-                ->line('كلمة المرور المؤقتة: '.$this->temporaryPassword)
-                ->line('يُفضَّل تغيير كلمة المرور بعد أول تسجيل دخول.');
-        } else {
-            $mail->line('استخدم البريد الإلكتروني وكلمة المرور الحاليين لتسجيل الدخول.');
-        }
-
-        return $mail
-            ->action('تسجيل الدخول', url('/login'))
-            ->line('شكراً لانضمامك إلى منصة صوت.');
+            ->view('emails.creators.accepted', [
+                'name' => $name,
+                'email' => $notifiable->email ?? null,
+                'temporaryPassword' => $this->temporaryPassword,
+                'loginUrl' => FrontendUrl::login(),
+            ]);
     }
 }

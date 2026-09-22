@@ -81,8 +81,11 @@ Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/courses', [CourseController::class, 'index'])->name('courses');
     Route::get('/courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
 
-    // Waitlist / enroll — JWT required (401 → front shows login/register)
+    // Waitlist — JWT required (401 → front shows login/register)
     Route::middleware('auth:api')->post('/courses/{slug}/join', [CourseController::class, 'join'])->name('courses.join');
+
+    // Guest subscribe (اشترك الآن 3-step modal) — no auth; admin accept/reject in dashboard
+    Route::post('/courses/{slug}/subscribe', [CourseController::class, 'subscribe'])->name('courses.subscribe');
 
     Route::get('/team', [TeamController::class, 'index'])->name('team');
     Route::get('/team/{uuid}', [TeamController::class, 'show'])->name('team.show');

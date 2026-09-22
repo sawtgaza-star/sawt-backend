@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendPasswordResetCodeEmailJob;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
@@ -112,10 +112,17 @@ class PasswordResetController extends Controller
             ['token' => Hash::make($code), 'created_at' => now()],
         );
 
-        // MAIL_MAILER=log → الرمز يُكتب في storage/logs. بدّلها ببريد فعلي في الإنتاج.
-        Mail::raw("رمز إعادة تعيين كلمة المرور الخاص بك هو: {$code}", function ($m) use ($email) {
-            $m->to($email)->subject('رمز التحقق - صوت');
-        });
+        $user = User::query()->where('email', $email)->first();
+        if (! $user) {
+            return;
+        }
+
+        // Same queued HTML mail as the API password-reset flow
+        SendPasswordResetCodeEmailJob::dispatch(
+            $user->id,
+            $code,
+            self::OTP_TTL_MINUTES * 60,
+        );
     }
 
     private function checkOtp(string $email, string $code): bool

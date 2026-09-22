@@ -2,18 +2,18 @@
 
 namespace App\Notifications;
 
-use App\Models\CourseJoinRequest;
+use App\Models\CourseSubscribeRequest;
 use App\Support\FrontendUrl;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Email body for an accepted course join / waitlist request.
- * Template: emails/courses/join/accepted.blade.php
+ * Email sent when admin accepts a guest course subscribe request.
+ * Template: emails/courses/subscribe/accepted.blade.php
  */
-class CourseJoinAcceptedNotification extends Notification
+class CourseSubscribeAcceptedNotification extends Notification
 {
-    public function __construct(public CourseJoinRequest $joinRequest) {}
+    public function __construct(public CourseSubscribeRequest $subscribeRequest) {}
 
     public function via(object $notifiable): array
     {
@@ -22,14 +22,12 @@ class CourseJoinAcceptedNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $course = $this->joinRequest->course;
+        $course = $this->subscribeRequest->course;
         $title = method_exists($course, 'getTranslation')
             ? ($course->getTranslation('title', 'ar') ?: $course->getTranslation('title', 'en') ?: $course->slug)
             : (string) ($course->title ?? $course->slug);
 
-        $name = $notifiable->name
-            ?? $this->joinRequest->full_name
-            ?? 'عزيزي';
+        $name = $this->subscribeRequest->full_name ?: 'عزيزي';
 
         $location = $course->location
             ? $course->location.($course->location_details ? ' — '.$course->location_details : '')
@@ -42,8 +40,8 @@ class CourseJoinAcceptedNotification extends Notification
         $slug = (string) ($course->slug ?: $course->uuid);
 
         return (new MailMessage)
-            ->subject('تم قبول طلب انضمامك للكورس — '.$title)
-            ->view('emails.courses.join.accepted', [
+            ->subject('تم قبول اشتراكك في الدورة — '.$title)
+            ->view('emails.courses.subscribe.accepted', [
                 'name' => $name,
                 'courseTitle' => $title,
                 'location' => $location,

@@ -13,7 +13,8 @@ DB: `2026_07_11_100001_create_courses_table.php` creates `courses` with the Fila
 | Item | Content |
 |------|---------|
 | **الكورسات** | Course CRUD (tabs below) |
-| **طلبات الانضمام** | Waitlist / enroll requests — accept or reject |
+| **طلبات الانضمام** | Waitlist requests (JWT join) — accept or reject |
+| **طلبات الاشتراك** | Guest "اشترك الآن" subscribe modal — accept or reject (email on accept) |
 
 | Tab | Content |
 |-----|---------|
@@ -30,13 +31,59 @@ DB: `2026_07_11_100001_create_courses_table.php` creates `courses` with the Fila
 |--------|----------|------|-------|
 | `GET` | `/api/v1/pages/courses` | Public | Published listing (paginated) |
 | `GET` | `/api/v1/pages/courses/{slugOrUuid}` | Public | Full detail — **slug** or **uuid** |
-| `POST` | `/api/v1/pages/courses/{slugOrUuid}/join` | **JWT** (`Authorization: Bearer …`) | Waitlist / enroll request → Filament **طلبات الانضمام** |
+| `POST` | `/api/v1/pages/courses/{slugOrUuid}/join` | **JWT** | Waitlist → Filament **طلبات الانضمام** |
+| `POST` | `/api/v1/pages/courses/{slugOrUuid}/subscribe` | Public | Guest subscribe (3-step modal) → Filament **طلبات الاشتراك** |
 
 Also listed (cards only) inside `GET /api/v1/pages/incubator` → `courses.items`.
 
+### Subscribe (`POST …/subscribe`) — "اشترك الآن"
+
+One request for the whole 3-step modal (frontend keeps steps locally). No JWT.
+
+**Validation**
+
+| Step | Field | Required |
+|------|-------|----------|
+| 1 | `full_name`, `phone`, `email` | yes |
+| 1 | `phone_country_code` | no |
+| 2 | `academic_level`, `attended_similar_course` | yes |
+| 2 | `goals_interests` | no |
+| 3 | `join_goal` | yes |
+| 3 | `additional_notes` | no (max 500) |
+
+```json
+{
+  "full_name": "محمد أحمد",
+  "phone": "59999999",
+  "phone_country_code": "+970",
+  "email": "mohamed@gmail.com",
+  "academic_level": "طالب جامعي",
+  "attended_similar_course": false,
+  "goals_interests": "أتوقع تعلّم التحليل من الصفر",
+  "join_goal": "تطوير مهاراتي المهنية",
+  "additional_notes": null
+}
+```
+
+`attended_similar_course` accepts boolean or `yes`/`no`/`نعم`/`لا`.
+
+On success → `201` with `confirmation` modal payload. Admin accepts or rejects in **طلبات الاشتراك** → queued email to the applicant (reject includes optional admin reason).
+
+Course detail CTA for open enrollment:
+
+```json
+{
+  "key": "subscribe",
+  "requires_auth": false,
+  "method": "POST",
+  "path": "/api/v1/pages/courses/{slug}/subscribe",
+  "label": { "ar": "اشترك الآن", "en": "Subscribe now" }
+}
+```
+
 ### Join / waitlist (`POST …/join`)
 
-1. Front sees CTA `key: waitlist` or `enroll` with `requires_auth: true`.
+1. Front sees CTA `key: waitlist` with `requires_auth: true` (coming-soon courses).
 2. If guest → open login/register (`POST /api/v1/auth/login` or `/register`), then retry.
 3. Authenticated → `POST` with optional body (defaults to profile):
 
@@ -184,11 +231,11 @@ When `is_coming_soon` is true, CTA becomes:
       "socials": [{ "platform": "instagram", "url": "…" }]
     },
     "cta": {
-      "key": "enroll",
-      "requires_auth": true,
+      "key": "subscribe",
+      "requires_auth": false,
       "method": "POST",
-      "path": "/api/v1/pages/courses/graphic-design/join",
-      "label": { "ar": "اشترك الآن", "en": "Enroll now" }
+      "path": "/api/v1/pages/courses/graphic-design/subscribe",
+      "label": { "ar": "اشترك الآن", "en": "Subscribe now" }
     }
   }
 }

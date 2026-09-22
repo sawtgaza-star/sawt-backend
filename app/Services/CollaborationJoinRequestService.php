@@ -3,11 +3,10 @@
 namespace App\Services;
 
 use App\Enums\CollaborationTypeKey;
+use App\Jobs\SendCollaborationJoinStatusEmailJob;
 use App\Models\CollaborationJoinRequest;
-use App\Notifications\CollaborationJoinAcceptedNotification;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -184,7 +183,7 @@ class CollaborationJoinRequestService
         return $request;
     }
 
-    public function reject(CollaborationJoinRequest $request, ?int $reviewerId = null, ?string $adminNote = null): CollaborationJoinRequest
+    public function reject(CollaborationJoinRequest $request, ?int $reviewerId = null, ?string $adminNote = null, bool $sendEmail = true): CollaborationJoinRequest
     {
         $request->update([
             'status' => 'rejected',
@@ -193,7 +192,15 @@ class CollaborationJoinRequestService
             'admin_note' => $adminNote,
         ]);
 
-        return $request->fresh();
+        $request = $request->fresh();
+
+        $this->lastEmailError = null;
+
+        if ($sendEmail) {
+            $this->sendRejectedEmail($request);
+        }
+
+        return $request;
     }
 
     protected function storeAttachment(?UploadedFile $attachment): ?string
@@ -210,11 +217,25 @@ class CollaborationJoinRequestService
     protected function sendAcceptedEmail(CollaborationJoinRequest $request): void
     {
         try {
-            Notification::route('mail', $request->email)
-                ->notify(new CollaborationJoinAcceptedNotification($request));
+            SendCollaborationJoinStatusEmailJob::dispatch($request->id, 'accepted');
         } catch (\Throwable $e) {
             $this->lastEmailError = $e->getMessage();
-            Log::error('Failed to send collaboration join accepted email.', [
+            Log::error('Failed to dispatch collaboration join accepted email job.', [
+                'email' => $request->email,
+                'request_uuid' => $request->uuid,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /** Queue rejection email for a collaboration request. */
+    protected function sendRejectedEmail(CollaborationJoinRequest $request): void
+    {
+        try {
+            SendCollaborationJoinStatusEmailJob::dispatch($request->id, 'rejected');
+        } catch (\Throwable $e) {
+            $this->lastEmailError = $e->getMessage();
+            Log::error('Failed to dispatch collaboration join rejected email job.', [
                 'email' => $request->email,
                 'request_uuid' => $request->uuid,
                 'error' => $e->getMessage(),

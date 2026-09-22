@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Jobs\SendPasswordResetCodeEmailJob;
 use App\Models\User;
-use App\Notifications\PasswordResetCodeNotification;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -47,9 +47,14 @@ class PasswordResetService
         );
 
         try {
-            $user->notify(new PasswordResetCodeNotification($code, self::CODE_TTL_SECONDS));
+            // Queue immediately — worker sends the OTP mail
+            SendPasswordResetCodeEmailJob::dispatch(
+                $user->id,
+                $code,
+                self::CODE_TTL_SECONDS,
+            );
         } catch (\Throwable $e) {
-            Log::error('Failed to send password reset code.', [
+            Log::error('Failed to dispatch password reset code email job.', [
                 'email' => $user->email,
                 'error' => $e->getMessage(),
             ]);
