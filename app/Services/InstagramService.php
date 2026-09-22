@@ -274,9 +274,15 @@ class InstagramService
         return str_starts_with((string) $this->token(), 'IG');
     }
 
+    /** Show only reels that appear on the Instagram profile grid (dashboard toggle, default on). */
+    protected function profileReelsOnly(): bool
+    {
+        return (bool) Setting::get('instagram_profile_reels_only', true);
+    }
+
     protected function cacheKey(int $limit, bool $withExtras): string
     {
-        return 'instagram.reels.v4.'.md5($this->userId().'|'.$this->token()).'.'.$limit.'.'.($withExtras ? 'full' : 'lite');
+        return 'instagram.reels.v4.'.md5($this->userId().'|'.$this->token().'|'.(int) $this->profileReelsOnly()).'.'.$limit.'.'.($withExtras ? 'full' : 'lite');
     }
 
     /**
@@ -365,7 +371,7 @@ class InstagramService
             $url = $this->graphBase()."/{$version}/{$userId}/media";
             $params = [
                 // Nested comments keep the list call lighter (avoid comments.limit(30))
-                'fields' => 'id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(10){id,text,username,timestamp,like_count}',
+                'fields' => 'id,caption,media_type,media_product_type,is_shared_to_feed,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(10){id,text,username,timestamp,like_count}',
                 'limit' => 50,
                 'access_token' => $token,
             ];
@@ -614,6 +620,12 @@ class InstagramService
 
         // Only real Instagram posts — never Facebook videos/permalinks.
         if (! str_contains(strtolower((string) parse_url($permalink, PHP_URL_HOST)), 'instagram.com')) {
+            return false;
+        }
+
+        // Reels cross-posted from Facebook / Business Suite live only in the Reels tab
+        // (is_shared_to_feed = false) and don't show on the profile grid — skip them by default.
+        if ($this->profileReelsOnly() && ($item['is_shared_to_feed'] ?? null) === false) {
             return false;
         }
 

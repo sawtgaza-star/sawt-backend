@@ -767,6 +767,7 @@ class Settings extends Page implements HasForms
             'instagram_user_id' => ['reels', 'string', ''],
             'instagram_access_token' => ['reels', 'string', ''],
             'instagram_cache_ttl' => ['reels', 'number', 300],
+            'instagram_profile_reels_only' => ['reels', 'boolean', true],
 
             // paypal
             'paypal_client_id' => ['paypal', 'string', ''],
@@ -2070,6 +2071,10 @@ class Settings extends Page implements HasForms
                         ->label(__('مدة الكاش (ثانية)'))
                         ->numeric()->minValue(0)
                         ->helperText(__('0 = جلب مباشر كل مرة (احذر حد الطلبات). المقترح 300')),
+                    Forms\Components\Toggle::make('instagram_profile_reels_only')
+                        ->label(__('عرض ريلز البروفايل فقط'))
+                        ->helperText(__('مفعّل: تظهر فقط الريلز الظاهرة على صفحة الحساب في إنستغرام. غير مفعّل: تظهر أيضاً الريلز المنشورة من فيسبوك (Business Suite) والتي تظهر فقط في تبويب Reels.'))
+                        ->columnSpanFull(),
                     Forms\Components\Textarea::make('instagram_access_token')
                         ->label(__('رمز الوصول (Access Token)'))
                         ->rows(3)
