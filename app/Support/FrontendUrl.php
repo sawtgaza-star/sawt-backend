@@ -49,6 +49,38 @@ class FrontendUrl
         return static::to((string) config('app.frontend_incubator_path', '/incubator'));
     }
 
+    /** Support page PayPal return (thank-you) page. */
+    public static function supportReturn(): string
+    {
+        return static::to((string) config('app.frontend_support_return_path', '/support/thank-you'));
+    }
+
+    /** Support page PayPal cancel page. */
+    public static function supportCancel(): string
+    {
+        return static::to((string) config('app.frontend_support_cancel_path', '/support'));
+    }
+
+    /**
+     * Keep a client-supplied redirect only when it points at our own frontend host
+     * (avoids turning PayPal into an open redirect); otherwise use $fallback.
+     */
+    public static function sameHostOr(?string $url, string $fallback): string
+    {
+        if (! filled($url)) {
+            return $fallback;
+        }
+
+        $host = parse_url((string) $url, PHP_URL_HOST);
+        $scheme = parse_url((string) $url, PHP_URL_SCHEME);
+
+        return $host
+            && in_array($scheme, ['http', 'https'], true)
+            && strcasecmp($host, (string) parse_url(static::root(), PHP_URL_HOST)) === 0
+                ? (string) $url
+                : $fallback;
+    }
+
     /** Website login page. */
     public static function login(): string
     {

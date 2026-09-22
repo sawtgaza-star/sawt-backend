@@ -75,6 +75,8 @@ class ContentPageService
                     'username' => $reel['username'] ?? null,
                     'likes' => $reel['likes'] ?? 0,
                     'comments_count' => $reel['comments'] ?? 0,
+                    // This reel's own comments (Instagram), so each reel shows matching comments
+                    'comment_items' => $reel['comment_items'] ?? [],
                     'views' => $reel['views'] ?? null,
                     'reach' => $reel['reach'] ?? null,
                     'collaborators' => $reel['collaborators'] ?? [],

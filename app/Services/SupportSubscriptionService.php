@@ -9,6 +9,7 @@ use App\Models\SupportSubscription;
 use App\Models\User;
 use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Repositories\Contracts\SupportRepositoryInterface;
+use App\Support\FrontendUrl;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -81,8 +82,9 @@ class SupportSubscriptionService
                 'email' => $subscription->subscriber_email,
             ],
             "subscription:{$subscription->uuid}",
-            $data['return_url'] ?? null,
-            $data['cancel_url'] ?? null,
+            // PayPal needs somewhere to send the donor back — default to the frontend support pages
+            FrontendUrl::sameHostOr($data['return_url'] ?? null, FrontendUrl::supportReturn()),
+            FrontendUrl::sameHostOr($data['cancel_url'] ?? null, FrontendUrl::supportCancel()),
         );
 
         $subscription->update([

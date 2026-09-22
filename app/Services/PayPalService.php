@@ -71,7 +71,7 @@ class PayPalService
      *
      * @param  string  $reference  internal reference (e.g. "donation:12" or "course:5")
      */
-    public function createOrder(float $amount, string $currency, string $reference, string $description = '', ?string $customId = null): array
+    public function createOrder(float $amount, string $currency, string $reference, string $description = '', ?string $customId = null, ?string $returnUrl = null, ?string $cancelUrl = null): array
     {
         $unit = [
             'reference_id' => $reference,
@@ -86,11 +86,29 @@ class PayPalService
             $unit['custom_id'] = $customId; // maps webhook events back to our Payment
         }
 
+        $payload = [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [$unit],
+        ];
+
+        // Redirect flow: PayPal returns a "payer-action" link the donor is sent to,
+        // then brings them back to return_url?token=<order id>&PayerID=… for capture.
+        if ($returnUrl && $cancelUrl) {
+            $payload['payment_source'] = [
+                'paypal' => [
+                    'experience_context' => [
+                        'brand_name' => mb_substr((string) (Setting::get('site_name', 'Sawt') ?: 'Sawt'), 0, 127),
+                        'shipping_preference' => 'NO_SHIPPING',
+                        'user_action' => 'PAY_NOW',
+                        'return_url' => $returnUrl,
+                        'cancel_url' => $cancelUrl,
+                    ],
+                ],
+            ];
+        }
+
         $response = Http::withToken($this->accessToken())
-            ->post("{$this->baseUrl()}/v2/checkout/orders", [
-                'intent' => 'CAPTURE',
-                'purchase_units' => [$unit],
-            ]);
+            ->post("{$this->baseUrl()}/v2/checkout/orders", $payload);
 
         if ($response->failed()) {
             Log::error('PayPal create order failed', ['body' => $response->json()]);
@@ -236,6 +254,7 @@ class PayPalService
             $payload['application_context'] = array_filter([
                 'brand_name' => Setting::get('site_name', 'Sawt'),
                 'user_action' => 'SUBSCRIBE_NOW',
+                'shipping_preference' => 'NO_SHIPPING',
                 'return_url' => $returnUrl,
                 'cancel_url' => $cancelUrl,
             ]);
@@ -298,12 +317,13 @@ class PayPalService
     }
 
     /**
-     * Pull the donor-facing approval link out of a create-subscription response.
+     * Pull the donor-facing approval link out of a create-subscription / create-order response.
      */
     public function approvalLink(array $subscription): ?string
     {
         foreach ($subscription['links'] ?? [] as $link) {
-            if (($link['rel'] ?? null) === 'approve') {
+            // "approve" for subscriptions, "payer-action" for orders created with payment_source
+            if (in_array($link['rel'] ?? null, ['approve', 'payer-action'], true)) {
                 return $link['href'] ?? null;
             }
         }
