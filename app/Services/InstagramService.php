@@ -137,10 +137,90 @@ class InstagramService
     }
 
     /**
-     * Local expiry datetime = saved_at + token_ttl_days (default 60 ≈ two months).
+     * Ask Meta for the token's real expiry (debug_token) and store it, so a
+     * short-lived Explorer token isn't mistaken for a 60-day one.
+     * Instagram-Login tokens have no debug_token — those keep the local 60-day estimate.
+     *
+     * Returns null when Meta couldn't be asked (network / permission error).
+     *
+     * @return array{valid: bool, expires_at: ?CarbonInterface, never_expires: bool, error: ?string}|null
+     */
+    public function syncTokenExpiry(): ?array
+    {
+        $token = $this->token();
+
+        if (! filled($token) || $this->isInstagramLoginToken()) {
+            Setting::set('instagram_access_token_expires_at', '', group: 'reels', type: 'string');
+
+            return null;
+        }
+
+        try {
+            // A token may inspect itself; an expired one fails with code 190.
+            $response = Http::timeout(8)->get('https://graph.facebook.com/'.config('services.instagram.version', 'v21.0').'/debug_token', [
+                'input_token' => $token,
+                'access_token' => $token,
+            ]);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        $data = $response->json('data');
+        $error = $response->json('error');
+
+        if (is_array($error) || ! is_array($data)) {
+            if ((int) ($error['code'] ?? 0) !== 190) {
+                return null; // network / permission problem — don't guess
+            }
+
+            $result = ['valid' => false, 'expires_at' => now(), 'never_expires' => false, 'error' => (string) ($error['message'] ?? '')];
+        } elseif (! ($data['is_valid'] ?? false)) {
+            $result = ['valid' => false, 'expires_at' => now(), 'never_expires' => false, 'error' => (string) ($data['error']['message'] ?? '')];
+        } else {
+            $expires = (int) ($data['expires_at'] ?? 0);
+            $result = [
+                'valid' => true,
+                'expires_at' => $expires > 0 ? Carbon::createFromTimestamp($expires) : null,
+                'never_expires' => $expires === 0,
+                'error' => null,
+            ];
+        }
+
+        Setting::set(
+            'instagram_access_token_expires_at',
+            $result['never_expires'] ? 'never' : $result['expires_at']->toIso8601String(),
+            group: 'reels',
+            type: 'string',
+        );
+
+        return $result;
+    }
+
+    /** Meta reported this token as non-expiring (e.g. a Page token from a long-lived user token). */
+    public function tokenNeverExpires(): bool
+    {
+        return Setting::get('instagram_access_token_expires_at') === 'never';
+    }
+
+    /**
+     * Expiry from Meta (debug_token) when known; otherwise saved_at + token_ttl_days (default 60).
      */
     public function tokenExpiresAt(): ?CarbonInterface
     {
+        $real = (string) Setting::get('instagram_access_token_expires_at', '');
+
+        if ($real === 'never') {
+            return null;
+        }
+
+        if ($real !== '') {
+            try {
+                return Carbon::parse($real);
+            } catch (\Throwable) {
+                // fall through to the local estimate
+            }
+        }
+
         $savedAt = $this->tokenSavedAt();
         if (! $savedAt) {
             return null;

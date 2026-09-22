@@ -2,17 +2,21 @@
 
 namespace App\Filament\Pages;
 
-use App\Support\LocaleText;
-
 use App\Models\Campaign;
 use App\Models\Setting;
+use App\Services\InstagramService;
+use App\Support\LocaleText;
 use App\Support\StoredUploadCleanup;
+use App\Support\SupportOptions;
+use Carbon\CarbonInterface;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
 
 /**
  * صفحة إعدادات واحدة (بدل CRUD تقليدي) — كل إعدادات المنصة مجمّعة بتابات حسب
@@ -43,7 +47,7 @@ class Settings extends Page implements HasForms
         return __('General Settings');
     }
 
-    public function getTitle(): string | \Illuminate\Contracts\Support\Htmlable
+    public function getTitle(): string|Htmlable
     {
         return __('General Settings');
     }
@@ -783,7 +787,7 @@ class Settings extends Page implements HasForms
         }
 
         // Lite fetch only — extras cause 60s timeouts on the Settings page
-        return app(\App\Services\InstagramService::class)->reels(12, bypassCache: false, withExtras: false);
+        return app(InstagramService::class)->reels(12, bypassCache: false, withExtras: false);
     }
 
     /**
@@ -791,7 +795,7 @@ class Settings extends Page implements HasForms
      */
     public function refreshReels(): void
     {
-        app(\App\Services\InstagramService::class)->reels(12, bypassCache: true, withExtras: false);
+        app(InstagramService::class)->reels(12, bypassCache: true, withExtras: false);
 
         Notification::make()->title(__('تم تحديث الريلز'))->success()->send();
     }
@@ -1722,7 +1726,7 @@ class Settings extends Page implements HasForms
                         ->columnSpanFull(),
                 ]),
 
-                                Forms\Components\Tabs\Tab::make(__('صفحة الدعم'))->icon('heroicon-o-heart')->schema([
+                Forms\Components\Tabs\Tab::make(__('صفحة الدعم'))->icon('heroicon-o-heart')->schema([
                     Forms\Components\Placeholder::make('support_hint')
                         ->label('')
                         ->content(__('ترتيب الأقسام يطابق sawtgaza.com/support. الصور داخل كل قسم فقط. الوسائل/الباقات من قائمة المالية.'))
@@ -1753,7 +1757,7 @@ class Settings extends Page implements HasForms
                         Forms\Components\Textarea::make('support_plans_desc_en')->label('Description (EN)')->rows(2),
                         Forms\Components\Select::make('support_default_interval')
                             ->label(__('الدورية الافتراضية'))
-                            ->options(\App\Support\SupportOptions::intervals()),
+                            ->options(SupportOptions::intervals()),
                         Forms\Components\TextInput::make('support_default_currency')->label(__('العملة الافتراضية'))->maxLength(3),
                         Forms\Components\TextInput::make('support_min_amount')->label(__('أقل مبلغ'))->numeric()->prefix('$'),
                         Forms\Components\TextInput::make('support_max_amount')->label(__('أعلى مبلغ'))->numeric()->prefix('$'),
@@ -2039,7 +2043,7 @@ class Settings extends Page implements HasForms
                     ])->columns(2)->collapsed(),
                 ]),
 
-Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope')->schema([
+                Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope')->schema([
                     Forms\Components\TextInput::make('contact_email')->label(__('بريد التواصل'))->email(),
                     Forms\Components\TextInput::make('contact_phone')->label(__('هاتف التواصل')),
                     Forms\Components\TextInput::make('support_whatsapp')->label(__('واتساب الدعم')),
@@ -2069,21 +2073,39 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
                     Forms\Components\Textarea::make('instagram_access_token')
                         ->label(__('رمز الوصول (Access Token)'))
                         ->rows(3)
-                        ->helperText(__('Long-lived token من Meta (~60 يوم / شهرين). عند الحفظ نبدأ عدّاد الصلاحية؛ بعد انتهاء المدة تتوقف الريلز حتى تجدّد التوكن.'))
+                        ->helperText(__('Long-lived token من Meta (~60 يوم) أو توكن صفحة لا ينتهي. عند الحفظ نسأل Meta عن تاريخ الانتهاء الحقيقي ونحذّرك إذا كان التوكن قصير العمر أو منتهي.'))
                         ->columnSpanFull(),
 
                     Forms\Components\Placeholder::make('instagram_token_expiry')
                         ->label(__('صلاحية التوكن'))
-                        ->content(function (): \Illuminate\Support\HtmlString {
-                            $ig = app(\App\Services\InstagramService::class);
+                        ->content(function (): HtmlString {
+                            $ig = app(InstagramService::class);
+
+                            // Tokens saved before the Meta check existed: ask Meta once and store the answer
+                            if (filled(Setting::get('instagram_access_token')) && ! filled(Setting::get('instagram_access_token_expires_at'))) {
+                                $ig->syncTokenExpiry();
+                            }
+
                             $savedAt = $ig->tokenSavedAt();
                             $expiresAt = $ig->tokenExpiresAt();
                             $days = $ig->tokenDaysRemaining();
                             $ttlDays = (int) config('services.instagram.token_ttl_days', 60);
+                            $checkedByMeta = filled(Setting::get('instagram_access_token_expires_at'));
 
                             if (! filled(Setting::get('instagram_access_token'))) {
                                 $html = e(__('لا يوجد توكن محفوظ.'));
-                            } elseif (! $savedAt) {
+                            } elseif ($ig->tokenNeverExpires()) {
+                                $html = '<span class="text-success-600 dark:text-success-400 font-semibold">'
+                                    .e(__('صالح ولا ينتهي (حسب Meta).'))
+                                    .'</span>';
+                            } elseif ($checkedByMeta && $expiresAt && ! $expiresAt->isPast() && $expiresAt->lt(now()->addDay())) {
+                                $html = '<span class="text-danger-600 dark:text-danger-400 font-semibold">'
+                                    .e(__('توكن قصير العمر — ينتهي :when (:time). استبدله بتوكن طويل العمر.', [
+                                        'when' => $expiresAt->diffForHumans(),
+                                        'time' => $expiresAt->toDateTimeString(),
+                                    ]))
+                                    .'</span>';
+                            } elseif (! $savedAt && ! $checkedByMeta) {
                                 $html = e(__('التوكن محفوظ بدون تاريخ حفظ — احفظه مرة أخرى لبدء عدّاد :days يوم.', ['days' => $ttlDays]));
                             } elseif ($ig->isTokenPastLocalExpiry()) {
                                 $html = '<span class="text-danger-600 dark:text-danger-400 font-semibold">'
@@ -2099,14 +2121,15 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
                                     ]))
                                     .'</span>';
                             } else {
-                                $html = e(__('محفوظ :saved — صالح حتى :expires (:days يوم متبقي).', [
-                                    'saved' => $savedAt->toDateString(),
+                                $html = e(__('محفوظ :saved — صالح حتى :expires (:days يوم متبقي) — :source.', [
+                                    'source' => $checkedByMeta ? __('حسب Meta') : __('تقدير 60 يوم'),
+                                    'saved' => $savedAt?->toDateString() ?? '—',
                                     'expires' => $expiresAt?->toDateString() ?? '—',
                                     'days' => $days ?? '—',
                                 ]));
                             }
 
-                            return new \Illuminate\Support\HtmlString(
+                            return new HtmlString(
                                 '<div class="text-sm text-gray-600 dark:text-gray-300">'.$html.'</div>'
                             );
                         })
@@ -2114,7 +2137,7 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
 
                     Forms\Components\Placeholder::make('instagram_reels_preview')
                         ->hiddenLabel()
-                        ->content(fn (): \Illuminate\Support\HtmlString => new \Illuminate\Support\HtmlString(
+                        ->content(fn (): HtmlString => new HtmlString(
                             view('filament.pages.partials.instagram-reels-preview', [
                                 'livewire' => $this,
                             ])->render()
@@ -2157,7 +2180,7 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
             Setting::set($key, $value, group: $group, type: $type);
         }
 
-        // Instagram token lifetime (~60 days / 2 months from last save)
+        // Instagram token lifetime — real expiry from Meta, 60-day estimate as fallback
         $oldToken = (string) ($oldValues['instagram_access_token'] ?? '');
         $newToken = (string) ($newValues['instagram_access_token'] ?? '');
         if ($oldToken !== $newToken) {
@@ -2167,7 +2190,9 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
                 group: 'reels',
                 type: 'string',
             );
-            app(\App\Services\InstagramService::class)->forgetReelsCache();
+            $ig = app(InstagramService::class);
+            $ig->forgetReelsCache();
+            $this->warnAboutInstagramToken($ig->syncTokenExpiry());
         } elseif (filled($newToken) && ! filled(Setting::get('instagram_access_token_saved_at'))) {
             // Existing token with no stamp — start the 60-day clock on next save
             Setting::set(
@@ -2182,6 +2207,41 @@ Forms\Components\Tabs\Tab::make(__('التواصل'))->icon('heroicon-o-envelope
             ->title(__('تم حفظ الإعدادات بنجاح'))
             ->success()
             ->send();
+    }
+
+    /**
+     * Tell the admin right away when the saved token is dead or short-lived
+     * (Graph API Explorer tokens last ~1–2 hours, not 60 days).
+     *
+     * @param  array{valid: bool, expires_at: ?CarbonInterface, never_expires: bool, error: ?string}|null  $check
+     */
+    protected function warnAboutInstagramToken(?array $check): void
+    {
+        if ($check === null || $check['never_expires']) {
+            return;
+        }
+
+        if (! $check['valid']) {
+            Notification::make()
+                ->title(__('توكن إنستغرام غير صالح أو منتهي'))
+                ->body($check['error'] ?: __('ولّد توكن جديد من Meta.'))
+                ->danger()
+                ->persistent()
+                ->send();
+
+            return;
+        }
+
+        if ($check['expires_at'] && $check['expires_at']->lt(now()->addDays(7))) {
+            Notification::make()
+                ->title(__('توكن قصير العمر'))
+                ->body(__('ينتهي :when. حوّله لتوكن طويل العمر (Extend Access Token في Access Token Debugger) أو استخدم توكن الصفحة.', [
+                    'when' => $check['expires_at']->diffForHumans(),
+                ]))
+                ->warning()
+                ->persistent()
+                ->send();
+        }
     }
 
     /**
