@@ -84,6 +84,17 @@ class TeamMemberResource extends Resource
                         ->imagePreviewHeight('180')
                         ->columnSpanFull(),
 
+                    // Mic portrait — used on the homepage team section
+                    Forms\Components\FileUpload::make('mic_photo')
+                        ->label(__('الصورة مع المايك (الصفحة الرئيسية)'))
+                        ->image()
+                        ->disk('public')
+                        ->directory('team/members/mic')
+                        ->visibility('public')
+                        ->imagePreviewHeight('180')
+                        ->helperText(__('تظهر في قسم الفريق على الصفحة الرئيسية'))
+                        ->columnSpanFull(),
+
                     Forms\Components\TextInput::make('sort_order')
                         ->label(__('ترتيب العرض'))
                         ->numeric()

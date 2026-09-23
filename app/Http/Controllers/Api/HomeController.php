@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BlogListingCardResource;
 use App\Http\Resources\HomeCreatorCardResource;
+use App\Http\Resources\HomeTeamCardResource;
 use App\Http\Resources\StoryListingCardResource;
-use App\Http\Resources\TeamListingCardResource;
 use App\Services\HomePageService;
 use Illuminate\Http\JsonResponse;
 
@@ -57,7 +57,7 @@ class HomeController extends Controller
                     'title' => $payload['team']['title'],
                     'subtitle' => $payload['team']['subtitle'],
                     'profile_cta' => $payload['team']['profile_cta'],
-                    'items' => TeamListingCardResource::collection($payload['team']['items']),
+                    'items' => HomeTeamCardResource::collection($payload['team']['items']),
                 ],
                 'join_cta' => $payload['join_cta'],
                 'reviews' => $payload['reviews'],

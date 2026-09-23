@@ -10,14 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Translatable\HasTranslations;
 
 /**
- * Platform team member — card + profile photo.
+ * Platform team member — card photo + optional mic portrait.
  */
 class TeamMember extends Model
 {
     use HasTranslations, HasUuid, PrunesStoredUploads;
 
     /** @var list<string> */
-    protected array $storedUploads = ['photo'];
+    protected array $storedUploads = ['photo', 'mic_photo'];
 
     public array $translatable = ['name', 'role', 'bio'];
 
@@ -28,6 +28,7 @@ class TeamMember extends Model
         'years_of_experience',
         'bio',
         'photo',
+        'mic_photo',
         'facebook_url',
         'linkedin_url',
         'twitter_url',
@@ -36,7 +37,7 @@ class TeamMember extends Model
         'is_active',
     ];
 
-    protected $appends = ['photo_url'];
+    protected $appends = ['photo_url', 'mic_photo_url'];
 
     protected function casts(): array
     {
@@ -54,6 +55,12 @@ class TeamMember extends Model
     public function getPhotoUrlAttribute(): ?string
     {
         return MediaUrl::make($this->photo);
+    }
+
+    /** Absolute URL for the microphone portrait (home team section). */
+    public function getMicPhotoUrlAttribute(): ?string
+    {
+        return MediaUrl::make($this->mic_photo);
     }
 
     /**
