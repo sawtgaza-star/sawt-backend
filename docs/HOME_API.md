@@ -149,7 +149,8 @@ Public. No auth.
 
 ### Notes
 
-- When home reel mode is on and Instagram Business ID + token are set (Settings → «ريلز إنستغرام»), `reviews.reels` has up to **3 latest** reels; comments come from the newest reel.
+- When **Settings → ريلز إنستغرام → تفعيل عرض الريلز** (`reels_enabled`) is on **and** home reel mode is on and Instagram Business ID + token are set, `reviews.reels` has up to **3 latest** reels; comments come from the newest reel.
+- If `reels_enabled` is off, Graph is not called anywhere (`reviews.reels_status` / content / creators / `/api/v1/reels` → `disabled`).
 - Each reel includes `views` / `reach` from Graph `/{media-id}/insights?metric=views,reach` (null if insights permission is missing).
 - Each reel includes `collaborators` from Graph `/{media-id}/collaborators` (`username`, `invite_status`: Accepted|Pending). Empty if none or API denies the edge.
 - `reviews.reels_status`: `ok` | `empty` | `missing_credentials` | `disabled` — explains why `reels` may be `[]`.

@@ -54,6 +54,12 @@ class CreatorPartnerCompanyResource extends Resource
                 ->required()
                 ->maxLength(255),
 
+            Forms\Components\TextInput::make('category')
+                ->label(__('التصنيف'))
+                ->placeholder(__('فنون وثقافة'))
+                ->helperText(__('يظهر تحت اسم الشركة في قائمة أبرز التعاونات'))
+                ->maxLength(255),
+
             Forms\Components\FileUpload::make('logo')
                 ->label(__('الشعار'))
                 ->image()
@@ -68,13 +74,8 @@ class CreatorPartnerCompanyResource extends Resource
                 ->url()
                 ->maxLength(255),
 
-            Forms\Components\Select::make('creators')
-                ->label(__('صناع المحتوى المرتبطون'))
-                ->relationship('creators', 'username')
-                ->multiple()
-                ->searchable()
-                ->preload()
-                ->helperText(__('يظهرون كصور صغيرة أسفل بطاقة الشركة'))
+            Forms\Components\Placeholder::make('creators_caption_hint')
+                ->content(__('ربط الصناع + نص الاقتباس لكل صانع: من **Content Creators → تاب أبرز التعاونات**.'))
                 ->columnSpanFull(),
 
             Forms\Components\TextInput::make('sort_order')

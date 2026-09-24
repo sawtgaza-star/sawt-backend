@@ -16,10 +16,11 @@ class CreatorPartnerCompany extends Model
     /** @var list<string> */
     protected array $storedUploads = ['logo'];
 
-    public array $translatable = ['name'];
+    public array $translatable = ['name', 'category'];
 
     protected $fillable = [
         'name',
+        'category',
         'logo',
         'url',
         'sort_order',
@@ -38,8 +39,20 @@ class CreatorPartnerCompany extends Model
     public function creators(): BelongsToMany
     {
         return $this->belongsToMany(Creator::class, 'creator_partner_company_creator')
-            ->withPivot('sort_order')
-            ->orderByPivot('sort_order');
+            ->using(CreatorCompanyCollaboration::class)
+            ->withPivot([
+                'sort_order',
+                'quote_ar',
+                'quote_en',
+                'rating',
+                'author_name',
+                'author_role_ar',
+                'author_role_en',
+                'author_photo',
+            ])
+            ->withTimestamps()
+            // Qualify: creators.sort_order and pivot.sort_order both exist
+            ->orderBy('creator_partner_company_creator.sort_order');
     }
 
     public function getLogoUrlAttribute(): ?string

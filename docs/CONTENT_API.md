@@ -15,7 +15,8 @@ Header/footer: [LAYOUT_API.md](./LAYOUT_API.md).
 | Reels block | title, “see more”, `content_most_viewed_limit` (how many Instagram reels) |
 
 ### Settings → «ريلز إنستغرام»
-Configure `instagram_user_id` + `instagram_access_token` (required for `reels.items`).
+- `reels_enabled` — **master switch** for the whole site (home, content, creators, `/api/v1/reels`). Off = no Graph API calls.
+- Configure `instagram_user_id` + `instagram_access_token` (required for `reels.items` when enabled).
 
 ## API
 
@@ -41,7 +42,7 @@ Public. No auth. No query filters.
     "reels": {
       "title": { "ar": "…", "en": "…" },
       "view_more": { "ar": "…", "en": "…" },
-            'status': "ok",
+      "status": "ok",
       "message": null,
       "items": [
         {
@@ -71,6 +72,7 @@ Public. No auth. No query filters.
 |-------|---------|
 | `ok` | Instagram reels returned |
 | `empty` | Credentials OK but no reels matched |
+| `disabled` | Settings `reels_enabled` is off — Graph was not called |
 | `missing_credentials` | Instagram user id / token not set in Settings |
 | `token_expired` | Access token expired (Meta revoked **or** local 60-day / 2-month clock from last Settings save) — paste a new long-lived token in **Settings → ريلز إنستغرام** |
 | `api_error` | Graph API error (see `reels.message`) |
@@ -78,6 +80,6 @@ Public. No auth. No query filters.
 ### Notes
 
 - Count limited by Settings `content_most_viewed_limit` (default 6).
-- Standalone list: `GET /api/v1/reels?limit=12`.
+- Standalone list: `GET /api/v1/reels?limit=12` (collaborators + insights on by default; `?extras=0` for a fast lite list). When disabled, `data: []` and `meta.status: disabled`.
 - Dashboard-saved tokens start a **60-day** lifetime clock (`INSTAGRAM_TOKEN_TTL_DAYS`, default 60 ≈ two months) via `instagram_access_token_saved_at`. After that, APIs return `token_expired` until you save a fresh token.
 - If `status` is `token_expired` on local **and** production, both environments need a fresh Instagram access token saved in Settings (or `.env`).

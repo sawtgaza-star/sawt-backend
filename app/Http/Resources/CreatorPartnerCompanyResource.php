@@ -12,6 +12,7 @@ class CreatorPartnerCompanyResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'name' => $this->getTranslations('name'),
+            'category' => $this->getTranslations('category'),
             'logo_url' => $this->logo_url,
             'url' => $this->url,
             'sort_order' => $this->sort_order,

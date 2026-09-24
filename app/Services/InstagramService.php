@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Fetches Instagram Reels via the Instagram Graph API for Settings, home, and content APIs.
  * Credentials come from dashboard Settings first, then fall back to .env config.
+ * Master switch: Settings → ريلز إنستغرام → reels_enabled (off = no Graph calls site-wide).
  */
 class InstagramService
 {
@@ -24,6 +25,9 @@ class InstagramService
     public const STATUS_TOKEN_EXPIRED = 'token_expired';
 
     public const STATUS_API_ERROR = 'api_error';
+
+    /** Settings reels_enabled is off — callers must not treat this as a Graph failure. */
+    public const STATUS_DISABLED = 'disabled';
 
     protected string $lastStatus = self::STATUS_MISSING_CREDENTIALS;
 
@@ -39,6 +43,14 @@ class InstagramService
     {
         $this->lastStatus = self::STATUS_MISSING_CREDENTIALS;
         $this->lastMessage = null;
+
+        // Global kill switch — every API/page that uses this method skips Graph when off
+        if (! $this->isEnabled()) {
+            $this->lastStatus = self::STATUS_DISABLED;
+            $this->lastMessage = 'Instagram reels are disabled in Settings (reels_enabled).';
+
+            return [];
+        }
 
         if (! $this->isConfigured()) {
             $this->lastMessage = 'Instagram user id or access token is missing.';
@@ -114,9 +126,106 @@ class InstagramService
         }
     }
 
+    /**
+     * Reels from the platform Instagram account where $username is an accepted collaborator.
+     * Used on creator detail «المحتوى» — matches Creator Instagram social URL/username.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function reelsForCollaborator(string $username, int $limit = 12): array
+    {
+        $needle = $this->normalizeInstagramUsername($username);
+        if ($needle === '') {
+            $this->lastStatus = self::STATUS_EMPTY;
+            $this->lastMessage = 'Instagram collaborator username is empty.';
+
+            return [];
+        }
+
+        $limit = max(1, min(12, $limit));
+
+        // Same limit + extras as GET /api/v1/reels
+        $pool = $this->reels($limit, bypassCache: false, withExtras: true);
+
+        if ($pool === []) {
+            return [];
+        }
+
+        $matched = collect($pool)
+            ->filter(fn (array $reel) => $this->reelHasCollaborator($reel, $needle))
+            ->take($limit)
+            ->values()
+            ->all();
+
+        if ($matched === []) {
+            $this->lastStatus = self::STATUS_EMPTY;
+            $this->lastMessage = 'No reels found where this username is a collaborator.';
+        }
+
+        return $matched;
+    }
+
+    /**
+     * Strip @ and path noise from an Instagram handle or profile URL.
+     */
+    public function normalizeInstagramUsername(?string $raw): string
+    {
+        $raw = trim((string) $raw);
+        if ($raw === '') {
+            return '';
+        }
+
+        // Full profile URL → last path segment
+        if (str_contains($raw, 'instagram.com')) {
+            $path = (string) parse_url($raw, PHP_URL_PATH);
+            $raw = trim($path, '/');
+            // Drop trailing segments like /reel/… if a bad URL was stored
+            $raw = explode('/', $raw)[0] ?? '';
+        }
+
+        $raw = ltrim($raw, '@');
+        $raw = strtok($raw, '?#') ?: $raw;
+
+        return strtolower(trim($raw));
+    }
+
+    /**
+     * @param  array<string, mixed>  $reel
+     */
+    protected function reelHasCollaborator(array $reel, string $needleUsername): bool
+    {
+        foreach ($reel['collaborators'] ?? [] as $collaborator) {
+            if (! is_array($collaborator)) {
+                continue;
+            }
+
+            $handle = $this->normalizeInstagramUsername($collaborator['username'] ?? '');
+            if ($handle === '' || $handle !== $needleUsername) {
+                continue;
+            }
+
+            // Prefer accepted invites; treat missing status as accepted (API sometimes omits it)
+            $status = strtolower((string) ($collaborator['invite_status'] ?? ''));
+            if ($status === '' || $status === 'accepted') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function isConfigured(): bool
     {
         return filled($this->userId()) && filled($this->token());
+    }
+
+    /**
+     * Master toggle from Settings → ريلز إنستغرام → «تفعيل عرض الريلز».
+     * When false, reels()/reelsForCollaborator() never hit Instagram Graph.
+     */
+    public function isEnabled(): bool
+    {
+        return (bool) Setting::get('reels_enabled', false);
     }
 
     /**
@@ -373,14 +482,14 @@ class InstagramService
                 // Nested comments keep the list call lighter (avoid comments.limit(30))
                 'fields' => 'id,caption,media_type,media_product_type,is_shared_to_feed,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,comments.limit(10){id,text,username,timestamp,like_count}',
                 'limit' => 50,
-                'access_token' => $token,
+                    'access_token' => $token,
             ];
 
             // Paginate until we have enough REELS (or pages run out).
             for ($page = 0; $page < 5; $page++) {
                 $response = Http::timeout(15)->get($url, $params);
 
-                if ($response->failed()) {
+            if ($response->failed()) {
                     $this->recordApiFailure($response->status(), $response->json(), $userId);
 
                     break;
@@ -431,26 +540,26 @@ class InstagramService
 
                     return [
                         'id' => $id,
-                        'caption' => $item['caption'] ?? '',
-                        'thumbnail' => $item['thumbnail_url'] ?? ($item['media_url'] ?? null),
-                        'video_url' => $item['media_url'] ?? null,
-                        'permalink' => $item['permalink'] ?? null,
+                    'caption' => $item['caption'] ?? '',
+                    'thumbnail' => $item['thumbnail_url'] ?? ($item['media_url'] ?? null),
+                    'video_url' => $item['media_url'] ?? null,
+                    'permalink' => $item['permalink'] ?? null,
                         'username' => $item['username'] ?? null,
-                        'likes' => $item['like_count'] ?? 0,
-                        'comments' => $item['comments_count'] ?? 0,
+                    'likes' => $item['like_count'] ?? 0,
+                    'comments' => $item['comments_count'] ?? 0,
                         'views' => $insights['views'],
                         'reach' => $insights['reach'],
-                        'comment_items' => collect($item['comments']['data'] ?? [])
-                            ->map(fn ($c) => [
+                    'comment_items' => collect($item['comments']['data'] ?? [])
+                        ->map(fn ($c) => [
                                 'id' => $c['id'] ?? null,
-                                'name' => $c['username'] ?? 'مستخدم',
-                                'text' => $c['text'] ?? '',
-                                'likes' => $c['like_count'] ?? 0,
-                                'time' => $c['timestamp'] ?? null,
-                            ])
-                            ->all(),
+                            'name' => $c['username'] ?? 'مستخدم',
+                            'text' => $c['text'] ?? '',
+                            'likes' => $c['like_count'] ?? 0,
+                            'time' => $c['timestamp'] ?? null,
+                        ])
+                        ->all(),
                         'collaborators' => $collaborators,
-                        'posted_at' => $item['timestamp'] ?? null,
+                    'posted_at' => $item['timestamp'] ?? null,
                     ];
                 })
                 ->all();

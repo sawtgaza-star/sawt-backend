@@ -327,16 +327,21 @@ class HomePageService
      */
     protected function reviews(): array
     {
-        $useInstagram = (bool) $this->settings->get('home_reviews_use_instagram', true);
+        // Global master switch (Settings → ريلز إنستغرام) + home section toggle
+        $globalOn = $this->instagram->isEnabled();
+        $sectionOn = (bool) $this->settings->get('home_reviews_use_instagram', true);
+        $useInstagram = $globalOn && $sectionOn;
 
         $reels = [];
         $comments = [];
         $commentsCount = 0;
         $status = 'disabled';
+        $message = null;
 
         if ($useInstagram) {
             if (! $this->instagram->isConfigured()) {
                 $status = 'missing_credentials';
+                $message = 'Instagram user id or access token is missing.';
             } else {
                 // Small set + extras; use cache so home does not timeout
                 $fetched = $this->instagram->reels(3, bypassCache: false, withExtras: true);
@@ -369,7 +374,10 @@ class HomePageService
                 }
 
                 $status = $this->instagram->lastStatus();
+                $message = $this->instagram->lastMessage();
             }
+        } elseif (! $globalOn) {
+            $message = 'Instagram reels are disabled in Settings (reels_enabled).';
         }
 
         return [
@@ -381,7 +389,7 @@ class HomePageService
             ),
             'reels_enabled' => $useInstagram,
             'reels_status' => $status,
-            'reels_message' => $useInstagram ? $this->instagram->lastMessage() : null,
+            'reels_message' => $message,
             'reels' => $reels,
             'comments' => [
                 'count' => $commentsCount,

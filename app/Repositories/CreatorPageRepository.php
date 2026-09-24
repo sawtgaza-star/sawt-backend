@@ -39,13 +39,28 @@ class CreatorPageRepository implements CreatorPageRepositoryInterface
             ->paginate(max(1, $perPage));
     }
 
+    /**
+     * Resolve by public uuid, or numeric id (legacy front URLs like /creators/6).
+     */
     public function findCreatorByUuid(string $uuid): ?Creator
     {
-        return Creator::query()
+        $query = Creator::query()
             ->active()
-            ->with(['user', 'socials'])
-            ->where('uuid', $uuid)
-            ->first();
+            ->with([
+                'user',
+                'socials',
+                // Partner logos for «أبرز التعاونات» — order comes from relationship (pivot.sort_order)
+                'partnerCompanies' => fn ($q) => $q->active(),
+            ]);
+
+        if (ctype_digit($uuid)) {
+            $byId = (clone $query)->where('id', (int) $uuid)->first();
+            if ($byId) {
+                return $byId;
+            }
+        }
+
+        return $query->where('uuid', $uuid)->first();
     }
 
     public function activePartnerCompanies(): Collection

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CreatorResource\Pages;
+use App\Filament\Resources\CreatorResource\RelationManagers;
 use App\Models\Creator;
 use App\Models\User;
 use App\Support\MediaUrl;
@@ -13,6 +14,10 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
+/**
+ * Filament CRUD for public content-creator profiles (listing cards + detail page).
+ * Instagram social URL drives which platform reels appear on the detail «المحتوى» grid.
+ */
 class CreatorResource extends Resource
 {
     use Translatable;
@@ -133,6 +138,13 @@ class CreatorResource extends Resource
                     ->default(0)
                     ->minValue(0),
 
+                Forms\Components\TextInput::make('views_count')
+                    ->label(__('عدد المشاهدات (يدوي)'))
+                    ->helperText(__('يُعرض في صفحة التفاصيل. اترك 0 لاستخدام مجموع مشاهدات ريلز التعاون من إنستغرام.'))
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0),
+
                 Forms\Components\TextInput::make('sort_order')
                     ->label(__('ترتيب العرض'))
                     ->numeric()
@@ -149,7 +161,9 @@ class CreatorResource extends Resource
                     ->required(),
             ])->columns(2),
 
-            Forms\Components\Section::make(__('مواقع التواصل'))->schema([
+            Forms\Components\Section::make(__('مواقع التواصل'))
+                ->description(__('أضف رابط إنستغرام ليظهر محتوى الريلز التي يكون فيها هذا الصانع متعاوناً (collaborator) على حساب المنصة.'))
+                ->schema([
                 Forms\Components\Repeater::make('socials')
                     ->label('')
                     ->schema([
@@ -222,7 +236,9 @@ class CreatorResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            RelationManagers\CollaborationsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -62,8 +62,13 @@ class ContentPageService
         $message = null;
         $items = [];
 
-        if ($this->instagram->isConfigured()) {
-            $fetched = $this->instagram->reels($limit, bypassCache: false);
+        // Prefer disabled over missing_credentials so front can hide the block without retrying
+        if (! $this->instagram->isEnabled()) {
+            $status = InstagramService::STATUS_DISABLED;
+            $message = 'Instagram reels are disabled in Settings (reels_enabled).';
+        } elseif ($this->instagram->isConfigured()) {
+            // withExtras=true loads /collaborators (+ insights) so co-authors match Instagram UI
+            $fetched = $this->instagram->reels($limit, bypassCache: false, withExtras: true);
 
             $items = collect($fetched)
                 ->map(fn (array $reel, int $index) => [

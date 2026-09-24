@@ -4,16 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Creators\StoreCreatorJoinRequest;
+use App\Http\Resources\CreatorCollaborationItemResource;
+use App\Http\Resources\CreatorDetailResource;
 use App\Http\Resources\CreatorFaqResource;
 use App\Http\Resources\CreatorJoinRequestResource;
 use App\Http\Resources\CreatorPartnerCompanyResource;
-use App\Http\Resources\CreatorCardResource;
 use App\Http\Resources\HomeCreatorCardResource;
 use App\Services\CreatorsPageService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Public creators pages: listing, view-all, join form, and profile detail.
+ */
 class CreatorsPageController extends Controller
 {
     public function __construct(
@@ -93,10 +97,18 @@ class CreatorsPageController extends Controller
         ], 201);
     }
 
-    public function show(string $uuid): JsonResponse
+    /**
+     * Creator profile detail.
+     * Path: uuid or numeric id. Query: ?reels_limit=12
+     * Content videos = Instagram reels where this creator is a collaborator.
+     */
+    public function show(Request $request, string $uuid): JsonResponse
     {
         try {
-            $payload = $this->creatorsPage->creator($uuid);
+            $payload = $this->creatorsPage->creator(
+                $uuid,
+                $request->integer('reels_limit') ?: null,
+            );
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'لا يوجد صانع محتوى بهذا المعرّف.',
@@ -107,8 +119,21 @@ class CreatorsPageController extends Controller
         return response()->json([
             'data' => [
                 'hero' => $payload['hero'],
-                'creator' => new CreatorCardResource($payload['creator']),
+                'creator' => new CreatorDetailResource(
+                    $payload['creator'],
+                    $payload['creator_extras'],
+                ),
                 'labels' => $payload['labels'],
+                'content' => $payload['content'],
+                'collaborations' => [
+                    'title' => $payload['collaborations']['title'],
+                    'description' => $payload['collaborations']['description'],
+                    // Same latest Instagram reel for every company tab
+                    'reel' => $payload['collaborations']['reel'],
+                    'items' => CreatorCollaborationItemResource::collection($payload['collaborations']['items']),
+                ],
+                'collaboration' => $payload['collaboration'],
+                'join' => $payload['join'],
             ],
         ]);
     }

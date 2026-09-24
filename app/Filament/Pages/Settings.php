@@ -719,8 +719,8 @@ class Settings extends Page implements HasForms
             'creators_partners_desc_en' => ['creators', 'text', 'Thank you to the companies that carried the voice of Gaza to the world'],
             'creators_collab_title_ar' => ['creators', 'string', 'كيف يبدأ التعاون مع صناع محتوى صوت؟'],
             'creators_collab_title_en' => ['creators', 'string', 'How does collaboration with Sawt content creators begin?'],
-            'creators_collab_desc_ar' => ['creators', 'text', 'ميديا صوت هي الجسر الذي يربط الشركات بصناع المحتوى في غزة'],
-            'creators_collab_desc_en' => ['creators', 'text', 'Sawt Media is the bridge connecting companies with content creators in Gaza'],
+            'creators_collab_desc_ar' => ['creators', 'text', 'وصلنا شركات من حول العالم بصنّاع المحتوى في غزة — صوت ميديا هي الجسر الذي يوصلك'],
+            'creators_collab_desc_en' => ['creators', 'text', 'We connect companies worldwide with creators in Gaza — Sawt Media is the bridge that gets you there'],
             'creators_collab_brands_label_ar' => ['creators', 'string', 'الشركات والعلامات'],
             'creators_collab_brands_label_en' => ['creators', 'string', 'Companies and Brands'],
             'creators_collab_brands_subtitle_ar' => ['creators', 'string', 'التجارية حول العالم'],
@@ -738,10 +738,10 @@ class Settings extends Page implements HasForms
             'creators_collab_steps_title_en' => ['creators', 'string', 'Collaboration steps'],
             'creators_collab_step_1_ar' => ['creators', 'text', 'استعرض ملفات صناعنا وفلتر حسب التخصص والميزانية والوصول الجماهيري'],
             'creators_collab_step_1_en' => ['creators', 'text', 'Browse our creators\' profiles and filter by specialty, budget, and audience reach'],
-            'creators_collab_step_2_ar' => ['creators', 'text', 'فريق صوت ميديا يتولى التنسيق الكامل بينك وبين صانع المحتوى - من التفاصيل حتى العقد'],
+            'creators_collab_step_2_ar' => ['creators', 'text', 'فريق صوت ميديا يتولى التنسيق الكامل بينك وبين صانع المحتوى — من التفاصيل حتى العقد'],
             'creators_collab_step_2_en' => ['creators', 'text', 'The Sawt Media team handles full coordination between you and the creator — from details to contract'],
-            'creators_collab_step_3_ar' => ['creators', 'text', 'المحتوى يُنتج ويُنشر، وتحصل على تقرير تفصيلي بالنتائج والتفاعل'],
-            'creators_collab_step_3_en' => ['creators', 'text', 'Content is produced and published, and you get a detailed report on results and engagement'],
+            'creators_collab_step_3_ar' => ['creators', 'text', 'المحتوى يُنتج ويُنشر، وتحصل على تقرير تفصيلي بالنتائج والوصول والتفاعل'],
+            'creators_collab_step_3_en' => ['creators', 'text', 'Content is produced and published, and you get a detailed report on results, reach, and engagement'],
             'creators_collab_cta_label_ar' => ['creators', 'string', 'تواصل مع فريق صوت للانضمام'],
             'creators_collab_cta_label_en' => ['creators', 'string', 'Contact the Sawt team to join'],
             'creators_faq_title_ar' => ['creators', 'string', 'الأسئلة التي تدور ببالك؟ إليك ردودها'],
@@ -753,8 +753,25 @@ class Settings extends Page implements HasForms
             'creators_bio_label_en' => ['creators', 'string', 'About'],
             'creators_followers_label_ar' => ['creators', 'string', 'عدد المتابعين'],
             'creators_followers_label_en' => ['creators', 'string', 'Followers'],
-            'creators_socials_label_ar' => ['creators', 'string', 'تابعنا على:'],
-            'creators_socials_label_en' => ['creators', 'string', 'Follow us on:'],
+            'creators_socials_label_ar' => ['creators', 'string', 'تابعني على :'],
+            'creators_socials_label_en' => ['creators', 'string', 'Follow me on:'],
+            'creators_follow_label_ar' => ['creators', 'string', 'متابعة'],
+            'creators_follow_label_en' => ['creators', 'string', 'Follow'],
+            'creators_views_suffix_ar' => ['creators', 'string', 'مشاهدة'],
+            'creators_views_suffix_en' => ['creators', 'string', 'views'],
+            'creators_followers_suffix_ar' => ['creators', 'string', 'متابع'],
+            'creators_followers_suffix_en' => ['creators', 'string', 'followers'],
+            'creators_videos_suffix_ar' => ['creators', 'string', 'فيديو'],
+            'creators_videos_suffix_en' => ['creators', 'string', 'videos'],
+            'creators_content_title_ar' => ['creators', 'string', 'المحتوى'],
+            'creators_content_title_en' => ['creators', 'string', 'Content'],
+            'creators_content_view_more_ar' => ['creators', 'string', 'رؤية المزيد'],
+            'creators_content_view_more_en' => ['creators', 'string', 'See more'],
+            'creators_detail_collabs_title_ar' => ['creators', 'string', 'ابرز التعاونات'],
+            'creators_detail_collabs_title_en' => ['creators', 'string', 'Top collaborations'],
+            'creators_detail_collabs_desc_ar' => ['creators', 'text', 'صناع محتوى صوت جزء لهم بصمتهم مع الشركات المحلية والعالمية'],
+            'creators_detail_collabs_desc_en' => ['creators', 'text', 'Sawt creators leave their mark with local and global brands'],
+            'creators_detail_reels_limit' => ['creators', 'number', 12],
 
             // stats (تظهر بصفحة صنّاع المحتوى بالموقع العام)
             'reach_count' => ['stats', 'number', 4000000],
@@ -1551,12 +1568,38 @@ class Settings extends Page implements HasForms
                     ])->columns(2),
 
                     Forms\Components\Section::make(__('8) صفحة تفاصيل صانع المحتوى'))->schema([
+                        Forms\Components\TextInput::make('creators_follow_label_ar')->label(__('زر متابعة (عربي)')),
+                        Forms\Components\TextInput::make('creators_follow_label_en')->label('Follow button (English)'),
                         Forms\Components\TextInput::make('creators_bio_label_ar')->label(__('عنوان النبذة (عربي)')),
                         Forms\Components\TextInput::make('creators_bio_label_en')->label('Bio heading (English)'),
                         Forms\Components\TextInput::make('creators_followers_label_ar')->label(__('عنوان المتابعين (عربي)')),
                         Forms\Components\TextInput::make('creators_followers_label_en')->label('Followers label (English)'),
                         Forms\Components\TextInput::make('creators_socials_label_ar')->label(__('عنوان التواصل (عربي)')),
                         Forms\Components\TextInput::make('creators_socials_label_en')->label('Socials label (English)'),
+                        Forms\Components\TextInput::make('creators_views_suffix_ar')->label(__('لاحقة المشاهدات (عربي)')),
+                        Forms\Components\TextInput::make('creators_views_suffix_en')->label('Views suffix (English)'),
+                        Forms\Components\TextInput::make('creators_followers_suffix_ar')->label(__('لاحقة المتابعين (عربي)')),
+                        Forms\Components\TextInput::make('creators_followers_suffix_en')->label('Followers suffix (English)'),
+                        Forms\Components\TextInput::make('creators_videos_suffix_ar')->label(__('لاحقة الفيديو (عربي)')),
+                        Forms\Components\TextInput::make('creators_videos_suffix_en')->label('Videos suffix (English)'),
+                        Forms\Components\TextInput::make('creators_content_title_ar')->label(__('عنوان المحتوى (عربي)')),
+                        Forms\Components\TextInput::make('creators_content_title_en')->label('Content title (English)'),
+                        Forms\Components\TextInput::make('creators_content_view_more_ar')->label(__('نص رؤية المزيد (عربي)')),
+                        Forms\Components\TextInput::make('creators_content_view_more_en')->label('See more (English)'),
+                        Forms\Components\TextInput::make('creators_detail_collabs_title_ar')->label(__('عنوان أبرز التعاونات (عربي)')),
+                        Forms\Components\TextInput::make('creators_detail_collabs_title_en')->label('Collaborations title (English)'),
+                        Forms\Components\Textarea::make('creators_detail_collabs_desc_ar')->label(__('وصف التعاونات (عربي)'))->rows(2),
+                        Forms\Components\Textarea::make('creators_detail_collabs_desc_en')->label('Collaborations description (English)')->rows(2),
+                        Forms\Components\TextInput::make('creators_detail_reels_limit')
+                            ->label(__('حد ريلز التعاون في صفحة التفاصيل'))
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(12)
+                            ->helperText(__('ريلز إنستغرام من حساب المنصة حيث يظهر الصانع كـ collaborator (حد أقصى 12)'))
+                            ->columnSpanFull(),
+                        Forms\Components\Placeholder::make('creators_detail_hint')
+                            ->content(__('المحتوى = ريلز التعاون من إنستغرام. أبرز التعاونات = شركات + اقتباس لكل شركة من **Content Creators → تاب أبرز التعاونات**؛ فيديو القسم = آخر ريل من حساب المنصة.'))
+                            ->columnSpanFull(),
                     ])->columns(2),
                 ]),
 
@@ -2062,7 +2105,7 @@ class Settings extends Page implements HasForms
                 Forms\Components\Tabs\Tab::make(__('ريلز إنستغرام'))->icon('heroicon-o-film')->schema([
                     Forms\Components\Toggle::make('reels_enabled')
                         ->label(__('تفعيل عرض الريلز'))
-                        ->helperText(__('لما يكون مفعّل، بيتم جلب الريلز من حساب إنستغرام وعرضها في هذا التاب وعبر /api/v1/reels'))
+                        ->helperText(__('مفتاح عام لكل الموقع: مفعّل = جلب الريلز من إنستغرام (الصفحة الرئيسية، محتوانا، صناع المحتوى، /api/v1/reels). غير مفعّل = لا يُستدعى Graph نهائياً.'))
                         ->columnSpanFull(),
                     Forms\Components\TextInput::make('instagram_user_id')
                         ->label(__('معرّف حساب إنستغرام (Business ID)'))
